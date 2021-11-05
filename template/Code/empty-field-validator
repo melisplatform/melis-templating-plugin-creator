@@ -1,0 +1,9 @@
+                                            [
+                                                'name' => 'NotEmpty',
+                                                'options' => [
+                                                    'messages' => [
+                                                        \Laminas\Validator\NotEmpty::IS_EMPTY => 'tr_front_common_input_empty',
+                                                    ],
+                                                ],
+                                            ],
+    

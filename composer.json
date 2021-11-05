@@ -1,0 +1,33 @@
+{
+	"name": "melisplatform/melis-templating-plugin-creator",
+	"description": "Melis Platform Templating Plugin Creator",
+	"type": "melisplatform-module",
+	"license": "OSL-3.0",
+	"homepage": "https://github.com/melisplatform/melis-templating-plugin-creator",
+	"support": {
+		"source": "https://github.com/melisplatform/melis-templating-plugin-creator",
+		"issues": "https://github.com/melisplatform/melis-templating-plugin-creator/issues"
+	},
+	"keywords": [		
+		"melis",
+		"zf2",
+		"module",
+		"templating",
+		"plugin"
+	],
+	"extra": {
+		"module-name": "MelisTemplatingPluginCreator",
+		"melis-site": false	
+	},
+	"require": {
+		"php": "^7.1.3|^7.2|^7.3",
+		"laminas/laminas-paginator": "^2.8",
+		"melisplatform/melis-core": "^4.0",	
+		"melisplatform/melis-tool-creator": "^4.0"
+	},
+	"autoload": {
+		"psr-4": {
+			"MelisTemplatingPluginCreator\\": "src/"
+		}
+	}
+}

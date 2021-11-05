@@ -1,0 +1,9 @@
+                                             [
+                                                'name' => 'Digits',
+                                                'options' => [
+                                                    'messages' => [
+                                                        \Laminas\Validator\Digits::NOT_DIGITS => 'tr_front_common_input_not_digit',
+                                                    ],
+                                                ],
+                                            ],
+    

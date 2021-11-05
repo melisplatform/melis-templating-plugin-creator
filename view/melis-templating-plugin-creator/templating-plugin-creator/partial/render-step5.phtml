@@ -1,0 +1,235 @@
+<?php
+    for($i=1; $i<=count($this->data['steps'])-2; $i++){         
+        $step = $this->data['steps']['melistemplatingplugincreator_step'.$i]; 
+        $sessionData = $this->data['sessionData']['step_'.$i];  
+        $curStep = $i;    
+
+    ?>
+    <div class="melis-tpc-summary-item">
+        <!-- Step Header -->
+        <h4>
+            <i class="fa <?php echo $step['icon'] ?>"></i>
+            <?php echo $this->translate($step['name']) ?>
+        </h4>
+
+        <!-- Step Content -->
+        <div class="melis-tpc-summary-item-content">
+            <?php if($curStep == 1){ ?>                
+                <div class="table-responsive">
+                    <table class="table table-striped table-primary table-bordered">
+                        <thead>
+                            <tr>
+                                <th><?php echo $this->translate('tr_melistemplatingplugincreator_tpc_plugin_name') ?></th>
+                                <th><?php echo $this->translate('tr_melistemplatingplugincreator_tpc_plugin_destination') ?></th>
+                                <?php 
+                                    if($sessionData['tpc_plugin_destination'] == 'new_module'){ ?>
+                                         <th><?php echo ucwords($this->translate('tr_melistemplatingplugincreator_tpc_new_module_name')) ?></th>
+                                <?php    }else{ ?>
+                                        <th><?php echo ucwords($this->translate('tr_melistemplatingplugincreator_destination_existing_opt')). ' Name ' ?></th>
+                               <?php }
+                                ?>                                
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><?php echo $sessionData['tpc_plugin_name'] ?></td> 
+                                <td><?php echo ucwords(str_replace("_", ' ', $sessionData['tpc_plugin_destination'])) ?></td>
+
+                                  <?php 
+                                        if($sessionData['tpc_plugin_destination'] == 'new_module'){ ?>
+                                            <td><?php echo $sessionData['tpc_new_module_name'] ?></td>
+                                    <?php    }else{ ?>
+                                           <td><?php echo $sessionData['tpc_existing_module_name'] ?></td>
+                                   <?php }
+                                    ?>
+                            </tr>
+                        </tbody>                        
+                    </table>
+                </div>
+            <?php } elseif ($curStep == 2) { ?>
+                <div class="table-responsive">
+                    <table class="table table-striped table-primary">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <?php
+                                foreach ($this->data['languages'] As $lang){
+                                    echo '<th>' . $lang['lang_name'] . '</th>';                                    
+                                }
+                                ?>                            
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                                $cols = array('tpc_plugin_title', 'tpc_plugin_desc');
+
+                                foreach ($cols As $col){
+                                    echo '<tr>';
+                                    echo '<td><b>' . $this->translate('tr_melistemplatingplugincreator_' . $col) . '</b></td>';
+
+                                    foreach ($this->data['languages'] As $lang){
+                                        $langTrans = '';
+                                        
+                                        if(!empty($sessionData[$lang['lang_locale']])){                                   
+                                            if(!empty($sessionData[$lang['lang_locale']][$col])){
+                                                $langTrans = $sessionData[$lang['lang_locale']][$col];
+                                            }                                    
+                                        }
+                                        echo '<td>' . $langTrans . '</td>';
+                                    }
+                                    echo '</tr>';
+                                }
+                                ?>
+                        </tbody>
+                    </table>
+
+                    <h6><b><?=$this->translate('tr_melistemplatingplugincreator_upload_thumbnail' )?></b></h6>
+                    <?php 
+                        if(!empty($sessionData['plugin_thumbnail'])){?>
+                            <div class="plugin_thumbnail_div_preview_summary">
+                                <img src="<?= $sessionData['plugin_thumbnail']?>" class = "plugin_thumbnail">
+                            </div>
+                    <?php    }
+                    ?>
+                </div> 
+            <?php } elseif ($curStep == 3) { 
+                ?>
+                <div class="table-responsive">
+                    <table class="table table-striped table-primary table-bordered">
+                        <thead>
+                            <tr>
+                                <th><?php echo $this->translate('tr_melistemplatingplugincreator_tpc_main_property_field_count') ?></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><?php echo $sessionData['main_form']['tpc_main_property_field_count'] ?></td>                                
+                            </tr>
+                        </tbody>                        
+                    </table>
+            
+                         
+                    <table class="table table-striped table-primary">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th><?=$this->translate('tr_melistemplatingplugincreator_tpc_field_name')?></th>
+                                <th><?=$this->translate('tr_melistemplatingplugincreator_tpc_field_display_type')?></th>
+                                <th><?=$this->translate('tr_melistemplatingplugincreator_tpc_field_is_required')?></th>
+                                <th><?=$this->translate('tr_melistemplatingplugincreator_tpc_field_default_value')?></th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <?php 
+                                for($field=1; $field<=$sessionData['main_form']['tpc_main_property_field_count']; $field++){ 
+                                    $tabNumber = $sessionData['main_form']['tpc_property_tab_number'];
+                                    $fieldName = $sessionData['tab_'.$tabNumber]['field_'.$field]['tpc_field_name'];
+                                    $isRequired = $sessionData['tab_'.$tabNumber]['field_'.$field]['tpc_field_is_required'];
+                                    $displayType = $sessionData['tab_'.$tabNumber]['field_'.$field]['tpc_field_display_type'];
+                                    $defaultValue = $sessionData['tab_'.$tabNumber]['field_'.$field]['tpc_field_default_value'];
+                                    $displayTypeOptions = array(
+                                        'MelisText' => 'Text / Classic input',
+                                        'Dropdown' => 'Dropdown',
+                                        'DatePicker' => 'Date Picker',
+                                        'DateTimePicker' => 'Datetime Picker', 
+                                        'PageInput' => 'Page Input', 
+                                        'NumericInput' => 'Numeric Input',  
+                                        'Switch' => 'Switch ON/OFF green/red',                                     
+                                        'Textarea' => 'Textarea',
+                                        'MelisCoreTinyMCE' => 'HTML Rich (TinyMCE)'); 
+                                    ?>
+                                    <tr>
+                                        <td><?=$this->translate('tr_melistemplatingplugincreator_field'). ' '.$field?></td>
+                                        <td><?=$fieldName?></td> 
+                                        <td><?=$displayTypeOptions[$displayType]?></td> 
+                                        <td><?=$isRequired==1?'Yes':'No'?></td> 
+                                        <td><?=$displayType=='Switch'?(isset($defaultValue)?($defaultValue==1?'On':'Off'):''):$defaultValue?></td> 
+                                    </tr>                                    
+                            <?php    }
+
+                            ?>                            
+                        </tbody>                  
+                    </table> 
+                </div>
+            <?php }elseif ($curStep == 4) { 
+
+                    $fieldCount = $this->data['sessionData']['step_3']['main_form']['tpc_main_property_field_count'];
+                    $tabNumber = $this->data['sessionData']['step_3']['main_form']['tpc_property_tab_number'];
+
+                    ?>
+                    <div class="table-responsive">                        
+                       <?php 
+                        for($ctr=1; $ctr<=$fieldCount; $ctr++){                       
+
+                            ?>
+                            <table class="table table-striped table-primary">
+                                <thead>
+                                    <tr>
+                                        <th><?=$this->translate('tr_melistemplatingplugincreator_field'). ' '.$ctr?> [<?=$this->data['sessionData']['step_3']['tab_'.$tabNumber]['field_'.$ctr]['tpc_field_name']?>]</th>
+                                        <?php
+                                        foreach ($this->data['languages'] As $lang){
+                                            echo '<th>' . $lang['lang_name'] . '</th>';                                    
+                                        }
+                                        ?>                            
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php
+                                        $cols = array('tpc_field_label', 'tpc_field_tooltip');
+
+                                        foreach ($cols As $col){
+                                            echo '<tr>';
+                                            echo '<td><b>' . $this->translate('tr_melistemplatingplugincreator_' . $col) . '</b></td>';
+
+                                            foreach ($this->data['languages'] As $lang){
+                                                $langTrans = '';
+                                                
+                                                if(!empty($sessionData[$lang['lang_locale']]['tab_'.$tabNumber]['field_'.$ctr])){                                   
+                                                    if(!empty($sessionData[$lang['lang_locale']]['tab_'.$tabNumber]['field_'.$ctr][$col])){
+                                                        $langTrans = $sessionData[$lang['lang_locale']]['tab_'.$tabNumber]['field_'.$ctr][$col];
+                                                    }                                    
+                                                }
+                                                echo '<td>' . $langTrans . '</td>';
+                                            }
+                                            echo '</tr>';
+                                        }
+
+
+                                        /*check if there are translated dropdown values*/
+                                        $displayType = $this->data['sessionData']['step_3']['tab_'.$tabNumber]['field_'.$ctr]['tpc_field_display_type'];
+                                        $dropdownValues = $this->data['sessionData']['step_3']['tab_'.$tabNumber]['field_'.$ctr]['tpc_field_default_value'];
+
+                                        if($displayType == 'Dropdown' && !empty($dropdownValues)){
+                                            $explode = explode(',', $dropdownValues);
+                                            foreach($explode as $val){          
+                                                echo '<tr>';
+                                                echo '<td><b>'.sprintf($this->translate('tr_melistemplatingplugincreator_tpc_dropdown_value_label'), $val).'<b></td>';
+
+                                                $val = str_replace(' ','_',preg_replace("/(\W)+/", "", $val));
+
+                                                foreach ($this->data['languages'] As $lang){
+                                                    $langTrans = '';
+                                                                                   
+                                                    if(!empty($sessionData[$lang['lang_locale']]['tab_'.$tabNumber]['field_'.$ctr][$val.'_label'])){
+                                                        $langTrans = $sessionData[$lang['lang_locale']]['tab_'.$tabNumber]['field_'.$ctr][$val.'_label'];
+                                                    }  
+                                                    echo '<td>' . $langTrans . '</td>';
+                                                }
+                                                echo '</tr>';
+                                            }
+                                        }
+
+                                        ?>
+                                </tbody>
+                            </table>
+                    <?php    }
+                    ?>                     
+                    </div> 
+            <?php }  ?>
+        </div>
+    </div>
+    <hr>  
+<?php } ?>
+
+

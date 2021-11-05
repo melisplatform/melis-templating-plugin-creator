@@ -1,0 +1,72 @@
+<div class="col-xs-12 col-md-3">
+    <div class="product-text-tab-container">
+        <ul class="nav-tabs product-text-tab">    
+            <?php                 
+                $ctr = 0;
+                foreach($this->data['languages'] As $key => $val){ ?>
+                <li class="<?php echo ($ctr++) ?: 'active'?>">
+                    <a class="clearfix" data-toggle="tab" href="#templating-plugin-creator-text-translations-<?php echo $val['lang_locale']?>" aria-expanded="false">
+                        <?php echo $val['lang_label']?>
+                    </a>
+                </li>
+            <?php } ?>
+                
+        </ul>
+    </div>
+</div>
+<div class="col-xs-12 col-md-9">
+    <div class="tab-content">      
+        <?php $ctr = 0; foreach($this->stepForm['mainPropertyTranslationForm'] As $key => $tab) { 
+            ?>
+            <div id="templating-plugin-creator-text-translations-<?php echo $key ?>" class="tab-pane <?php echo ($ctr++) ? '': 'active'?>">               
+                <div id='field-form-div' class = "tab-pane active">                     
+                    <div class="tab-content variant-prices-forms">
+                        <div id="" class="tab-pane field-accordion active"> 
+                    <?php
+                        $i=1;
+                        foreach($tab as $form){  
+                            foreach($form as $fieldForm){
+                                ?>
+                                <div class="widget" data-toggle="collapse-widget" data-collapse-closed="<?=$i==1?'false':'true'?>">
+                                    <div class="widget-head melis-primary-bg accordionTitle">
+                                        <h4 class="heading"><?=$fieldForm->get('tpc_field_name')->getValue()?></h4>
+                                    </div>
+                                    <div class="widget-body <?=$i==1?'show':''?>">
+                                       <?php                                     
+                                        $fieldForm->prepare();
+                                        $fieldForm->setAttribute('id', $key.'-'.$fieldForm->getAttribute('id').'-field-'.$i);
+                                       
+                                        echo $this->form()->openTag($fieldForm);
+                                        echo $this->melisFieldCollection($fieldForm);
+                                        echo $this->form()->closeTag();
+                                    ?>
+                                    </div>
+                                </div>
+                            <?php    
+                                $i++;
+                            } 
+                        }    
+                    ?>
+                        </div>  
+                    </div>
+                </div>  
+            </div>
+        <?php 
+           
+        }?>
+
+    </div>
+</div>
+
+<script type="text/javascript">
+    widgetCollapsibleInit();
+</script>
+
+
+
+
+
+
+
+
+   

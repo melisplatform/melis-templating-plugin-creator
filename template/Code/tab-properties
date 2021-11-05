@@ -1,0 +1,18 @@
+'plugin_pluginname_tab_TAB#' => [
+                                'tab_title' => 'tr_moduletpl_pluginname_plugin_tab_properties',
+                                'tab_icon'  => 'fa #tabicon',
+                                'tab_form_layout' => 'ModuleTpl/plugins/plugin-plugin-name-tab-TAB#-modal-form',
+                                'attributes' => [
+                                    'name' => 'plugin_pluginname_tab_TAB#',
+                                    'id' => 'plugin_pluginname_tab_TAB#',
+                                    'method' => '',
+                                    'action' => '',
+                                ],
+                                'hydrator'  => 'Laminas\Hydrator\ArraySerializable',
+                                'elements' => [
+                                    #TABELEMENTS
+                                ],
+                                'input_filter' => [
+                                    #TABINPUTFILTERS
+                                ],
+                            ],

@@ -1,0 +1,76 @@
+<div class="col-md-12"> 
+    <?php
+        $form = $this->stepForm['form1'];
+
+        $form->prepare();       
+        echo $this->form()->openTag($form);
+    
+        foreach($form->getElements() As $key => $val){ ?>               
+            <div class="form-group">                        
+                <?php $required = '';
+                if(!empty($val->getAttribute('required'))){
+                    $required = '<sup>*</sup>';
+                }                 
+                ?>
+
+                <label class="d-flex flex-row justify-content-between" for = "<?=$key?>">
+                    <div class = "label-text"><?=$val->getLabel().$required?></div>
+                    <div class = "slider-open-tooltip">
+                        <i class="fa fa-info-circle fa-lg float-right tip-info" data-toggle="tooltip" data-placement="left" title="" data-original-title="<?= $this->translate($val->getOptions()['tooltip'])?>"></i>
+                    </div>
+                </label>                             
+                                  
+                <div class = "form-group input-group">
+                    <input class = "<?=$val->getAttribute('class')?>" type = "<?=$val->getAttribute('type')?>" id = "<?=$key?>" name = "<?=$key?>" required="required" value="<?=$val->getValue()?>">
+                </div>   
+            </div>
+    <?php }//end first foreach 
+
+    echo $this->form()->closeTag();
+?>
+
+    <div id='field-form-div' class = "tab-pane active"> 
+        <?php 
+
+            if(!empty($this->stepForm['fieldForm'])){
+                  echo $this->partial('melis-templating-plugin-creator/partial/field-form', array(
+                    'fieldFormArr' => $this->stepForm['fieldForm']                                     
+                 ));   
+            }
+
+        ?>
+    </div>
+</div>
+
+
+<script>
+    $.each($("#melistemplatingplugincreator_step3 form[name=templating-plugin-creator-step-3-field-form]").not(":eq(0)"), function( key, error ) {   
+
+        if($(this).find("#tpc_field_display_type").val() == "Dropdown"){
+            $(this).find('#tpc_field_default_value').tagsinput('refresh'); 
+        }else if($(this).find("#tpc_field_display_type").val() == "DatePicker"){
+            $(this).find('#tpc_field_default_value').datetimepicker({format: "YYYY-MM-DD"});
+        }else if($(this).find("#tpc_field_display_type").val() == "DateTimePicker"){
+            $(this).find('#tpc_field_default_value').datetimepicker({format: "YYYY-MM-DD HH:mm:ss"});
+        }else if($(this).find("#tpc_field_display_type").val() == "Switch"){  
+            var value = $(this).find('#tpc_field_default_value').val();         
+            $(this).find('#tpc_field_default_value').replaceWith('<select id="tpc_field_default_value" name="tpc_field_default_value">'+
+                '<option value="">Choose</option><option value="1" >On</option><option value="0">Off</option></select>');
+            $(this).find('#tpc_field_default_value').val(value);  
+        }
+                
+    });
+
+    widgetCollapsibleInit();
+
+</script>
+
+
+
+
+
+
+
+
+
+   

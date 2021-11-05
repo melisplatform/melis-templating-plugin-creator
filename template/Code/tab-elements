@@ -1,0 +1,16 @@
+[
+                                        'spec' => [
+                                            'name' => '#field_name',
+                                            'type' => '#field_type',
+                                            'options' => [
+                                                'label' => 'tr_melis_moduletpl_pluginname_#field_name_label',
+                                                'tooltip' => 'tr_melis_moduletpl_pluginname_#field_name tooltip',
+                                                                                               
+                                            ],
+                                            'attributes' => [
+                                                'id' => '#field_name',
+                                                'class' => #classAttr,
+                                                'required' => '#isRequired',
+                                            ],
+                                        ],
+                                    ],
