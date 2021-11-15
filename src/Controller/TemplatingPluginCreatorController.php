@@ -74,28 +74,15 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
             $filePermissionErr[] = 'tr_melistemplatingplugincreator_fp_module';
 
         //check if temp-thumbnail directory exists and is writable
-        $tempThumbnailDirectory = $this->getTempThumbnailDirectory();    
-        if(is_writable($tempThumbnailDirectory)){
-            dump('temp-thumbnail is writable');
-        }else{
-            dump('temp-thumbnail not writable');
+        $tempThumbnailDirectory = $this->getTempThumbnailDirectory();   
+        if (!file_exists($tempThumbnailDirectory)) {
+            mkdir($tempThumbnailDirectory, 0755, true);          
         }
 
-        if (file_exists($tempThumbnailDirectory)) {
-            $stat = chown($tempThumbnailDirectory, 'www-data');           
-        } else {             
-            if (mkdir($tempThumbnailDirectory, 0755, true)) {
-                $stat = chown($tempThumbnailDirectory, 'www-data'); 
-            } else {
-                $stat = false;
-            }           
-        }
-        
-        if(!$stat){
+        if (!is_writable($tempThumbnailDirectory)) {
             $filePermissionErr[] = 'tr_melistemplatingplugincreator_fp_temp_thumbnail';
         }
-       
-
+        
         if (!empty($filePermissionErr)){
             $view->fPErr = $filePermissionErr;
             return $view;
