@@ -81,11 +81,20 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
             dump('temp-thumbnail not writable');
         }
 
-        if($this->createFolder($tempThumbnailDirectory) && is_writable($tempThumbnailDirectory)) { 
-            chown($tempThumbnailDirectory, 'www-data');
-        }else{
+        if (file_exists($tempThumbnailDirectory)) {
+            $stat = chown($tempThumbnailDirectory, 'www-data');           
+        } else {             
+            if (mkdir($tempThumbnailDirectory, 0755, true)) {
+                $stat = chown($tempThumbnailDirectory, 'www-data'); 
+            } else {
+                $stat = false;
+            }           
+        }
+        
+        if(!$stat){
             $filePermissionErr[] = 'tr_melistemplatingplugincreator_fp_temp_thumbnail';
         }
+       
 
         if (!empty($filePermissionErr)){
             $view->fPErr = $filePermissionErr;
