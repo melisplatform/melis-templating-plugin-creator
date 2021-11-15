@@ -1,7 +1,7 @@
 <?php
     return [    	
 		'tr_melistemplatingplugincreator_title' => 'Templating Plugin Creator',
-		'tr_melistemplatingplugincreator_desc' => 'The dashboard plugin creator generates new ready-to-use templating plugins.',
+		'tr_melistemplatingplugincreator_desc' => 'The templating plugin creator generates new ready-to-use templating plugins.',
 
 		 //Buttons
         'tr_melistemplatingplugincreator_back' => 'Back',
@@ -21,9 +21,10 @@
         'tr_melistemplatingplugincreator_err_long_50' => 'Value is too long, it should be less than 50 characters',
 	    'tr_melistemplatingplugincreator_err_empty' => 'The input is required and cannot be empty',
 	    'tr_melistemplatingplugincreator_greater_than_0' => 'The input must be greather than or equal to 1',
+        'tr_melistemplatingplugincreator_value_must_be_between_1_to_25' => 'The input must be between 1 and 25',
         'tr_melistemplatingplugincreator_integer_only' => 'The input must be integer only',
-        'tr_melistemplatingplugincreator_digits_only' => 'The value must be in digits',
-
+        'tr_melistemplatingplugincreator_digits_only' => 'The input must be in digits', 
+ 
         'tr_melistemplatingplugincreator_save_upload_image_imageFalseType' => 'Invalid image format, please upload a valid image',
         'tr_melistemplatingplugincreator_save_upload_image_imageNotDetected' => 'Unknown image format, please upload a valid image',
         'tr_melistemplatingplugincreator_save_upload_image_imageNotReadable' => 'Image does not exists, or is not readable',
@@ -80,14 +81,16 @@
         //Step3 Form
         'tr_melistemplatingplugincreator_title_step_3' => 'Plugin\'s main properties',
         'tr_melistemplatingplugincreator_desc_step_3' => 'Set the main properties of the plugin',
-        'tr_melistemplatingplugincreator_tpc_main_property_field_count' => '# of Fields',
+        'tr_melistemplatingplugincreator_tpc_main_property_field_count' => 'Number of Fields',
         'tr_melistemplatingplugincreator_tpc_main_property_field_count tooltip' => 'Enter the number of fields',
         'tr_melistemplatingplugincreator_tpc_field_name' => 'Name',
-        'tr_melistemplatingplugincreator_tpc_field_name tooltip' => 'Enter a valid name attribute',
+        'tr_melistemplatingplugincreator_tpc_field_name tooltip' => 'Enter a valid name attribute (no spaces, must start with a letter and the rest must be either of the following: alphanumeric character, an underscore, a dash, a colon or a period)',
         'tr_melistemplatingplugincreator_tpc_field_display_type' => 'Display Type',
         'tr_melistemplatingplugincreator_tpc_field_display_type tooltip' => 'Select the field\'s display type',
         'tr_melistemplatingplugincreator_tpc_field_is_required' => 'Is Required',
         'tr_melistemplatingplugincreator_tpc_field_is_required tooltip' => 'Select if the field is required or not',
+        'tr_melistemplatingplugincreator_tpc_field_default_options' => 'Default Options',
+        'tr_melistemplatingplugincreator_tpc_field_default_options tooltip' => 'Set default options',
         'tr_melistemplatingplugincreator_tpc_field_default_value' => 'Default Value',
         'tr_melistemplatingplugincreator_tpc_field_default_value tooltip' => 'Set the default value',        
         'tr_melistemplatingplugincreator_tpc_select_placeholder' => 'Choose',           
@@ -96,7 +99,7 @@
 
         //Step4 Form
         'tr_melistemplatingplugincreator_title_step_4' => 'Properties\' Translation',
-        'tr_melistemplatingplugincreator_desc_step_4' => 'Enter the text translations in different languages, at least one language must be filled in.<br>Choose the image of your plugin that will appear in the right expandable menu.',
+        'tr_melistemplatingplugincreator_desc_step_4' => 'Enter the text translations in different languages, at least one language must be filled in.',
         'tr_melistemplatingplugincreator_tpc_field_label'  => 'Label',
         'tr_melistemplatingplugincreator_tpc_field_label tooltip' => 'Set the field\'s name label',
         'tr_melistemplatingplugincreator_tpc_field_tooltip' => 'Tooltip',
@@ -105,8 +108,7 @@
         'tr_melistemplatingplugincreator_tpc_dropdown_value_label tooltip' => 'Set the label for the dropdown value',
         'tr_melistemplatingplugincreator_field' => 'Field',
 
-
-         //Step5 Form
+        //Step5 Form
         'tr_melistemplatingplugincreator_title_step_5' => 'Summary',
         'tr_melistemplatingplugincreator_desc_step_5' => 'Review your settings before creating the templating plugin',
 

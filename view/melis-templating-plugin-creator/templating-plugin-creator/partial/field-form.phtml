@@ -12,17 +12,84 @@
                    <?php                  
                     $fieldForm->prepare();
                     $fieldForm->setAttribute('id', $fieldForm->getAttribute('id').'-'.$i);
-                   
+                
+                    //get the field display type field options   
+                    $fieldDisplayType = $fieldForm->get('tpc_field_display_type');
+                    $fieldDisplayTypeOptions = $fieldDisplayType->getValueOptions();
+
+                    //get the field display type field options   
+                    $isRequired = $fieldForm->get('tpc_field_is_required');
+                    $isRequiredOptions = $isRequired->getValueOptions();
+
+                    //get the field display type field options   
+                    $defaultOptions = $fieldForm->get('tpc_field_default_options');
+                
+                    $fieldForm->prepare();       
                     echo $this->form()->openTag($fieldForm);
-                    echo $this->melisFieldCollection($fieldForm);
-                    echo $this->form()->closeTag();
+                
+                    foreach ($fieldForm->getElements() As $key => $val) { ?>               
+                        <div class="form-group" <?=(empty($val->getValue()) && $key=='tpc_field_default_options')?'style="display:none"':''?>>    
+                                
+                            <?php $required = '';
+                            if (!empty($val->getAttribute('required'))) {
+                                $required = '<sup>*</sup>';
+                            }                 
+                            ?>
+
+                            <label class="d-flex flex-row justify-content-between" for="<?=$key?>">
+                                <div class = "label-text"><?=$val->getLabel().$required?></div>
+                                <div class = "slider-open-tooltip">
+                                      <i class="fa fa-info-circle fa-lg float-right tip-info" data-toggle="tooltip" data-placement="left" title="" data-original-title="<?= $this->translate($val->getOptions()['tooltip'])?>"></i>
+                                </div>
+                            </label>                             
+
+                            <?php 
+                                if ($key == 'tpc_field_name' || $key == 'tpc_field_default_value' || $key == 'tpc_field_default_options') {?>                      
+                                    <div class = "form-group input-group">
+                                        <input class = "<?=$val->getAttribute('class')?>" type = "text" id = "<?=$key?>" name = "<?=$key?>" required="required" value="<?=$val->getValue()?>" <?=$val->getAttribute('readonly') == "readonly"?"readonly":""?>>                                      
+                                    </div>
+                            <?php } elseif ($key == 'tpc_field_is_required') { ?>     
+                                    <div class = "form-group input-group">
+                                        <div class="col-md-2 padding-left-0">
+                                            <select id="<?=$key?>" name="<?=$key?>" required="required" class = "<?=$val->getAttribute('class')?>" <?=$val->getAttribute('disabled') == "true"?"disabled":""?>>
+                                                <option value=""><?=$this->translate($isRequired->getOptions()['empty_option'])?></option>
+                                                <?php 
+                                                    if($isRequiredOptions){
+                                                        foreach($isRequiredOptions as $requiredKey => $requiredval){ ?>
+                                                            <option value="<?=$requiredKey?>" <?=($isRequired->getValue() != "" && $isRequired->getValue()==$requiredKey)?"selected":""?>><?=$requiredval?></option>
+                                                    <?php  }
+                                                    }
+                                                ?>
+                                            </select>
+                                        </div>                            
+                                    </div>       
+                        <?php } elseif ($key == 'tpc_field_display_type') { ?>
+                                    <div class = "form-group input-group">
+                                        <div class="col-md-2 padding-left-0">
+                                            <select id="<?=$key?>" name="<?=$key?>" required="required" class = "<?=$val->getAttribute('class')?>" <?=$val->getAttribute('disabled') == "true"?"disabled":""?>>
+                                                <option value=""><?=$this->translate($fieldDisplayType->getOptions()['empty_option'])?></option>
+                                                <?php 
+                                                    if($fieldDisplayTypeOptions){
+                                                        foreach($fieldDisplayTypeOptions as $displayKey => $displayVal){ ?>
+                                                            <option value="<?=$displayKey?>" <?=$fieldDisplayType->getValue()==$displayKey?"selected":""?>><?=$displayVal?></option>
+                                                    <?php  }
+                                                    }
+                                                ?>
+                                            </select>
+                                        </div>                            
+                                    </div>                        
+                       <?php } ?>  
+                        </div>
+                <?php }//end first foreach 
+                echo $this->form()->closeTag();
+
                 ?>
                 </div>
             </div> 
-
     <?php
-         $i++;
+        $i++;
     }    
 ?>
     </div>  
 </div>
+

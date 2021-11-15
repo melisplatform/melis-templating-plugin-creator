@@ -5,19 +5,17 @@
         $form->prepare();       
         echo $this->form()->openTag($form);
     
-        foreach($form->getElements() As $key => $val){ ?>               
+        foreach ($form->getElements() As $key => $val) { ?>               
             <div class="form-group">                        
                 <?php $required = '';
-                if(!empty($val->getAttribute('required'))){
+                if (!empty($val->getAttribute('required'))) {
                     $required = '<sup>*</sup>';
                 }                 
                 ?>
 
                 <label class="d-flex flex-row justify-content-between" for = "<?=$key?>">
                     <div class = "label-text"><?=$val->getLabel().$required?></div>
-                    <div class = "slider-open-tooltip">
-                        <i class="fa fa-info-circle fa-lg float-right tip-info" data-toggle="tooltip" data-placement="left" title="" data-original-title="<?= $this->translate($val->getOptions()['tooltip'])?>"></i>
-                    </div>
+                   
                 </label>                             
                                   
                 <div class = "form-group input-group">
@@ -31,11 +29,10 @@
 
     <div id='field-form-div' class = "tab-pane active"> 
         <?php 
-
-            if(!empty($this->stepForm['fieldForm'])){
-                  echo $this->partial('melis-templating-plugin-creator/partial/field-form', array(
+            if (!empty($this->stepForm['fieldForm'])) {
+                echo $this->partial('melis-templating-plugin-creator/partial/field-form', array(
                     'fieldFormArr' => $this->stepForm['fieldForm']                                     
-                 ));   
+                ));   
             }
 
         ?>
@@ -45,24 +42,68 @@
 
 <script>
     $.each($("#melistemplatingplugincreator_step3 form[name=templating-plugin-creator-step-3-field-form]").not(":eq(0)"), function( key, error ) {   
+        var tpc_default_val_input = '<input class = "form-control" type = "text" id = "tpc_field_default_value" name = "tpc_field_default_value" value="">';
+        var defaultVal = $(this).find('#tpc_field_default_value').val();
 
-        if($(this).find("#tpc_field_display_type").val() == "Dropdown"){
-            $(this).find('#tpc_field_default_value').tagsinput('refresh'); 
-        }else if($(this).find("#tpc_field_display_type").val() == "DatePicker"){
+        if ($(this).find("#tpc_field_display_type").val() == "Dropdown") {   
+
+            //show Default Options field         
+            $(this).find("#tpc_field_default_options").parents('.form-group').show();  
+            $(this).find('#tpc_field_default_options').tagsinput('refresh');             
+       
+            //set Default Value field as select type
+            $(this).find('#tpc_field_default_value').replaceWith('<div class="col-md-2 padding-left-0"><select id="tpc_field_default_value" name="tpc_field_default_value" class="form-control">'+
+                '<option value="">Choose</option>'+
+                '</select></div>');
+
+            //set 'Default Value' select options based on Default Options value
+            var defaultOptions = $(this).find('#tpc_field_default_options').val();         
+            if(defaultOptions.length){               
+                console.log('default options not null, add values to default field');
+                defaultOptions = defaultOptions.split(',');
+                var defaultValueField = $(this).find('#tpc_field_default_value');
+                $.each(defaultOptions, function(key, value) {   
+                    defaultValueField.append('<option value="'+value+'">'+value+'</option>');
+                });
+
+                if (defaultVal != '') {
+                    $(this).find('#tpc_field_default_value option[value='+defaultVal+']').attr('selected','selected');
+                }                  
+            }
+
+        } else if ($(this).find("#tpc_field_display_type").val() == "DatePicker") {
+            //initialize datepicker
             $(this).find('#tpc_field_default_value').datetimepicker({format: "YYYY-MM-DD"});
-        }else if($(this).find("#tpc_field_display_type").val() == "DateTimePicker"){
+
+        } else if ($(this).find("#tpc_field_display_type").val() == "DateTimePicker") {
+            //initialize datepicker
             $(this).find('#tpc_field_default_value').datetimepicker({format: "YYYY-MM-DD HH:mm:ss"});
-        }else if($(this).find("#tpc_field_display_type").val() == "Switch"){  
-            var value = $(this).find('#tpc_field_default_value').val();         
-            $(this).find('#tpc_field_default_value').replaceWith('<select id="tpc_field_default_value" name="tpc_field_default_value">'+
-                '<option value="">Choose</option><option value="1" >On</option><option value="0">Off</option></select>');
-            $(this).find('#tpc_field_default_value').val(value);  
-        }
-                
+
+        } else if ($(this).find("#tpc_field_display_type").val() == "Switch") {        
+
+            //set Default Value options     
+            $(this).find('#tpc_field_default_value').replaceWith('<div class="col-md-2 padding-left-0"><select id="tpc_field_default_value" name="tpc_field_default_value" class="form-control">'+
+                '<option value="">Choose</option><option value="1" >On</option><option value="0">Off</option></select></div>');
+            $(this).find('#tpc_field_default_value').val(defaultVal);  
+
+        } else if ($(this).find("#tpc_field_display_type").val() == "PageInput") {  
+            /*add sitemap icon to 'Default Value' input field*/
+            $(this).find('#tpc_field_default_value').closest('.form-group.input-group').empty().
+            prepend('<div class="d-flex flex-row justify-content-between">'+tpc_default_val_input+'<a class="btn btn-default meliscms-site-selector"><i class="fa fa-sitemap"></i></a></div>');
+
+            $(this).find('#tpc_field_default_value').val(defaultVal);  
+        } else if ($(this).find("#tpc_field_display_type").val() == 'MelisCoreTinyMCE'){    
+
+            var fieldId = Math.round(new Date().getTime() + (Math.random() * 100));
+           
+
+            $(this).find('#tpc_field_default_value').replaceWith('<textarea data-tinymce-id="'+fieldId+'" id="'+fieldId+'" class="form-control" name="tpc_field_default_value">'+defaultVal+'</textarea>');
+            
+            melisTinyMCE.createTinyMCE("tool", "textarea[data-tinymce-id=\'"+fieldId+"\']", {height: 200, relative_urls: false,  remove_script_host: false, convert_urls : false});
+        }                 
     });
 
     widgetCollapsibleInit();
-
 </script>
 
 

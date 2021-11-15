@@ -16,24 +16,23 @@
 </div>
 
 <script>
-    <?php if ($this->restartRequired){ ?>
-
-        var countdown = function(){
+    <?php if ($this->restartRequired) { ?>
+        function countdown(){
             var tcResCd = parseInt($("#tc-restart-cd").text());
             var countDown = setInterval(function() {
                 if (tcResCd < 1){
                     $("#tc-restart-msg").text("<?php echo $this->translate('tr_melistemplatingplugincreator_refreshing') ?>");
                     clearInterval(countDown);
                     window.location.reload();                    
-                }else{
+                } else {
                     $("#tc-restart-cd").text(tcResCd);
                     tcResCd--;
                 }
             }, 1000);
-        };
+        }
     <?php } 
 
-    if($this->restartRequired){ ?>
+    if ($this->restartRequired) { ?>
         countdown();
     <?php } ?>
 </script>

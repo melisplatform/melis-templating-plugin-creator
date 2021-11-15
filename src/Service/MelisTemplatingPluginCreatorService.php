@@ -34,7 +34,7 @@ class MelisTemplatingPluginCreatorService extends MelisGeneralService
 
     public function __construct()
     {    
-        $this->templatingPluginCreatorTplDir = __DIR__ .'/../../../template';
+        $this->templatingPluginCreatorTplDir = __DIR__ .'/../../template';
 
         //session container     
         $container = new Container('templatingplugincreator');     
@@ -45,45 +45,40 @@ class MelisTemplatingPluginCreatorService extends MelisGeneralService
      * This will generate the templating plugin based on the parameters stored in the current session   
      * @return boolean
      */
-    public function generateTemplatingPlugin(){   
-        // Event parameters prepare
-        $arrayParameters = $this->makeArrayFromParameters(__METHOD__, func_get_args());
+    public function generateTemplatingPlugin()
+    {   
         // Sending service start event
-        $arrayParameters = $this->sendEvent('melistemplating_plugin_creator_service_generate_templating_plugin_start', $arrayParameters);
+        $this->sendEvent('melistemplating_plugin_creator_service_generate_templating_plugin_start', []);
 
         //set module name and directory
         if ($this->steps['step_1']['tpc_plugin_destination'] == self::EXISTING_MODE) {
-            $this->moduleName = $this->steps['step_1']['tpc_existing_module_name'];
-            //set module directory
+            $this->moduleName = $this->steps['step_1']['tpc_existing_module_name'];           
             $moduleDir = $_SERVER['DOCUMENT_ROOT'].'/../module/MelisSites/'.$this->moduleName;
         } else {
-            $this->moduleName = $this->generateModuleNameCase($this->steps['step_1']['tpc_new_module_name']);
-            //set module directory
+            $this->moduleName = $this->generateModuleNameCase($this->steps['step_1']['tpc_new_module_name']);           
             $moduleDir = $_SERVER['DOCUMENT_ROOT'].'/../module/'.$this->moduleName;
 
             //unset the tools tree section of the newly created module
             $this->emptyConfigToolsTreeSection($_SERVER['DOCUMENT_ROOT'].'/../module/'.$this->moduleName);
         }
+
         //set plugin name
         $this->pluginName = $this->generateModuleNameCase($this->steps['step_1']['tpc_plugin_name']);
        
-
         //perform the steps in generating the Templating plugin
         $isSuccessful = $this->performGeneration($moduleDir);   
                   
         if ($isSuccessful) {    
-            //remove temp thumbnail directory of the current session    
-            //uncomment this after testing
-           // $tempPath = pathinfo($this->getTempThumbnail(), PATHINFO_DIRNAME);            
-            //$this->removeDir($tempPath);
+            //remove temp thumbnail directory of the current session  
+            $tempPath = pathinfo($this->getTempThumbnail(), PATHINFO_DIRNAME);            
+            $this->removeDir($tempPath);
         } else {            
             //this will rollback the steps performed when generating the Templating plugin
             $this->rollbackPluginGeneration($moduleDir);              
         }    
 
-        $arrayParameters['results'] = $isSuccessful;
-        $arrayParameters = $this->sendEvent('melistemplating_plugin_creator_service_generate_templating_plugin_end', $arrayParameters);
-        return $arrayParameters['results']; 
+        $this->sendEvent('melistemplating_plugin_creator_service_generate_templating_plugin_end', $this->steps);
+        return $isSuccessful; 
     }
 
     /**
@@ -91,8 +86,9 @@ class MelisTemplatingPluginCreatorService extends MelisGeneralService
      * @param string $moduleDir
      * @return boolean
      */
-    protected function performGeneration($moduleDir){
-        //create a Templating Plugin config
+    protected function performGeneration($moduleDir)
+    {
+        //generate the Templating Plugin config
         $isSuccessful = $this->generateTemplatingPluginConfig($moduleDir);
         if (!$isSuccessful) {
             return false;
@@ -148,10 +144,10 @@ class MelisTemplatingPluginCreatorService extends MelisGeneralService
      * @param string $moduleDir
      * @return boolean
      */
-    protected function rollbackPluginGeneration($moduleDir){
-
+    protected function rollbackPluginGeneration($moduleDir)
+    {
         //remove created files if using existing mode
-        if($this->steps['step_1']['tpc_plugin_destination'] == self::EXISTING_MODE){              
+        if ($this->steps['step_1']['tpc_plugin_destination'] == self::EXISTING_MODE) {              
             
             /*delete Templating plugin config*/
             if (file_exists($moduleDir.'/config/plugins/'.$this->moduleName.$this->pluginName.'Plugin.config.php')) {
@@ -164,7 +160,7 @@ class MelisTemplatingPluginCreatorService extends MelisGeneralService
             //remove translation keys
             $this->setTranslations($moduleDir, false);
           
-            /*******start remove assets*****/
+            /*******start remove assets(css/js/image)*****/
             $cssFile = $moduleDir.'/public/plugins/css/plugin.'.$this->pluginName.'.css';
             if (file_exists($cssFile)) {
                 unlink($cssFile);
@@ -222,36 +218,28 @@ class MelisTemplatingPluginCreatorService extends MelisGeneralService
         $targetDir = $moduleDir.'/config/plugins';
 
         // get the config template
-        $templatingPluginConfigContent = $this->getTemplateContent('/TemplatingPlugin.config.php');
-              
-        //set the fields in the config after the 'id' key
-        //get the total field count of tabs, in ver. 2 the # of tabs is given in step 1
-        $tabCount = 1; //this default to 1 for now
-       
+        $templatingPluginConfigContent = $this->getTemplateContent('/TemplatingPlugin.config.php');  
+        //this default to 1 for now, in ver. 2, the # of tabs is given in step 1
+        $tabCount = 1; 
+        $fields = "";
+        $tab = "";
+
+        //set the fields with their default values in the config file after the 'template_path' key          
         $pattern = "/^.*\btemplate_path\b'.*$/m";                  
         $match = null;
         if (preg_match_all($pattern, $templatingPluginConfigContent, $matches)) {
             $match = implode("\n", $matches[0]);//return as string
         }
 
-        //retrieve all fields set in all tabs 
-        $fields = "";
-        $tab = "";
         if ($match) {
             for ($t=1; $t<=$tabCount; $t++) {
                 $tabFieldCount = $this->steps['step_3']['main_form']['tpc_main_property_field_count'];
                 
-                //starts with field #2 since the field 1[template_path] is already added in the template
+                //starts with field #2 since the field 1[template_path] is already added in the template file
                 for ($f=2; $f<=$tabFieldCount; $f++) {
                     $fieldName = $this->steps['step_3']['tab_'.$t]['field_'.$f]['tpc_field_name'];
                     $displayType = $this->steps['step_3']['tab_'.$t]['field_'.$f]['tpc_field_display_type'];
                     $defaultValue = $this->steps['step_3']['tab_'.$t]['field_'.$f]['tpc_field_default_value'];
-
-                    //if display type is dropdown, set the first option as the default value
-                    if ($displayType == self::DROPDOWN && !empty($defaultValue)) {
-                        $explode = explode(',',$defaultValue);
-                        $defaultValue = $explode[0];
-                    }
 
                     if ($f!=2) {
                         $tab = "\t\t\t\t\t\t";
@@ -265,30 +253,25 @@ class MelisTemplatingPluginCreatorService extends MelisGeneralService
         //set the tab properties    
         for ($i=1; $i<=$tabCount; $i++) {       
             $tabPropertiesTpl = $this->getTemplateContent('/Code/tab-properties');           
-
-            //set the plugin name
-            // $tabPropertiesTpl = str_replace('plugin_name',strtolower($this->pluginName), $tabPropertiesTpl);
-            // $tabPropertiesTpl = str_replace('plugin-name', $this->convertToViewName($this->pluginName), $tabPropertiesTpl);
            
             //set the tab#
             $tabPropertiesTpl = str_replace('TAB#', $i, $tabPropertiesTpl);
 
             //set the tab icon
-            $tabIcon = 'fa-cog';//default for tab 1, in ver 2, tab icon is selected
-            $tabPropertiesTpl = str_replace('#tabicon', $tabIcon, $tabPropertiesTpl);
-            
+            $tabIcon = 'fa-cog';//default for tab 1, in ver 2, tab icon is selected for each tab
+            $tabPropertiesTpl = str_replace('#tabicon', $tabIcon, $tabPropertiesTpl);            
             $fieldCount = $this->steps['step_3']['main_form']['tpc_main_property_field_count'];            
             $tabElementCollection = '';
             $tabInputFilterCollection = '';
 
-            //set the tab's elements
+            //set tab's elements and input filters
             for ($j=1; $j<=$fieldCount; $j++) {
-
-                //set template path
+                //set template path default value
                 if ($j==1) {
-                    $templatingPluginConfigContent = str_replace('#template_path',$this->steps['step_3']['tab_'.$i]['field_'.$j]['tpc_field_default_value'],$templatingPluginConfigContent);
+                    $templatingPluginConfigContent = str_replace('#template_path',$this->steps['step_3']['tab_'.$i]['field_'.$j]['tpc_field_default_value'], $templatingPluginConfigContent);
                 }
 
+                /********************* start setting tab elements ********************/
                 $tabElements = "";
                 if ($j!=1) {
                     $tabElements = "\t\t\t\t\t\t\t\t\t";
@@ -300,40 +283,39 @@ class MelisTemplatingPluginCreatorService extends MelisGeneralService
                 $fieldName = $this->steps['step_3']['tab_'.$i]['field_'.$j]['tpc_field_name'];
                 $classAttr = "'form-control'";//default
 
-                //set empty_option and value_option keys of the element if display type is dropdown
+                
                 if ($fieldDisplayType == 'Dropdown') {   
                     $pattern = "/^.*\btooltip\b.*$/m";
                     if (preg_match_all($pattern, $tabElements, $matches)) {
                         $match = implode("\n", $matches[0]);//return as string
-                    }
 
-                    if ($match) {
-                        $emptyOptionLabel = "'empty_option' => 'tr_meliscore_common_choose',\r\n\t\t\t\t\t\t\t\t\t\t\t\t'disable_inarray_validator' => true";
-             
-                        $tabElements = str_replace($match, substr_replace($match, "\t\t\t\t\t\t\t\t\t\t\t\t".$emptyOptionLabel.",", strlen($match), 0), $tabElements);
+                        //set 'empty_option' key and put it under the 'tooltip' key
+                        $emptyOptionLabel = "'empty_option' => 'tr_meliscore_common_choose',\r\n\t\t\t\t\t\t\t\t\t\t\t\t'disable_inarray_validator' => true";             
+                        $tabElements = str_replace($match, $match. "\t\t\t\t\t\t\t\t\t\t\t\t".$emptyOptionLabel.",", $tabElements);
 
-                        //check if there are defined default values
-                        $defaultValues = $this->steps['step_3']['tab_'.$i]['field_'.$j]['tpc_field_default_value'];
-                        if ($defaultValues) {
-                            $explode = explode(',',$defaultValues);
+                        //set 'value_option' key of the element if default options are given and put it under the 'tooltip' key
+                        $defaultOptions = $this->steps['step_3']['tab_'.$i]['field_'.$j]['tpc_field_default_options'];
+                        if ($defaultOptions) {
+                            $defaultOptions = explode(',',$defaultOptions);
                             $options = "";
-                            foreach ($explode as $val) {
-                                $options .= "\t\t\t\t\t\t\t\t\t\t\t\t\t'".$val."'=> 'tr_".$fieldName.'_'.$this->removeNonAlphaNumeric($val)."_label',\r\n";
+
+                            foreach ($defaultOptions as $val) {
+                                $translationKey = 'tr_melis_'.strtolower($this->moduleName).'_'.strtolower($this->pluginName).'_'.$fieldName.'_'.$this->removeNonAlphaNumeric($val).'_label'; 
+
+                                $options .= "\t\t\t\t\t\t\t\t\t\t\t\t\t'".$val."'=> '".$translationKey."',\r\n";
                             }
-                        }
 
-                        $valueOptions = "'value_options' => [\r\n".$options."\t\t\t\t\t\t\t\t\t\t\t\t]";
-
-                        $tabElements = str_replace($match, substr_replace($match, "\t\t\t\t\t\t\t\t\t\t\t\t".$valueOptions.",\r\n", strlen($match), 0), $tabElements);
-                    }                    
+                            $valueOptions = "'value_options' => [\r\n".$options."\t\t\t\t\t\t\t\t\t\t\t\t]";
+                            $tabElements = str_replace($match, $match."\t\t\t\t\t\t\t\t\t\t\t\t".$valueOptions.",\r\n", $tabElements);
+                        }  
+                    }                               
                     
                 } elseif ($fieldDisplayType == 'Switch') {
+                    //set the switch options and put under the 'tooltip' key
                     $pattern = "/^.*\btooltip\b.*$/m";
                     if (preg_match_all($pattern, $tabElements, $matches)) {
                         $match = implode("\n", $matches[0]);//return as string
-                    }
 
-                    if ($match) {
                         $switchOptions = "'checked_value' => 1,"."\r\n\t\t\t\t\t\t\t\t\t\t\t\t".
                                         "'unchecked_value' => 0,"."\r\n\t\t\t\t\t\t\t\t\t\t\t\t".
                                         "'switchOptions' => ["."\r\n\t\t\t\t\t\t\t\t\t\t\t\t\t".
@@ -343,23 +325,20 @@ class MelisTemplatingPluginCreatorService extends MelisGeneralService
                                         "],"."\r\n\t\t\t\t\t\t\t\t\t\t\t\t".
                                         "'disable_inarray_validator' => true";
 
-                        $tabElements = str_replace($match, substr_replace($match, "\t\t\t\t\t\t\t\t\t\t\t\t".$switchOptions.",", strlen($match), 0), $tabElements);
-                    }                   
+                        $tabElements = str_replace($match, $match."\t\t\t\t\t\t\t\t\t\t\t\t".$switchOptions.",",  $tabElements);
+                    }
 
-                } elseif ($fieldDisplayType == 'PageInput') {
+                } elseif ($fieldDisplayType == self::PAGE_INPUT) {
+                    //set field attributes here for the pageinput field and put under the 'required' key
                     $classAttr = "'melis-input-group-button'";
 
                     $pattern = "/^.*\brequired\b'.*$/m";
-                    if(preg_match_all($pattern, $tabElements, $matches)){
+                    if (preg_match_all($pattern, $tabElements, $matches)) {
                         $match = implode("\n", $matches[0]);//return as string
-                    }
-
-                    if($match){
                         $pageInputOptionAttr = "'data-button-icon' => 'fa fa-sitemap',"."\r\n\t\t\t\t\t\t\t\t\t\t\t\t".
-                                        "'data-button-id' => 'meliscms-site-selector'"."\r\n\t\t\t\t\t\t\t\t\t\t\t\t";                               
-
-                        $tabElements = str_replace($match, substr_replace($match, "\t\t\t\t\t\t\t\t\t\t\t\t".$pageInputOptionAttr.",", strlen($match), 0), $tabElements);
-                    }
+                                               "'data-button-id' => 'meliscms-site-selector'"."\r\n\t\t\t\t\t\t\t\t\t\t\t\t";                               
+                        $tabElements = str_replace($match, $match."\t\t\t\t\t\t\t\t\t\t\t\t".$pageInputOptionAttr.",", $tabElements);
+                    }                  
                 }               
                 
                 //set class attribute
@@ -384,74 +363,64 @@ class MelisTemplatingPluginCreatorService extends MelisGeneralService
                     default:
                         $fieldDisplayType = $fieldDisplayType;
                         break;
-                }      
-
+                } 
                 $tabElements = str_replace('#field_type', $fieldDisplayType, $tabElements);
 
-                //set required attr
+                //set 'required' attribute
                 $isRequired = $this->steps['step_3']['tab_'.$i]['field_'.$j]['tpc_field_is_required'];
                 $tabElements = str_replace('#isRequired', ($isRequired==1?'required':''), $tabElements); 
 
                 $tabElementCollection .= $tabElements;
-            }
+                /************************ end setting tab elements *******************************/
 
-            //set input filters here 
-            for ($k=1; $k<=$fieldCount; $k++) {
+
+                /************************ start setting input filters****************************/
                 $tabInputFilters = "";
-                $displayType = $this->steps['step_3']['tab_'.$i]['field_'.$k]['tpc_field_display_type'];
+                $validators = [];
+                $displayType = $this->steps['step_3']['tab_'.$i]['field_'.$j]['tpc_field_display_type'];
 
-                if ($k!=1) {
+                if ($j!=1) {
                     $tabInputFilters = "\t\t\t\t\t\t\t\t\t";
                 }
 
+                //get the template
                 $tabInputFilters .= $this->getTemplateContent('/Code/tab-input-filters');
 
                 //set field name
-                $tabInputFilters = str_replace('field_name', $this->steps['step_3']['tab_'.$i]['field_'.$k]['tpc_field_name'], $tabInputFilters);
+                $tabInputFilters = str_replace('field_name', $this->steps['step_3']['tab_'.$i]['field_'.$j]['tpc_field_name'], $tabInputFilters);
 
-                //set required attr
-                $isRequired = $this->steps['step_3']['tab_'.$i]['field_'.$k]['tpc_field_is_required'];
+                //set required attribute
+                $isRequired = $this->steps['step_3']['tab_'.$i]['field_'.$j]['tpc_field_is_required'];
                 $tabInputFilters = str_replace('#isRequired', ($isRequired==1?'true':'false'), $tabInputFilters);
 
                 //add empty field validator if field is required 
                 if ($isRequired == 1) {
-                    $validator = $this->getTemplateContent('/Code/empty-field-validator');
-
-                    //search for the validators keyword to append the dashboard plugin config file 
-                    $pattern = 'validators\s*[\'"]\s*=>\s*\[';  
-                    $pattern = '/('.$pattern.')/';
-
-                    if (preg_match_all($pattern, $tabInputFilters, $matches)) {
-                        $match = implode("\n", $matches[0]);//return as string
-                    }
-
-                    if ($match) {
-                        $tabInputFilters = str_replace($match, $match."\r\n".$validator, $tabInputFilters);
-                        //$tabInputFilters = str_replace($match, substr_replace($match, "\r\n".$validator, strlen($match), 0), $tabInputFilters);
-                    }
+                    $validators[] = $this->getTemplateContent('/Code/empty-field-validator');
                 } 
 
-                //add digit validator
+                //add digit validator if the selected display type is either numeric or page input
                 if ($displayType == self::NUMERIC_INPUT || $displayType == self::PAGE_INPUT) {
-                    $validator = $this->getTemplateContent('/Code/digit-validator');
-
-                    //search for the validators keyword to append the dashboard plugin config file 
-                    $pattern = 'validators\s*[\'"]\s*=>\s*\[';  
-                    $pattern = '/('.$pattern.')/';
-
-                    if (preg_match_all($pattern, $tabInputFilters, $matches)) {
-                        $match = implode("\n", $matches[0]);//return as string
-                    }
-
-                    if ($match) {
-                        $tabInputFilters = str_replace($match, $match."\r\n".$validator, $tabInputFilters);
-                        //$tabInputFilters = str_replace($match, substr_replace($match, "\r\n".$validator, strlen($match), 0), $tabInputFilters);
-                    }
+                    $validators[] = $this->getTemplateContent('/Code/digit-validator');
                 }
 
-                $tabInputFilterCollection .= $tabInputFilters;
-            }
+                //add validators inside the 'validators' key
+                if ($validators) {
+                    foreach ($validators as $validator) {
+                        //search for the validators keyword to append the filters
+                        $pattern = 'validators\s*[\'"]\s*=>\s*\[';  
+                        $pattern = '/('.$pattern.')/';
 
+                        if (preg_match_all($pattern, $tabInputFilters, $matches)) {
+                            $match = implode("\n", $matches[0]);//return as string
+                            $tabInputFilters = str_replace($match, $match."\r\n".$validator, $tabInputFilters);
+                        }
+                    }                    
+                }              
+
+                $tabInputFilterCollection .= $tabInputFilters;
+                /************************ end setting input filters*/
+            }
+        
             $tabPropertiesTpl = str_replace('#TABELEMENTS', $tabElementCollection, $tabPropertiesTpl); 
             $tabPropertiesTpl = str_replace('#TABINPUTFILTERS', $tabInputFilterCollection, $tabPropertiesTpl); 
         }
@@ -484,10 +453,10 @@ class MelisTemplatingPluginCreatorService extends MelisGeneralService
         $tabConfig = "";
         $tabXML = "";
 
+        //retrieve all fields from all tabs
         for ($t=1; $t<=$tabCount; $t++) {
-            $tabFieldCount = $this->steps['step_3']['main_form']['tpc_main_property_field_count'];
+            $tabFieldCount = $this->steps['step_3']['main_form']['tpc_main_property_field_count'];            
             
-            //starts with field #2 since the field 1[template_path] is already added in the template
             for ($f=1; $f<=$tabFieldCount; $f++) {
                 $fieldName = $this->steps['step_3']['tab_'.$t]['field_'.$f]['tpc_field_name'];
 
@@ -498,7 +467,6 @@ class MelisTemplatingPluginCreatorService extends MelisGeneralService
 
                 $configValues .= $tabConfig."if (!empty(\$xml->".$fieldName."))\r\n\t\t\t\t";
                 $configValues .= "\$configValues['".$fieldName."'] = (string)\$xml->".$fieldName.";\r\n";   
-
                 $xmlValueFormatted .= $tabXML."if (!empty(\$parameters['".$fieldName."']))\r\n\t\t\t";
                 $xmlValueFormatted .=  " \$xmlValueFormatted .= \"\\t\\t\". '<".$fieldName."><![CDATA[' . \$parameters['".$fieldName."'] . ']]></".$fieldName.">';\r\n";               
             }
@@ -518,14 +486,23 @@ class MelisTemplatingPluginCreatorService extends MelisGeneralService
      */
     protected function generateTemplatingPluginView($moduleDir)
     {
-        //$targetDir = $moduleDir.'/view/'.$this->convertToViewName($this->moduleName).'/plugins';
         $targetDir = $moduleDir.'/view/plugins';
                 
         //get the plugin view template for multiple tabs
-        $TemplatingPluginViewContent = $this->getTemplateContent('/plugin-name.phtml');
-                         
+        $templatingPluginViewContent = $this->getTemplateContent('/plugin-name.phtml');
+
+        //set module name and directory
+        if ($this->steps['step_1']['tpc_plugin_destination'] == self::EXISTING_MODE) {                     
+            $moduleDir = '/module/MelisSites';
+        } else {
+            $this->moduleName = $this->generateModuleNameCase($this->steps['step_1']['tpc_new_module_name']);           
+            $moduleDir = '/module';
+        }
+
+        $templatingPluginViewContent = str_replace('ModuleDir', $moduleDir, $templatingPluginViewContent);
+
         //generate view file
-        $res = $this->generateFile($this->convertToViewName($this->pluginName).'.phtml', $targetDir, $TemplatingPluginViewContent);
+        $res = $this->generateFile($this->convertToViewName($this->pluginName).'.phtml', $targetDir, $templatingPluginViewContent);
 
         return $res;
     }
@@ -537,23 +514,23 @@ class MelisTemplatingPluginCreatorService extends MelisGeneralService
      */
     protected function generatePluginModalForm($moduleDir)
     {
-        //$targetDir = $moduleDir.'/view/'.$this->convertToViewName($this->moduleName).'/plugins';
         $targetDir = $moduleDir.'/view/plugins';
         $tabName = 'plugin-'.$this->convertToViewName($this->pluginName).'-tab-';
-        $tabCount = 1;//default 1 for now
-        $datePickerFields = "";
-        $dateTimePickerFields = "";
-        $datePickerScript = "";
-        $dateTimePickerScript = "";
-        $modalScripts = "";
+        $tabCount = 1;//default to 1 for now
+       
+        for ($t=1; $t<=$tabCount; $t++) {
+            $datePickerFields = "";
+            $dateTimePickerFields = "";
+            $datePickerScript = "";
+            $dateTimePickerScript = "";
+            $modalScripts = "";
 
-        for ($t=1; $t<=$tabCount;$t++) {
+            //set js script if one of the fields' display type is either datepicker or datetimepicker
             $fieldCount = $this->steps['step_3']['main_form']['tpc_main_property_field_count']; 
-            for ($f=1; $f<=$fieldCount;$f++) {
+            for ($f=1; $f<=$fieldCount; $f++) {
                 $fieldName = $this->steps['step_3']['tab_'.$t]['field_'.$f]['tpc_field_name'];
                 $displayType = $this->steps['step_3']['tab_'.$t]['field_'.$f]['tpc_field_display_type'];
-                $defaultValue = $this->steps['step_3']['tab_'.$t]['field_'.$f]['tpc_field_default_value'];
-
+              
                 if ($displayType == self::DATE_PICKER) {
                     $datePickerFields = !empty($datePickerFields)?",#".$fieldName:"#".$fieldName;
                 } elseif ($displayType == self::DATETIME_PICKER) {
@@ -574,19 +551,15 @@ class MelisTemplatingPluginCreatorService extends MelisGeneralService
             }
             
             if ($datePickerScript || $dateTimePickerScript) {
-                 //get modal form scrips template
+                //get modal form scripts template
                 $modalScripts = $this->getTemplateContent('/Code/modal-form-scripts');
                 $modalScripts = str_replace('#DATEPICKER', $datePickerScript, $modalScripts);
-                $modalScripts = str_replace('#DATETIMEPICKER', $dateTimePickerScript, $modalScripts);
-
-                //get modal form template
-                $templatingPluginModalFormContent = $this->getTemplateContent('/modal-form.phtml');
-                $templatingPluginModalFormContent = str_replace('#JSSCRIPTS', $modalScripts, $templatingPluginModalFormContent);                        
-            } else {
-                //get modal form template
-                $templatingPluginModalFormContent = $this->getTemplateContent('/modal-form.phtml');
-                $templatingPluginModalFormContent = str_replace('#JSSCRIPTS', $modalScripts, $templatingPluginModalFormContent);  
+                $modalScripts = str_replace('#DATETIMEPICKER', $dateTimePickerScript, $modalScripts);                                     
             }
+
+            //get modal form template
+            $templatingPluginModalFormContent = $this->getTemplateContent('/modal-form.phtml');
+            $templatingPluginModalFormContent = str_replace('#JSSCRIPTS', $modalScripts, $templatingPluginModalFormContent);  
                        
             //generate view file
             $res = $this->generateFile($tabName.$t.'-modal-form.phtml', $targetDir, $templatingPluginModalFormContent);
@@ -637,11 +610,9 @@ class MelisTemplatingPluginCreatorService extends MelisGeneralService
      * This method retrieves the temp thumbnail path and filename     
      * @return string
      */
-    public function getTempThumbnail(){
-        // Event parameters prepare
-        $arrayParameters = $this->makeArrayFromParameters(__METHOD__, func_get_args());
-        // Sending service start event
-        $arrayParameters = $this->sendEvent('melistemplating_plugin_creator_service_get_temp_thumbnail_plugins_start', $arrayParameters);
+    public function getTempThumbnail()
+    {
+        $this->sendEvent('melistemplating_plugin_creator_service_get_temp_thumbnail_plugins_start', []);
 
         //session container     
         $container = new Container('templatingplugincreator');     
@@ -658,18 +629,18 @@ class MelisTemplatingPluginCreatorService extends MelisGeneralService
         $baseName = pathinfo($this->steps['step_2']['plugin_thumbnail'], PATHINFO_BASENAME);      
         $pluginThumbnail = $thumbnailTempPath.$baseName;
 
-        $arrayParameters['results'] = $pluginThumbnail;
-        $arrayParameters = $this->sendEvent('melistemplating_plugin_creator_service_get_temp_thumbnail_plugins_end', $arrayParameters);
-        return $arrayParameters['results']; 
+        $this->sendEvent('melistemplating_plugin_creator_service_get_temp_thumbnail_plugins_end', []);       
+        return $pluginThumbnail;
     }
 
     /**
-     * This method sets or unsets the translations for each language available in the platform
+     * This method sets or unsets the translations of the plugin's properties for each language available in the platform
      * @param string $moduleDir
      * @param boolean $appencConfig    
      * @return string
      */
-    protected function setTranslations($moduleDir, $appendConfig = true){
+    protected function setTranslations($moduleDir, $appendConfig = true)
+    {
         $languageDir = $moduleDir.'/language/';
         
         //retrieve all available languages
@@ -695,35 +666,32 @@ class MelisTemplatingPluginCreatorService extends MelisGeneralService
                     //set the plugin description
                     $translationArr['tr_'.$this->moduleName.$this->pluginName.'Plugin_Description'] = !empty($this->steps['step_2'][$lang['lang_locale']]['tpc_plugin_desc'])                                ?$this->removeExtraSpace($this->steps['step_2'][$lang['lang_locale']]['tpc_plugin_desc']):"";
 
-                    //set the plugin section title
-                    $translationArr['tr_PluginSection_'.strtolower($this->moduleName)] = $this->moduleName;
-
                 } else {
                     //unset name and desc translation if doing rollback process
                     unset($translationArr['tr_'.$this->moduleName.$this->pluginName.'Plugin_Name']);
                     unset($translationArr['tr_'.$this->moduleName.$this->pluginName.'Plugin_Description']);
                 }
-                    
-                    
+                   
                 //set here the tab title and field translations of each tab
                 $tabCount = 1; //this default to 1 for now    
                 for ($t=1; $t<=$tabCount; $t++) {
                     $tabFieldCount = $this->steps['step_3']['main_form']['tpc_main_property_field_count'];
                     $tr_keyword = 'tr_'.strtolower($this->moduleName).'_'.strtolower($this->pluginName).'_plugin_tab';
                       
-                    //set the title for Properties Tab, always present in templating plugin
+                    //set the title for Properties Tab, always present in templating plugin, in version 2, tab title is set as required field
                     if ($t==1) {
-                        $tr_keyword = $tr_keyword.'_properties';  
-                        $tr_value = "";        
-            
-                        if ($lang['lang_locale'] == 'en_EN') {
-                            $tr_value = "Properties";
-                        } elseif ($lang['lang_locale'] == 'fr_FR') {
-                            $tr_value = "Propriètès";
-                        }
+                        $tr_keyword = $tr_keyword.'_properties';                    
 
                         //set the default translation for the Properties tab name
                         if ($appendConfig) {
+                            $tr_value = "";        
+            
+                            if ($lang['lang_locale'] == 'en_EN') {
+                                $tr_value = "Properties";
+                            } elseif ($lang['lang_locale'] == 'fr_FR') {
+                                $tr_value = "Propriètès";
+                            }
+
                             $translationArr[$tr_keyword] = $tr_value;
                         } else {
                             //unset translation if rollback
@@ -739,8 +707,8 @@ class MelisTemplatingPluginCreatorService extends MelisGeneralService
                         
                         //set translations for field label and tooltip                     
                         if ($appendConfig) {
-                            $translationArr[$trKeywordLabel] = !empty($this->steps['step_4'][$lang['lang_locale']]['tab_'.$t]['field_'.$f]['tpc_field_label'])?$this->steps['step_4'][$lang['lang_locale']]['tab_'.$t]['field_'.$f]['tpc_field_label']:null;;
-                            $translationArr[$trKeywordTooltip] = !empty($this->steps['step_4'][$lang['lang_locale']]['tab_'.$t]['field_'.$f]['tpc_field_tooltip'])?$this->steps['step_4'][$lang['lang_locale']]['tab_'.$t]['field_'.$f]['tpc_field_tooltip']:null;
+                            $translationArr[$trKeywordLabel] = !empty($this->steps['step_4'][$lang['lang_locale']]['tab_'.$t]['field_'.$f]['tpc_field_label'])?$this->removeExtraSpace($this->steps['step_4'][$lang['lang_locale']]['tab_'.$t]['field_'.$f]['tpc_field_label']):'';;
+                            $translationArr[$trKeywordTooltip] = !empty($this->steps['step_4'][$lang['lang_locale']]['tab_'.$t]['field_'.$f]['tpc_field_tooltip'])?$this->removeExtraSpace($this->steps['step_4'][$lang['lang_locale']]['tab_'.$t]['field_'.$f]['tpc_field_tooltip']):'';
 
                         } else {
                             //unset if performing rollback  
@@ -750,17 +718,18 @@ class MelisTemplatingPluginCreatorService extends MelisGeneralService
                         
                         /*check if there are translated dropdown values*/
                         $displayType = $this->steps['step_3']['tab_'.$t]['field_'.$f]['tpc_field_display_type'];
-                        $dropdownValues = $this->steps['step_3']['tab_'.$t]['field_'.$f]['tpc_field_default_value'];
+                        // $dropdownValues = $this->steps['step_3']['tab_'.$t]['field_'.$f]['tpc_field_default_value'];
+                        $dropdownValues = $this->steps['step_3']['tab_'.$t]['field_'.$f]['tpc_field_default_options'];
 
                         if ($displayType == 'Dropdown' && !empty($dropdownValues)) {
                             $explode = explode(',', $dropdownValues);
                             foreach ($explode as $val) {
                                 $val = $this->removeNonAlphaNumeric($val);
-                                $dropdownKeyword = 'tr_'.$fieldName.'_'.$val.'_label';                         
+                                $dropdownKeyword = 'tr_melis_'.strtolower($this->moduleName).'_'.strtolower($this->pluginName).'_'.$fieldName.'_'.$this->removeNonAlphaNumeric($val).'_label';                         
                                 
                                 //set translations for dropdown values' labels
                                 if ($appendConfig) {
-                                    $translationArr[$dropdownKeyword] = !empty($this->steps['step_4'][$lang['lang_locale']]['tab_'.$t]['field_'.$f][$val.'_label'])?$this->steps['step_4'][$lang['lang_locale']]['tab_'.$t]['field_'.$f][$val.'_label']:null;
+                                    $translationArr[$dropdownKeyword] = !empty($this->steps['step_4'][$lang['lang_locale']]['tab_'.$t]['field_'.$f][$val.'_label'])?$this->steps['step_4'][$lang['lang_locale']]['tab_'.$t]['field_'.$f][$val.'_label']:'';
                                 } else {
                                     //unset if performing rollback
                                     unset($translationArr[$dropdownKeyword]);
@@ -794,7 +763,8 @@ class MelisTemplatingPluginCreatorService extends MelisGeneralService
      * @param boolean $appendConfig
      * @return boolean
      */
-    protected function updateModuleConfig($moduleDir, $appendConfig = true){
+    protected function updateModuleConfig($moduleDir, $appendConfig = true)
+    {
         $res = false;
 
         //get the existing module.config.php
@@ -817,15 +787,15 @@ class MelisTemplatingPluginCreatorService extends MelisGeneralService
             //find the controller_plugin and template_map keys of the created Templating plugin, then remove           
             $keyArr = array();
    
-             //add to array the controller plugin key
+             //add to array the controller_plugin key
             $keyArr[] = $this->moduleName.$this->pluginName.'Plugin';
             
-            //add to array the main template path key
+            //add to array the main template_path key
             $keyArr[] = $this->moduleName."/plugins/".$pluginToViewName;
 
-            //add to array the template path for the forms for each plugin tab
+            //add to array the template_path keys of the modal forms for each plugin tab
             $tabCount = 1;//default 1 for now  
-            for ($t=1; $t<=$tabCount;$t++) {            
+            for ($t=1; $t<=$tabCount; $t++) {            
                 $key = $this->moduleName."/plugins/plugin-".$pluginToViewName."-tab-".$t."-modal-form";  
                 $keyArr[] = $key;                       
             }  
@@ -840,7 +810,7 @@ class MelisTemplatingPluginCreatorService extends MelisGeneralService
                     // search, and store all matching occurences in $matches
                     if (preg_match_all($pattern, $moduleFileContent, $matches)) { 
                         $match = implode("\n", $matches[0]);
-                        //remove the template map key entry
+                        //remove the key entry
                         $moduleFileContent = str_replace($match, '', $moduleFileContent);
                     }  
                 }
@@ -861,19 +831,19 @@ class MelisTemplatingPluginCreatorService extends MelisGeneralService
      * @param string pluginToViewName
      * @return string
      */
-    protected function setTemplateMapEntry($moduleDir, $moduleFileContent, $moduleToViewName, $pluginToViewName){   
-        //set template map entry for the plugin's view file     
+    protected function setTemplateMapEntry($moduleDir, $moduleFileContent, $moduleToViewName, $pluginToViewName)
+    {   
+        //set template map entry for the plugin's main template     
         $templateMapKey = $this->moduleName."/plugins/".$pluginToViewName;        
         $templateMapValue = ".'/../view/plugins/".$pluginToViewName.".phtml'"; 
+        $templateMap = "'".$templateMapKey."' => __DIR__".$templateMapValue.",\r\n\t\t\t";
 
         //set template map entry for plugin's modal form for each tab    
-        $tabCount = 1;//default 1 for now
-        $modalFormTemplateMap = "";
-     
-        for ($t=1; $t<=$tabCount;$t++) {            
+        $tabCount = 1;//default 1 for now    
+        for ($t=1; $t<=$tabCount; $t++) {            
             $key = $this->moduleName."/plugins/plugin-".$pluginToViewName."-tab-".$t."-modal-form";            
             $val = ".'/../view/plugins/plugin-".$pluginToViewName."-tab-".$t."-modal-form".".phtml'"; 
-            $modalFormTemplateMap .= "'".$key."' => __DIR__".$val.",\r\n";
+            $templateMap .= "'".$key."' => __DIR__".$val.",\r\n";
         }       
                   
         $match = null;
@@ -883,39 +853,33 @@ class MelisTemplatingPluginCreatorService extends MelisGeneralService
 
         if (preg_match_all($pattern, $moduleFileContent, $matches)) {
             $match = implode("\n", $matches[0]);//return as string
-        }
 
-        //if template_map exists in the config, add immediately the entry
-        if ($match) {  
             //check the existence of the template_map entries for the formatting purposes          
             $moduleConfig = include $moduleDir.'/config/module.config.php';
             $existingTemplateMapEntry = $moduleConfig['view_manager']['template_map'];
 
             if (count($existingTemplateMapEntry) > 0) {
-                $templateMapEntry = "'".$templateMapKey."' => __DIR__".$templateMapValue.",\r\n\t\t\t".$modalFormTemplateMap."\t\t\t";
+                $templateMapEntry = $templateMap."\t\t\t";
             } else {
-                $templateMapEntry = "\t'".$templateMapKey."' => __DIR__".$templateMapValue.",\r\n\t\t\t".$modalFormTemplateMap."\t\t";
+                $templateMapEntry = "\t".$templateMap."\t\t";
             }
 
             $moduleFileContent = str_replace($match, $match.$templateMapEntry, $moduleFileContent);
-
-        } else {  
+        } else {
             //search for the view_manager key to add the template_map key
             $pattern = 'view_manager\s*[\'"]\s*=>\s*(array\s*\(|\[)\s*';
             $pattern = '/('.$pattern.')/';        
 
             if (preg_match_all($pattern, $moduleFileContent, $matches)) {
                 $match = implode("\n", $matches[0]);//return as string
-            }
 
-            if ($match) {
                 $templateMapArr ="'template_map' => ["."\t\t".                    
-                    "\r\n\t\t\t'". $templateMapKey."' => __DIR__".$templateMapValue.",\r\n\t\t".$modalFormTemplateMap.                
-                "]";                
+                    "\r\n\t\t\t'". $templateMap.                
+                "]";             
                 $moduleFileContent = str_replace($match, $match.$templateMapArr.",\r\n\t\t", $moduleFileContent);
-            }        
-        }  
-
+            }          
+        }
+       
         return  $moduleFileContent;    
     }
 
@@ -926,35 +890,28 @@ class MelisTemplatingPluginCreatorService extends MelisGeneralService
      * @param string pluginToViewName
      * @return string
      */
-    protected function setControllerPluginEntry($moduleFileContent, $moduleToViewName, $pluginToViewName){       
+    protected function setControllerPluginEntry($moduleFileContent, $moduleToViewName, $pluginToViewName)
+    {       
         $controllerPluginKey = $this->moduleName.$this->pluginName.'Plugin';
         $controllerPluginValue =  "\\".$this->moduleName."\Controller\Plugin\\".$controllerPluginKey."::class";
                 
-        //search for the controller_plugin invokables key
+        //search for the controller_plugin invokables key and add the plugin key inside it
         $pattern = 'controller_plugins\s*[\'"]\s*=>\s*(array\s*\(|\[)\s*[\'"]invokables\s*[\'"]\s*=>\s*(array\s*\(|\[)';
         $pattern = '/('.$pattern.')/';
         $match = null;
 
         if (preg_match_all($pattern, $moduleFileContent, $matches)) {
             $match = implode("\n", $matches[0]);//return as string
-        }
-      
-        //if controller_plugin/invokables exists in the config, add immediately the entry
-        if ($match) {                  
-            $controllerPluginEntry = "'".$controllerPluginKey."' => ".$controllerPluginValue;   
-            $moduleFileContent = str_replace($match, $match."\r\n\t\t\t".$controllerPluginEntry.",", $moduleFileContent);   
-           
-        } else {      
 
+            $controllerPluginEntry = "'".$controllerPluginKey."' => ".$controllerPluginValue;   
+            $moduleFileContent = str_replace($match, $match."\r\n\t\t\t".$controllerPluginEntry.",", $moduleFileContent);
+        } else {
             //search for the 'controllers' key, then add the controller_plugin key before the 'controllers' key 
             $pattern = '[\'"]\s*controllers\s*[\'"]\s*=>\s*(array\s*\(|\[)\s*';
             $pattern = '/('.$pattern.')/';        
 
             if (preg_match_all($pattern, $moduleFileContent, $matches)) {
                 $match = implode("\n", $matches[0]);//return as string
-            }
-
-            if ($match) {  
 
                 //set the template
                 $template ="'controller_plugins' => ["."\r\n\t\t".
@@ -964,9 +921,9 @@ class MelisTemplatingPluginCreatorService extends MelisGeneralService
                 "],";
 
                 //prepend it to 'controllers' key
-                $moduleFileContent = str_replace($match, $template."\r\n\t".$match, $moduleFileContent); 
-            }        
-        }  
+                $moduleFileContent = str_replace($match, $template."\r\n\t".$match, $moduleFileContent);                
+            }      
+        }      
 
         return  $moduleFileContent;    
     }
@@ -993,10 +950,6 @@ class MelisTemplatingPluginCreatorService extends MelisGeneralService
 
             if (preg_match_all($pattern, $moduleFileContent, $matches)) {
                 $match = implode("\n", $matches[0]);//return as string
-            }
-
-            if ($match) {
-                //$moduleFileContent = str_replace($match, substr_replace($match, $templatingConfigFile, strlen($match), 0), $moduleFileContent);
                 $moduleFileContent = str_replace($match, $match.$templatingConfigFile, $moduleFileContent);
             }
           
@@ -1054,7 +1007,7 @@ class MelisTemplatingPluginCreatorService extends MelisGeneralService
 
 
     /**
-     * This method retrieves the content of the template files for the Templating generation
+     * This method retrieves the content of the template files 
      * @param string $path 
      * @return string 
      */
@@ -1080,7 +1033,8 @@ class MelisTemplatingPluginCreatorService extends MelisGeneralService
      * @param string $moduleDir
      * @return boolean
      */
-    protected function emptyConfigToolsTreeSection($moduleDir){
+    protected function emptyConfigToolsTreeSection($moduleDir)
+    {
         $toolsTreeConfigFile = $moduleDir.'/config/app.toolstree.php';        
         $toolsTreeConfig = include $toolsTreeConfigFile;
         
@@ -1102,10 +1056,10 @@ class MelisTemplatingPluginCreatorService extends MelisGeneralService
     /**
      * This method removes the directory and its files recursively
      * ref: https://stackoverflow.com/questions/3349753/delete-directory-with-files-in-it
-     * @param string $dirPath
-     * @return boolean
+     * @param string $dirPath    
      */
-    public function removeDir($dirPath) {
+    public function removeDir($dirPath) 
+    {
         if (! is_dir($dirPath)) {
             return false;
         }
@@ -1133,7 +1087,8 @@ class MelisTemplatingPluginCreatorService extends MelisGeneralService
      * @param string $str
      * @return string
      */
-    public function generateModuleNameCase($str) {
+    public function generateModuleNameCase($str) 
+    {
         $str = preg_replace('/([a-z])([A-Z])/', "$1$2", $str);
         $str = str_replace(['-', '_'], '', ucwords(strtolower($str)));
         $str = ucfirst($str);
@@ -1176,7 +1131,8 @@ class MelisTemplatingPluginCreatorService extends MelisGeneralService
      * @param string $str
      * @return string
      */
-    public function removeAccents($str){
+    public function removeAccents($str)
+    {
         $transliterator = \Transliterator::createFromRules(':: Any-Latin; :: Latin-ASCII; :: NFD; :: [:Nonspacing Mark:] Remove; :: NFC;', \Transliterator::FORWARD);
         $normalized = $transliterator->transliterate($str);
         return $normalized;
@@ -1187,17 +1143,19 @@ class MelisTemplatingPluginCreatorService extends MelisGeneralService
      * @param string $str
      * @return string
      */
-    public function removeExtraSpace($string){
+    public function removeExtraSpace($string)
+    {
         $cleanStr = trim(preg_replace('/\s\s+/', ' ', str_replace("\n", " ", $string)));
         return $cleanStr;
     }
 
     /**
-     * This will remove non alphanumeric extra spaces in the given string
+     * This will remove non alphanumeric and extra spaces in the given string
      * @param string $str
      * @return string
      */
-    public function removeNonAlphaNumeric($string){
+    public function removeNonAlphaNumeric($string)
+    {
         $cleanStr = str_replace(' ','_',preg_replace("/(\W)+/", "", $string));
         return $cleanStr;
     }
@@ -1209,11 +1167,12 @@ class MelisTemplatingPluginCreatorService extends MelisGeneralService
      * @param string $siteModule
      * @return array
      */
-    public function getSiteTemplatingPluginNames($siteModule){
+    public function getSiteTemplatingPluginNames($siteModule)
+    {
         // Event parameters prepare
         $arrayParameters = $this->makeArrayFromParameters(__METHOD__, func_get_args());
         // Sending service start event
-        $arrayParameters = $this->sendEvent('melistemplating_plugin_creator_service_get_site_templating_plugins_start', $arrayParameters);
+        $arrayParameters = $this->sendEvent('melistemplating_plugin_creator_service_get_site_templating_plugin_names_start', $arrayParameters);
 
         //set the directory of the new or existing module
         $siteService = $this->getServiceManager()->get('MelisCmsSiteService');
@@ -1222,8 +1181,7 @@ class MelisTemplatingPluginCreatorService extends MelisGeneralService
         $templatingPlugins = [];
 
         $dir = new \RecursiveDirectoryIterator($moduleDir);
-        foreach (new \RecursiveIteratorIterator($dir) as $filename => $file) {                  
-
+        foreach (new \RecursiveIteratorIterator($dir) as $filename => $file) { 
             if (!is_dir($filename) && $filename != '.' && $filename != '..' ) {                         
                 $conf = include $filename;
                
@@ -1249,7 +1207,7 @@ class MelisTemplatingPluginCreatorService extends MelisGeneralService
         }
 
         $arrayParameters['templatingPlugins'] = $templatingPlugins;
-        $arrayParameters = $this->sendEvent('melistemplating_plugin_creator_service_get_site_templating_plugins_end', $arrayParameters);
+        $arrayParameters = $this->sendEvent('melistemplating_plugin_creator_service_get_site_templating_plugin_names_end', $arrayParameters);
         return $arrayParameters['templatingPlugins']; 
     }
 

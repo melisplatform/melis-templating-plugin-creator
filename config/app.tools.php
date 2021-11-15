@@ -402,16 +402,19 @@ return [
                                             \Laminas\I18n\Validator\IsInt::NOT_INT  => 'tr_melistemplatingplugincreator_integer_only'                                            
                                         ],                                                                       
                                     ],
-                                ],                    
-                                [
-                                    'name' => 'GreaterThan',
+                                ],           
+
+                               [
+                                    'name' => 'Between',
                                     'options' => [
                                         'messages' => [
-                                            \Laminas\Validator\GreaterThan::NOT_GREATER => 'tr_melistemplatingplugincreator_greater_than_0',
+                                            \Laminas\Validator\Between::NOT_BETWEEN => 'tr_melistemplatingplugincreator_value_must_be_between_1_to_25',
+                                            'valueNotNumeric' => 'tr_melistemplatingplugincreator_value_must_be_between_1_to_25',
                                         ],
-                                        'min' => 0                                                                       
+                                        'min' => 1,
+                                        'max' => 25                                  
                                     ],
-                                ],                    
+                                ],                                         
                             ],
                             'filters'  => [
                                 ['name' => 'StripTags'],
@@ -420,7 +423,6 @@ return [
                         ],              
                     ],
                 ],
-
 
                 //step 3's field form
                 'melistemplatingplugincreator_step3_field_form' => [
@@ -508,6 +510,26 @@ return [
 
                         [
                             'spec' => [
+                                'name' => 'tpc_field_default_options',
+                                'type' => 'MelisText',
+                                'options' => [
+                                    'disable_inarray_validator' => true,
+                                    'label' => 'tr_melistemplatingplugincreator_tpc_field_default_options',
+                                    'tooltip' => 'tr_melistemplatingplugincreator_tpc_field_default_options tooltip',  
+                               ],
+
+                               'attributes' => [
+                                    'id' => 'tpc_field_default_options',
+                                    'class' => 'form-control',
+                                    'value' => '',
+                                    'placeholder' => '',
+                                    'required' => '',                                    
+                                ],
+                            ],
+                        ],
+
+                        [
+                            'spec' => [
                                 'name' => 'tpc_field_default_value',
                                 'type' => 'MelisText',
                                 'options' => [
@@ -524,9 +546,7 @@ return [
                                     'required' => '',                                    
                                 ],
                             ],
-                        ],
-
-                                      
+                        ],                                      
                     ],
                     'input_filter' => [
                         'tpc_field_name' => [
@@ -551,7 +571,6 @@ return [
                                 ],
                             ],
                             'filters'  => [
-                                ['name' => 'StripTags'],
                                 ['name' => 'StringTrim'],
                             ],
                         ],
@@ -595,13 +614,11 @@ return [
                             'name'     => 'tpc_field_default_value',
                             'required' => false,                           
                             'filters'  => [
-                                ['name' => 'StripTags'],
-                                ['name' => 'StringTrim'],
+                               ['name' => 'StringTrim'],
                             ],
                         ],
                     ],
                 ],
-
 
                 //properties' translation form
                 'melistemplatingplugincreator_step4' => [
@@ -726,7 +743,6 @@ return [
                     ],
                 ],
 
-
                 'melistemplatingplugincreator_step6_form' => [
                     'attributes' => [
                         'name' => 'templating-plugin-creator-step-6',
@@ -754,8 +770,7 @@ return [
                                 ],
                             ],
                         ],                       
-                    ],
-                                    
+                    ],                                    
                 ],
             ]
         ]

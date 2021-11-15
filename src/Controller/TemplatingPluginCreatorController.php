@@ -27,7 +27,7 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
     const PAGE_INPUT = "PageInput";
       
     /**
-     * This will render the dashboard plugin creator tool
+     * This will render the templating plugin creator tool
      * @return ViewModel
     */     
     public function renderToolAction()
@@ -112,23 +112,23 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
         $viewStep = $this->$stepFunction($viewStep, $nextStep, $validate); 
         $viewStep->id = 'melistemplatingplugincreator_step'.$nextStep;   
         $viewStep->curStep = $nextStep;
-        if($nextStep){
+        if ($nextStep) {
             $viewStep->nextStep = $nextStep + 1; 
         }         
 
         //if 'back' or 'next' step button is triggered
-        if($validate || ($curStep > $nextStep)){
+        if ($validate || ($curStep > $nextStep)) {
             // Retrieving steps form config
             $stepsConfig = $this->getStepConfig();           
             $translator = $this->getServiceManager()->get('translator');
 
-            if(!empty($viewStep->errors)){               
+            if (!empty($viewStep->errors)) {               
                 $results['errors'] = $viewStep->errors;
                 $results['textMessage'] = $translator->translate('tr_melistemplatingplugincreator_err_message');
                 $results['textTitle'] = $translator->translate($stepsConfig['melistemplatingplugincreator_step'.$curStep]['name']);
-            }else{   
+            } else {   
 
-                if(isset($viewStep->restartRequired)){
+                if (isset($viewStep->restartRequired)) {
                     $viewStep->setTemplate('melis-templating-plugin-creator/render-step6-finalization');
                 }
 
@@ -164,7 +164,7 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
         $stepForm = null; 
       
         //validate form if Next button is triggered
-        if($validate){  
+        if ($validate) {  
             $request = $this->getRequest();
             $postValues = get_object_vars($request->getPost()); 
             
@@ -174,22 +174,21 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
             $stepForm->setData($postValues['step-form']);              
          
             //if plugin destination is new, remove the validation for the existing module and vice versa
-            if(!empty($postValues['step-form']['tpc_plugin_destination'])){
-                if($postValues['step-form']['tpc_plugin_destination'] == self::NEW_MODULE){
+            if (!empty($postValues['step-form']['tpc_plugin_destination'])) {
+                if ($postValues['step-form']['tpc_plugin_destination'] == self::NEW_MODULE) {
                     $stepForm->getInputFilter()->remove('tpc_existing_module_name');
-                }else{
+                } else {
                     $stepForm->getInputFilter()->remove('tpc_new_module_name');
                 }
-            }else{
+            } else {
                 $stepForm->getInputFilter()->remove('tpc_new_module_name');
                 $stepForm->getInputFilter()->remove('tpc_existing_module_name');
-            }            
-  
+            }              
 
             //if current step is valid, save form data to session and get the view of the next step 
-            if($stepForm->isValid()) { 
+            if ($stepForm->isValid()) { 
                 //validate new module name entered for duplicates
-                if(!empty($postValues['step-form']['tpc_new_module_name'])){
+                if (!empty($postValues['step-form']['tpc_new_module_name'])) {
                     /**
                      * Validating the module entered if it's already existing on the platform
                      */
@@ -200,9 +199,8 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
                     $newModuleName = strtolower($postValues['step-form']['tpc_new_module_name']);
 
                     //set error if the entered module name has duplicate
-                    if(in_array(trim($newModuleName), $existingModules)){
-                      
-                        // Adding error message to module input
+                    if (in_array(trim($newModuleName), $existingModules)) {                      
+                        // Adding error message to form field
                         $translator = $this->getServiceManager()->get('translator');
                         $stepForm->get('tpc_new_module_name')->setMessages([
                             'ModuleExist' => sprintf($translator->translate('tr_melistemplatingplugincreator_err_module_exist'), $postValues['step-form']['tpc_new_module_name'])
@@ -213,18 +211,18 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
                 }
                     
                 //validate templating plugin name if it already exists for the selected existing module
-                if(!empty($postValues['step-form']['tpc_existing_module_name'])){  
+                if (!empty($postValues['step-form']['tpc_existing_module_name'])) {  
                     $templatingPluginCreatorSrv = $this->getServiceManager()->get('MelisTemplatingPluginCreatorService');
                     $existingModuleName = trim($postValues['step-form']['tpc_existing_module_name']);
                     $newPluginName = trim($postValues['step-form']['tpc_plugin_name']);
-                    $pluginKey =  strtolower($existingModuleName.$newPluginName.'plugin');
+                    $pluginKey = strtolower($existingModuleName.$newPluginName.'plugin');
                     
                     //retrieve existing templating plugin names of the selected site module               
-                    $siteTemplatingPlugins = $templatingPluginCreatorSrv->getSiteTemplatingPluginNames($existingModuleName);                    
-                    $siteTemplatingPlugins = array_map('strtolower', $siteTemplatingPlugins);                   
-                 
-                    if($siteTemplatingPlugins && in_array($pluginKey, $siteTemplatingPlugins)){
-                        //Adding error message to module input
+                    $siteTemplatingPlugins = $templatingPluginCreatorSrv->getSiteTemplatingPluginNames($existingModuleName);
+                    $siteTemplatingPlugins = array_map('strtolower', $siteTemplatingPlugins);   
+                    
+                    //if has duplicates, add error message to form field
+                    if ($siteTemplatingPlugins && in_array($pluginKey, $siteTemplatingPlugins)) {                       
                         $translator = $this->getServiceManager()->get('translator');
                         $stepForm->get('tpc_plugin_name')->setMessages([
                             'PluginExist' => sprintf($translator->translate('tr_melistemplatingplugincreator_err_plugin_name_exist'), $postValues['step-form']['tpc_plugin_name'])
@@ -234,7 +232,6 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
                        $errorMessages = $stepForm->getMessages();                        
                     }          
                 }
-
 
                 //if current step form is valid, save form data to session and get the next step's form 
                 if(empty($errorMessages)){
@@ -250,7 +247,7 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
             }
 
             //format error labels
-            if($errorMessages){
+            if ($errorMessages) {
                 foreach ($errorMessages as $keyError => $valueError)
                 {
                     foreach ($stepForm->getElements() as $keyForm => $valueForm)
@@ -264,7 +261,7 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
                     }
                 }               
             }
-        }else{
+        } else {
             list($stepForm, $data) = $this->getStepFormAndData($nextStep);          
         }
            
@@ -302,13 +299,13 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
         $melisCoreConfig = $this->getServiceManager()->get('MelisCoreConfig');   
 
         //validate form if Next button is triggered
-        if($validate){         
+        if ($validate) {         
             $request = $this->getRequest();
             $postValues = get_object_vars($request->getPost()); 
             $uploadedFile = $request->getFiles()->toArray();
 
             //merge upload data with the other posted values
-            if(!empty($uploadedFile)){
+            if (!empty($uploadedFile)) {
                 $postValues = array_merge_recursive($postValues,$uploadedFile);               
             }
 
@@ -320,8 +317,8 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
             $stepForm2 = $factory->createForm($appConfigForm);         
             $stepForm2->setData($postValues['step-form']);
 
-            if($stepForm2->isValid()){        
-                //get the saved thumbnail 
+            if ($stepForm2->isValid()) {        
+                //get the saved thumbnail done via ajax
                 $pluginThumbnail = !empty($container['melis-templatingplugincreator']['step_2']['plugin_thumbnail'])?$container['melis-templatingplugincreator']['step_2']['plugin_thumbnail']:null;
 
                 //if no saved uploaded thumbnail, try to upload again
@@ -330,13 +327,13 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
                     //process uploading of thumbnail
                     list($isValid2ndForm, $pluginThumbnail, $textMessage) = $this->uploadPluginThumbnail($postValues['step-form']['tpc_plugin_upload_thumbnail']);
 
-                    if($isValid2ndForm){
+                    if ($isValid2ndForm) {
                         //save to session   
                         $container['melis-templatingplugincreator']['step_2']['plugin_thumbnail'] = '/Melistemplatingplugincreator/temp-thumbnail/'.$sessionID.'/'.pathinfo($pluginThumbnail, PATHINFO_FILENAME).'.'.pathinfo($pluginThumbnail, PATHINFO_EXTENSION); 
 
-                    }else{         
+                    } else {         
                         //unset previously uploaded file
-                        if(!empty($container['melis-templatingplugincreator']['step_2']['plugin_thumbnail'])){
+                        if (!empty($container['melis-templatingplugincreator']['step_2']['plugin_thumbnail'])) {
                             unset($container['melis-templatingplugincreator']['step_2']['plugin_thumbnail']); 
                         }                
               
@@ -347,27 +344,27 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
 
                         $uploadFormErrorMessages = $this->formatErrors($stepForm2->getMessages(), $stepForm2->getElements());   
                     }  
-                }else{
+                } else {
                     $isValid2ndForm = 1;
                 }
 
-            }else{    
+            } else {    
                 $uploadFormErrorMessages = $this->formatErrors($stepForm2->getMessages(), $stepForm2->getElements());
             }    
              
             //check if the forms for the current step are all valid
-            if($isValidLanguageForm && $isValid2ndForm){
+            if ($isValidLanguageForm && $isValid2ndForm) {
                 $isValid = 1;
-            }else{
+            } else {
                 //merge language and upload form errors 
                 $errors = ArrayUtils::merge($languageFormErrorMessages, $uploadFormErrorMessages);                
             }      
 
             //get next step's form
-            if($isValid){                
+            if ($isValid) {                
                 list($stepForm, $data) = $this->getStepFormAndData($nextStep);
             } 
-        }else{ 
+        } else { 
             list($stepForm, $data) = $this->getStepFormAndData($nextStep); 
         }
 
@@ -402,7 +399,7 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
         $melisCoreConfig = $this->getServiceManager()->get('MelisCoreConfig');   
 
         //validate form if Next button is triggered
-        if($validate){              
+        if ($validate) {              
             $request = $this->getRequest();
             $postValues = get_object_vars($request->getPost()); 
 
@@ -411,38 +408,29 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
             $stepForm = $factory->createForm($appConfigForm);         
             $stepForm->setData($postValues['step-form']);
 
-            if($stepForm->isValid()){
+            if ($stepForm->isValid()) {
                 $isValidMainForm = 1;
-                //dump('step form 1 is valid');
-                $container['melis-templatingplugincreator']['step_3']['main_form'] = $stepForm->getData();                   
-
-            }else{
-                //dump('step form 1 is not valid');
+                $container['melis-templatingplugincreator']['step_3']['main_form'] = $stepForm->getData();  
+            } else {
                 $mainFormErrorMessages = $this->formatErrors($stepForm->getMessages(), $stepForm->getElements());
             }
                       
-            //validate only the field form if the main form is valid
+            //validate field form 
             list($isValidFieldForm, $fieldFormErrorMessages) = $this->validateFieldForm($curStep, $postValues); 
           
             //get next step's form if all forms are valid
-            if($isValidMainForm && $isValidFieldForm){
-
-                //dump('step 3 is valid');
-                // dump($container['melis-templatingplugincreator']['step_3']);
-
+            if ($isValidMainForm && $isValidFieldForm) {
                 list($stepForm, $data) = $this->getStepFormAndData($nextStep);
             }else{
                 //merge language and upload form errors 
                 $errors = ArrayUtils::merge($mainFormErrorMessages, $fieldFormErrorMessages);  
             }
 
-            //dump($errors);
-
-        }else{ 
+        } else { 
             list($stepForm, $data) = $this->getStepFormAndData($nextStep); 
         }
 
-        $viewStep->stepForm = $stepForm;//the form to be displayed
+        $viewStep->stepForm = $stepForm;
         $viewStep->errors = $errors;
         $viewStep->data = $data;
         return $viewStep;
@@ -460,22 +448,13 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
         $sessionID = $container->getManager()->getId(); 
         $curStep = 4;       
         $data = array();
-        $errors = array();
-        $languageFormErrorMessages = array();
-        $uploadFormErrorMessages = array();
+        $errors = array();       
         $textMessage = '';
         $stepForm = null; 
-        $isValid = 0;
-        $isValid2ndForm = 0;
-        $pluginThumbnail = null;
-
-        $factory = new \Laminas\Form\Factory();
-        $formElements = $this->getServiceManager()->get('FormElementManager');
-        $factory->setFormElementManager($formElements);
-        $melisCoreConfig = $this->getServiceManager()->get('MelisCoreConfig');   
+        $isValid = 0;        
 
         //validate form if Next button is triggered
-        if($validate){         
+        if ($validate) {         
             $request = $this->getRequest();
             $postValues = get_object_vars($request->getPost()); 
                 
@@ -483,10 +462,11 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
             list($isValid, $errors) = $this->validateFieldTranslations($curStep, $postValues);  
 
             //get next step's form
-            if($isValid){                
+            if ($isValid) {                
                 list($stepForm, $data) = $this->getStepFormAndData($nextStep);
             }
-        }else{ 
+
+        } else { 
             list($stepForm, $data) = $this->getStepFormAndData($nextStep); 
         }
 
@@ -530,17 +510,14 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
         $errors = array();
         $stepForm = null; 
       
-        //generate dashboard plugin
-        if($validate){ 
+        //generate templating plugin
+        if ($validate) { 
             $request = $this->getRequest();
             $postValues = get_object_vars($request->getPost());          
             $isActivatePlugin = !empty($postValues['step-form']['tpc_activate_plugin'])?1:0;
 
-            // dump('validate');
-            // dump($container['melis-templatingplugincreator']);
-
-            //if destination of the plugin is the new module, create first the new module before adding the dashboard plugin files
-            if($container['melis-templatingplugincreator']['step_1']['tpc_plugin_destination'] == self::NEW_MODULE){              
+            //if destination of the plugin is the new module, create first the new module before adding the templating plugin files
+            if ($container['melis-templatingplugincreator']['step_1']['tpc_plugin_destination'] == self::NEW_MODULE) {              
                 // Initializing the Tool creator session container
                 $toolContainer = new Container('melistoolcreator');
                 $toolContainer['melis-toolcreator'] = [];    
@@ -552,12 +529,12 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
                 $toolCreatorSrv->createTool();             
             }
        
-            //call service to generate the dashboard plugin 
+            //call service to generate the templating plugin 
             $tpcService = $this->getServiceManager()->get('MelisTemplatingPluginCreatorService');
             $result = $tpcService->generateTemplatingPlugin();
 
-            if($result){
-                if($container['melis-templatingplugincreator']['step_1']['tpc_plugin_destination'] == self::NEW_MODULE){
+            if ($result) {
+                if ($container['melis-templatingplugincreator']['step_1']['tpc_plugin_destination'] == self::NEW_MODULE) {
                     // Activate new module
                     $moduleSvc = $this->getServiceManager()->get('ModulesService');
                     $moduleSvc->activateModule($toolCreatorSrv->moduleName());
@@ -570,16 +547,13 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
                 }
                
                 //reload page to activate the plugin
-                if($isActivatePlugin){   
+                if ($isActivatePlugin) {   
                     $viewStep->restartRequired = 1;
-                }else{      
+                } else {      
                     $viewStep->restartRequired = 0;
                 }   
 
-            }else{
-
-                // dump('generation not successful, dump session');
-                // dump($container['melis-templatingplugincreator']);
+            } else {
                 //set errors
                 $translator = $this->getServiceManager()->get('translator');
                 $viewStep->textMessage = $translator->translate('tr_melistemplatingplugincreator_generate_plugin_error_encountered');
@@ -611,9 +585,8 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
         $errors = array();
         $stepForm = null;
         $stepFormArr = array();
-        $tabCount = 0;
-           
-        switch($curStep){
+                  
+        switch ($curStep) {
             case 1:      
                 $appConfigForm = $melisCoreConfig->getFormMergedAndOrdered('melistemplatingplugincreator/forms/melistemplatingplugincreator_step1_form', 'melistemplatingplugincreator_step1_form');                               
                 $stepForm = $factory->createForm($appConfigForm);                 
@@ -621,11 +594,7 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
                 //check if there is a session data
                 if(!empty($container['melis-templatingplugincreator']['step_1'])){                 
                     $stepForm->setData($container['melis-templatingplugincreator']['step_1']);  
-                }      
-
-                //get the current locale used from meliscore session
-                $container = new Container('meliscore');
-                $data['lang_locale'] = $container['melis-lang-locale'];  
+                }   
                 break;
 
             case 2:  
@@ -636,13 +605,13 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
                 $stepForm2 = $factory->createForm($appConfigForm);                              
 
                 //check if there is a session data
-                if(!empty($container['melis-templatingplugincreator']['step_2'])){
+                if (!empty($container['melis-templatingplugincreator']['step_2'])) {
                     $stepForm2->setData($container['melis-templatingplugincreator']['step_2']);
                 }            
                 $stepFormArr['form2'] = $stepForm2;
                 
                 //get the thumbnail saved in session
-                if(!empty($container['melis-templatingplugincreator']['step_2']['plugin_thumbnail'])){                    
+                if (!empty($container['melis-templatingplugincreator']['step_2']['plugin_thumbnail'])) {                    
                     $data['thumbnail'] = $container['melis-templatingplugincreator']['step_2']['plugin_thumbnail'];
                 }   
 
@@ -660,11 +629,11 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
                 $stepFormArr['form1'] = $stepForm; 
              
                 //if main form is already set, get the dynamic field forms
-                if(!empty($container['melis-templatingplugincreator']['step_3']['main_form'])){
+                if (!empty($container['melis-templatingplugincreator']['step_3']['main_form'])) {
                     //set the main form's session data to form
                     $stepForm->setData($container['melis-templatingplugincreator']['step_3']['main_form']);    
                     $tabNum = 1;//main properties tab is set as default to 1
-                    $stepFormArr['fieldForm'] = $this->getFieldForms(3, $tabNum, $container['melis-templatingplugincreator']['step_3']['main_form']['tpc_main_property_field_count']); 
+                    $stepFormArr['fieldForm'] = $this->getFieldForms($curStep, $tabNum, $container['melis-templatingplugincreator']['step_3']['main_form']['tpc_main_property_field_count']); 
                 }
                                          
                 $stepForm = $stepFormArr; 
@@ -701,11 +670,9 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
      * @param int $step
      * @return array
     */
-    private function getLanguageForms($step){
-        $container = new Container('templatingplugincreator');
-        // get all languages available in the plaftform
-        $coreLang = $this->getServiceManager()->get('MelisCoreTableLang');
-        $languages = $coreLang->fetchAll()->toArray();
+    private function getLanguageForms($step)
+    {
+        $container = new Container('templatingplugincreator');       
 
         //get the language form set for the given step
         $melisCoreConfig = $this->getServiceManager()->get('MelisCoreConfig');          
@@ -714,26 +681,18 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
         $factory->setFormElementManager($formElements); 
         $appConfigForm = $melisCoreConfig->getFormMergedAndOrdered('melistemplatingplugincreator/forms/melistemplatingplugincreator_step'.$step.'_form1', 'melistemplatingplugincreator_step'.$step.'_form1'); 
 
-        //get the current locale used from meliscore session
-        $melisCoreContainer = new Container('meliscore');
-        $locale = $melisCoreContainer['melis-lang-locale']; 
-
-        foreach($languages as $key => $langData) {
-            if(trim($langData["lang_locale"]) == trim($locale)){
-                unset($languages[$key]);
-                array_unshift($languages,$langData);
-            }
-        }
+        //get all languages
+        $languages = $this->getOrderedLanguagesByCurrentLocale();
 
         // Generate form for each language
-        foreach($languages As $key => $lang){           
+        foreach ($languages As $key => $lang) {           
             $stepFormtmp = $factory->createForm($appConfigForm);
         
             if (!empty($container['melis-templatingplugincreator']['step_'.$step][$lang['lang_locale']])){
                 $stepFormtmp->setData($container['melis-templatingplugincreator']['step_'.$step][$lang['lang_locale']]);
             }                                   
 
-            //set value of the hidden field -> tcp_lang_local
+            //set value of the hidden field 'tcp_lang_local'
             $stepFormtmp->get('tpc_lang_local')->setValue($lang['lang_locale']);
 
             // Adding language form
@@ -750,7 +709,8 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
      * This retrieves the list of steps of the tool from the config
      * @return array
     */
-    private function getStepConfig(){
+    private function getStepConfig()
+    {
         $melisCoreConfig = $this->getServiceManager()->get('MelisCoreConfig');
         $toolSteps = $melisCoreConfig->getItem('melistemplatingplugincreator/datas/steps'); 
         return $toolSteps;
@@ -789,7 +749,8 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
      * @param array $formData
      * @return array
     */
-    private function validateMultiLanguageForm($curStep, $formData){
+    private function validateMultiLanguageForm($curStep, $formData)
+    {
         $container = new Container('templatingplugincreator');//to store the session data
         $translator = $this->getServiceManager()->get('translator');
         // Meliscore languages
@@ -803,60 +764,32 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
         $factory->setFormElementManager($formElements);       
         $appConfigForm = $melisCoreConfig->getFormMergedAndOrdered('melistemplatingplugincreator/forms/melistemplatingplugincreator_step'.$curStep.'_form1', 'melistemplatingplugincreator_step'.$curStep.'_form1');  
         $validFormCount = 0;
-        $isValid = 0;
-        $pluginTitleDuplicate = 0;
+        $isValid = 0;        
         $errors = array();
 
-        foreach($languages as $lang){
+        foreach ($languages as $lang) {
             // Generating form for each language
             $stepFormtmp = $factory->createForm($appConfigForm);
             
             //loop through the language form data
             $ctr = 1;
-            foreach($formData['step-form'] As $val){               
-                if($val['tpc_lang_local'] && $val['tpc_lang_local'] == $lang['lang_locale']){                  
+            foreach ($formData['step-form'] As $val) {               
+                if ($val['tpc_lang_local'] && $val['tpc_lang_local'] == $lang['lang_locale']) {                  
                     $stepFormtmp->setData($val);                    
                 }  
 
                 $ctr++;
 
-                if($ctr > $languageCount){                    
+                if ($ctr > $languageCount) {                    
                     break;
                 }              
             }
           
-            if($stepFormtmp->isValid()){   
+            if ($stepFormtmp->isValid()) {   
+                $validFormCount++;   
 
-                //validate plugin title entered for duplicates if current step is 2 and destination is existing module
-                if($curStep == 2 && !empty($container['melis-templatingplugincreator']['step_1']['tpc_existing_module_name'])){     
-                    // //call templating plugin creator service 
-                    // $tpcService = $this->getServiceManager()->get('MelisTemplatingPluginCreatorService');
-
-                    // $existingTranslatedPluginTitle = $tpcService->getExistingTranslatedPluginTitle($tpcService->getModuleExistingPlugins($container['melis-templatingplugincreator']['step_1']['tpc_existing_module_name']), $container['melis-templatingplugincreator']['step_1']['tpc_existing_module_name']);
-               
-                    // //check here if the plugin title for the specific language has duplicates
-                    // if($existingTranslatedPluginTitle && in_array($tpcService->removeExtraSpace($stepFormtmp->get('tpc_plugin_title')->getValue()), $existingTranslatedPluginTitle[$lang['lang_locale']])){
-                                      
-                    //     $stepFormtmp->get('tpc_plugin_title')->setMessages([
-                    //         'PluginTitleExist_'.$lang['lang_locale'] => sprintf($translator->translate('tr_melistemplatingplugincreator_err_plugin_title_exist'), $stepFormtmp->get('tpc_plugin_title')->getValue(), $lang['lang_name'])
-                    //     ]);
-
-                    //     $pluginTitleDuplicate++;
-                    //     $errors = ArrayUtils::merge($errors, $stepFormtmp->getMessages());
-
-                    // }else{
-                        $validFormCount++;                      
-                    //}
-                }else{
-                    $validFormCount++;                    
-                }                                 
-
-            }else{                              
-
-                //if no duplicate in plugin title, get the form error messages
-                if($pluginTitleDuplicate == 0){
-                    $errors = ArrayUtils::merge($errors, $stepFormtmp->getMessages());
-                }
+            } else {          
+                $errors = ArrayUtils::merge($errors, $stepFormtmp->getMessages());              
             }   
 
             //add to session the posted values
@@ -864,11 +797,11 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
 
         }//end foreach
 
-        //if at least 1 form is valid, or if there are no duplicates in the plugin title for each language, flag as valid
-        if($validFormCount && $pluginTitleDuplicate == 0){            
+        //if at least 1 form is valid, flag as valid
+        if ($validFormCount) {            
             $isValid = 1;
             $errors = array();
-        }else{           
+        } else {           
             $errors = $this->formatErrors($errors, $stepFormtmp->getElements());
         }       
 
@@ -876,7 +809,7 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
     }
 
     /**
-     * This creates a directory if not yet existed
+     * This creates a directory if not yet existing
      * @param string $path
      * @return boolean
     */
@@ -909,7 +842,6 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
             $thumbnailTempPath = $melisModule->getModulePath($moduleName,true).'/public/temp-thumbnail/';
             $sessionID = $container->getManager()->getId(); 
             $thumbnailTempPath = $thumbnailTempPath.$sessionID.'/';
-
             $upload = false;
             $textMessage = '';
             $fileName = '';
@@ -922,17 +854,16 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
                 ],
             ]);           
 
-            if(!empty($uploadedFile['name'])){ 
+            if (!empty($uploadedFile['name'])) { 
                
-                if($this->createFolder($thumbnailTempPath)){    
-
+                if ($this->createFolder($thumbnailTempPath)) {    
                     //call templating plugin creator service 
                     $tpcService = $this->getServiceManager()->get('MelisTemplatingPluginCreatorService');
                     //clean filename by removing accents and spaces
                     $fileName = $tpcService->removeAccents(str_replace(' ','_',trim($uploadedFile['name'])));
 
                     /** validate image  */
-                    if(!empty($uploadedFile['tmp_name'])) {
+                    if (!empty($uploadedFile['tmp_name'])) {
 
                         //check if file is image
                         $sourceImg = @imagecreatefromstring(@file_get_contents($uploadedFile['tmp_name']));
@@ -940,31 +871,29 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
                             return array($upload, $fileName, $tool->getTranslation('tr_melistemplatingplugincreator_save_upload_image_imageFalseType'));
                         }
 
-                        //check if size does not exceed the limit set
-                        //set size validator
+                        //retrieve the size limit from the configuration               
                         $melisCoreConfig = $this->getServiceManager()->get('MelisCoreConfig');
-                        $pluginThumbnailConfig = $melisCoreConfig->getItem('melistemplatingplugincreator/datas/plugin_thumbnail');          
+                        $pluginThumbnailConfig = $melisCoreConfig->getItem('melistemplatingplugincreator/datas/plugin_thumbnail');
                         $minSize = $pluginThumbnailConfig['min_size'];
                         $maxSize = $pluginThumbnailConfig['max_size'];
                     
-                        // Limit the file size to between 10kB and 4MB
+                        // set size validator
                         $sizeValidator = new Size([
                             'min' => $minSize,              
                             'max' => $maxSize,
                         ]);
 
-                        // Perform validation with file path
+                        //check if size does not exceed the limit set   
                         if (!$sizeValidator->isValid($uploadedFile['tmp_name'])) {                           
                             return array($upload, $fileName, $tool->getTranslation('tr_melistemplatingplugincreator_upload_too_big', array($this->formatBytes($maxSize)))   );
                         }
                     }
 
-
                     $adapter = new Http();     
                     $validator = array($imageValidator);  
                     $adapter->setValidators($validator, $fileName);
 
-                    if($adapter->isValid()) {
+                    if ($adapter->isValid()) {
                         $adapter->setDestination($thumbnailTempPath);
                         //adds file directory to filename      
                         $fileName = $thumbnailTempPath .'/'. $fileName;          
@@ -975,7 +904,7 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
                         ]);
 
                         // if uploaded successfully
-                        if($adapter->receive()) {
+                        if ($adapter->receive()) {
                             $upload = true;                            
                         } else {                          
                             $textMessage = $tool->getTranslation('tr_melistemplatingplugincreator_save_upload_error_encounter');
@@ -1003,7 +932,8 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
      * This processes the uploading of the plugin thumbnail     
      * @return Laminas\View\Model\JsonModel
     */
-    public function processUploadAction(){   
+    public function processUploadAction()
+    {   
         $container = new Container('templatingplugincreator');//session container
         $sessionID = $container->getManager()->getId();    
         $errors = array();       
@@ -1025,17 +955,17 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
         $stepForm2 = $factory->createForm($appConfigForm);         
         $stepForm2->setData($uploadedFile['tpc_plugin_upload_thumbnail']);
 
-        if($stepForm2->isValid()){  
+        if ($stepForm2->isValid()) {  
             //process uploading of thumbnail
             list($isValid2ndForm, $pluginThumbnail, $textMessage) = $this->uploadPluginThumbnail($uploadedFile['tpc_plugin_upload_thumbnail']);
 
-            if($isValid2ndForm){
+            if ($isValid2ndForm) {
                 //save to session   
                 $container['melis-templatingplugincreator']['step_2']['plugin_thumbnail'] = '/MelisTemplatingPluginCreator/temp-thumbnail/'.$sessionID.'/'.pathinfo($pluginThumbnail, PATHINFO_FILENAME).'.'.pathinfo($pluginThumbnail, PATHINFO_EXTENSION); 
 
-            }else{         
+            } else {         
                 //unset previously uploaded file
-                if(!empty($container['melis-templatingplugincreator']['step_2']['plugin_thumbnail'])){
+                if (!empty($container['melis-templatingplugincreator']['step_2']['plugin_thumbnail'])) {
                     unset($container['melis-templatingplugincreator']['step_2']['plugin_thumbnail']); 
                 }                
       
@@ -1047,7 +977,7 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
                 $uploadFormErrorMessages = $this->formatErrors($stepForm2->getMessages(), $stepForm2->getElements());   
             }  
 
-        }else{           
+        } else {           
             $uploadFormErrorMessages = $this->formatErrors($stepForm2->getMessages(), $stepForm2->getElements());
         }           
 
@@ -1071,17 +1001,16 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
      * @return boolean
     */
     public function removeTempThumbnailDirAction()
-    {   
-        // Initializing the Dashboard Plugin creator session container
+    {           
         $container = new Container('templatingplugincreator');
         
-        if(!empty($container['melis-templatingplugincreator'])){       
-            //call dashboard plugin creator service 
+        if (!empty($container['melis-templatingplugincreator'])) {       
+            //call templating plugin creator service 
             $tpcService = $this->getServiceManager()->get('MelisTemplatingPluginCreatorService');
 
             //get the temp directory that stored the uploaded plugin thumbnails        
             $tempPath = pathinfo($tpcService->getTempThumbnail(), PATHINFO_DIRNAME);  
-            if($tempPath){               
+            if ($tempPath) {               
                 //remove temp thumbnail directory 
                $tpcService->removeDir($tempPath); 
             }  
@@ -1089,8 +1018,13 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
         return true;
     }
 
-    /*ref: MelisComDocumentController*/
-    /*this will format the size of the uploaded file into kb*/
+
+    /**
+     * ref: MelisComDocumentController
+     * this will format the size of the uploaded file into kb
+     * @param byte unit
+     * @return kb unit
+    */
     private function formatBytes($bytes) {
         $size = $bytes;
         $units = array( 'B', 'Ko', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB');
@@ -1105,11 +1039,11 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
     */
     public function removePluginThumbnailAction()
     {   
-        // Initializing the Dashboard Plugin creator session container
+        // Initializing the Templating Plugin creator session container
         $container = new Container('templatingplugincreator');
         
-        if(!empty($container['melis-templatingplugincreator'])){ 
-            if(!empty($container['melis-templatingplugincreator']['step_2']['plugin_thumbnail'])){
+        if (!empty($container['melis-templatingplugincreator'])) { 
+            if (!empty($container['melis-templatingplugincreator']['step_2']['plugin_thumbnail'])) {
                 unset($container['melis-templatingplugincreator']['step_2']['plugin_thumbnail']);
             }          
         }
@@ -1142,10 +1076,15 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
         return $view;
     }
 
-
+    /**
+     * Retrieve the forms for each field
+     * @param curstep
+     * @param tab number
+     * @param field count
+     * @return array
+    */
     private function getFieldForms($curStep, $tab, $fieldCount){
-        $container = new Container('templatingplugincreator');//to store the session data
-     
+        $container = new Container('templatingplugincreator');//to store the session data     
         $melisCoreConfig = $this->getServiceManager()->get('MelisCoreConfig');          
         $factory = new \Laminas\Form\Factory();
         $formElements = $this->getServiceManager()->get('FormElementManager');
@@ -1153,12 +1092,12 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
         $appConfigForm = $melisCoreConfig->getFormMergedAndOrdered('melistemplatingplugincreator/forms/melistemplatingplugincreator_step'.$curStep.'_field_form', 'melistemplatingplugincreator_step'.$curStep.'_field_form');  
          $stepFormArr = array();
    
-        for($i=1; $i<=$fieldCount; $i++){
+        for ($i=1; $i<=$fieldCount; $i++) {
             // Generating form for each language
             $stepFormtmp = $factory->createForm($appConfigForm);
            
-            //set the default value of the first field
-            if($i==1){
+            //set the default value of the first field (template_path)
+            if ($i==1) {
                 $templatingPluginCreatorSrv = $this->getServiceManager()->get('MelisTemplatingPluginCreatorService');
                 $moduleName = $this->getDestinationModule();               
                 $newPluginName = $templatingPluginCreatorSrv->convertToViewName($container['melis-templatingplugincreator']['step_1']['tpc_plugin_name']);
@@ -1167,22 +1106,40 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
                 $stepFormtmp->get('tpc_field_display_type')->setValue(self::DROPDOWN);
                 $stepFormtmp->get('tpc_field_is_required')->setValue('1');
                 $stepFormtmp->get('tpc_field_default_value')->setValue($moduleName.'/plugins/'.$newPluginName); 
+                $stepFormtmp->get('tpc_field_default_options')->setValue($moduleName.'/plugins/'.$newPluginName); 
 
                 //set to readonly/disabled
                 $stepFormtmp->get('tpc_field_name')->setAttribute('readonly','readonly');
                 $stepFormtmp->get('tpc_field_display_type')->setAttribute('disabled',true);
                 $stepFormtmp->get('tpc_field_is_required')->setAttribute('disabled',true);
                 $stepFormtmp->get('tpc_field_default_value')->setAttribute('readonly','readonly');
+                $stepFormtmp->get('tpc_field_default_options')->setAttribute('readonly','readonly');                    
             }
 
-            //set data here for each form
-            if(!empty($container['melis-templatingplugincreator']['step_'.$curStep]['tab_'.$tab]['field_'.$i])){
+            //hide default_options field
+            $stepFormtmp->get('tpc_field_default_options')->setLabelAttributes(array('style' => 'display: none;','color' => 'red'));    
+            $stepFormtmp->get('tpc_field_default_options')->setAttributes(array('style' => 'display: none;'));         
+
+            //set data here for each form except for the template_path field since it's predefined
+            if (!empty($container['melis-templatingplugincreator']['step_'.$curStep]['tab_'.$tab]['field_'.$i]) && $i!=1) {
                 $stepFormtmp->setData($container['melis-templatingplugincreator']['step_'.$curStep]['tab_'.$tab]['field_'.$i]);
 
                 //if the selected display type is Dropdown, add data-role=tagsinput attribute
-                if($stepFormtmp->get('tpc_field_display_type')->getValue() == self::DROPDOWN && $i!=1){
-                    $stepFormtmp->get('tpc_field_default_value')->setAttribute('data-role','tagsinput');
+                if ($stepFormtmp->get('tpc_field_display_type')->getValue() == self::DROPDOWN && $i!=1) {
+                    $stepFormtmp->get('tpc_field_default_options')->setAttribute('data-role','tagsinput');
+
+                    //show default_options field
+                    $stepFormtmp->get('tpc_field_default_options')->setLabelAttributes(array('style' => 'display: block;'));    
+                    $stepFormtmp->get('tpc_field_default_options')->setAttributes(array('style' => 'display: block;'));                    
                 }
+
+
+                //test
+                if ($stepFormtmp->get('tpc_field_display_type')->getValue() == 'MelisCoreTinyMCE') {         
+                    //dump('display type is tiny mce, value is: '. $container['melis-templatingplugincreator']['step_'.$curStep]['tab_'.$tab]['field_'.$i]['tpc_field_default_value']);           
+                    $stepFormtmp->get('tpc_field_default_value')->setValue(htmlentities($container['melis-templatingplugincreator']['step_'.$curStep]['tab_'.$tab]['field_'.$i]['tpc_field_default_value']));                 
+                }
+
             }           
 
             $stepFormArr[] = $stepFormtmp;
@@ -1193,64 +1150,62 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
 
 
     /**
-     * This retrieves the translation forms for the plugin's properties and the list of languages available in the platform
-     * @param int $step
-     * @return array
+    * This retrieves the translation forms for the plugin's properties and the list of languages available in the platform
+    * @return array
     */
     private function getMainPropertiesTranslationForm(){
         $container = new Container('templatingplugincreator');
-        // get all languages available in the plaftform
-        $coreLang = $this->getServiceManager()->get('MelisCoreTableLang');
-        $languages = $coreLang->fetchAll()->toArray();
-
+   
         //get the language form set for the given step
         $melisCoreConfig = $this->getServiceManager()->get('MelisCoreConfig');          
         $factory = new \Laminas\Form\Factory();
         $formElements = $this->getServiceManager()->get('FormElementManager');
         $factory->setFormElementManager($formElements); 
         $appConfigForm = $melisCoreConfig->getFormMergedAndOrdered('melistemplatingplugincreator/forms/melistemplatingplugincreator_step4', 'melistemplatingplugincreator_step4'); 
-
-        //get the current locale used from meliscore session
-        $melisCoreContainer = new Container('meliscore');
-        $locale = $melisCoreContainer['melis-lang-locale']; 
-
-        foreach($languages as $key => $langData) {
-            if(trim($langData["lang_locale"]) == trim($locale)){
-                unset($languages[$key]);
-                array_unshift($languages,$langData);
-            }
-        }
+        
+        //get all available languages 
+        $languages = $this->getOrderedLanguagesByCurrentLocale();
 
         // Generate form for each language
-        foreach($languages As $key => $lang){      
+        foreach ($languages As $key => $lang) {      
             $fieldCount = $container['melis-templatingplugincreator']['step_3']['main_form']['tpc_main_property_field_count'];
             $tabNumber = $container['melis-templatingplugincreator']['step_3']['main_form']['tpc_property_tab_number'];
+            $tabCount = 1;//default to 1 for now
 
-            for($i=1; $i<=$fieldCount; $i++){
-                $stepFormtmp = $factory->createForm($appConfigForm);        
-         
-                //set value of the hidden fields
-                $stepFormtmp->get('tpc_lang_local')->setValue($lang['lang_locale']);
-                $stepFormtmp->get('tpc_tab_num')->setValue($tabNumber);
-                $stepFormtmp->get('tpc_field_num')->setValue($i);
-                $stepFormtmp->get('tpc_field_name')->setValue($container['melis-templatingplugincreator']['step_3']['tab_'.$tabNumber]['field_'.$i]['tpc_field_name']);
-                            
-                //if field dislay type is dropdown, and default values are given in step 3, add translation fields for each dropdown values
-                $fieldDisplayType = $container['melis-templatingplugincreator']['step_3']['tab_'.$tabNumber]['field_'.$i]['tpc_field_display_type'];
-                $fieldDefaultValues = $container['melis-templatingplugincreator']['step_3']['tab_'.$tabNumber]['field_'.$i]['tpc_field_default_value'];
-                                
-                if($fieldDisplayType == self::DROPDOWN && !empty($fieldDefaultValues)){
-                   $stepFormtmp = $this->setDropdownValueTranslation($i, $stepFormtmp, $fieldDefaultValues);                 
-                }
+            for ($t=1; $t<=$tabCount; $t++) {
+                for ($i=1; $i<=$fieldCount; $i++) {
+                    $stepFormtmp = $factory->createForm($appConfigForm);        
+             
+                    //set value of the hidden fields
+                    $stepFormtmp->get('tpc_lang_local')->setValue($lang['lang_locale']);
+                    $stepFormtmp->get('tpc_tab_num')->setValue($t);
+                    $stepFormtmp->get('tpc_field_num')->setValue($i);
+                    $stepFormtmp->get('tpc_field_name')->setValue($container['melis-templatingplugincreator']['step_3']['tab_'.$t]['field_'.$i]['tpc_field_name']);    
+           
+                    //set default label for template_path field
+                    if ($i==1) {
+                        $stepFormtmp->get('tpc_field_label')->setValue('Template');
+                    }                        
+            
+                    $fieldDisplayType = $container['melis-templatingplugincreator']['step_3']['tab_'.$t]['field_'.$i]['tpc_field_display_type'];
+                    //$fieldDefaultValues = $container['melis-templatingplugincreator']['step_3']['tab_'.$t]['field_'.$i]['tpc_field_default_value'];
+                    $fieldDefaultOptions = $container['melis-templatingplugincreator']['step_3']['tab_'.$t]['field_'.$i]['tpc_field_default_options'];
+                   
+                    //if field dislay type is dropdown, and default values are given in step 3, add translation fields for each dropdown values                
+                    if ($fieldDisplayType == self::DROPDOWN && !empty($fieldDefaultOptions)) {
+                       $stepFormtmp = $this->setDropdownValueTranslation($i, $stepFormtmp, $fieldDefaultOptions);                 
+                    }
 
-                //set session data to form if there are any
-                if(!empty($container['melis-templatingplugincreator']['step_4'][$lang['lang_locale']]['tab_'.$tabNumber]['field_'.$i])){
-                    $stepFormtmp->setData($container['melis-templatingplugincreator']['step_4'][$lang['lang_locale']]['tab_'.$tabNumber]['field_'.$i]);
-                }  
+                    //set session data to form if there are any
+                    if (!empty($container['melis-templatingplugincreator']['step_4'][$lang['lang_locale']]['tab_'.$t]['field_'.$i])) {
+                        $stepFormtmp->setData($container['melis-templatingplugincreator']['step_4'][$lang['lang_locale']]['tab_'.$t]['field_'.$i]);
+                    }  
 
-                // Adding translation form for each field
-                $stepFormArr['mainPropertyTranslationForm'][$lang['lang_locale']]['tab_'.$tabNumber]['field_'.$i] = $stepFormtmp;
-            }                 
+                    // Adding translation form for each field
+                    $stepFormArr['mainPropertyTranslationForm'][$lang['lang_locale']]['tab_'.$t]['field_'.$i] = $stepFormtmp;
+                } 
+            }
+                           
 
             // Language label
             $languages[$key]['lang_label'] = $this->langLabel($lang['lang_locale'], $lang['lang_name']);
@@ -1259,17 +1214,47 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
         return array($stepFormArr, $languages);
     }
 
-    /*this will add dropdown value translation fields to form*/
-    private function setDropdownValueTranslation($fieldNum, $stepFormtmp, $fieldDefaultValues){
+    /**
+    * This retrieves the list of languages available in the platform where the current locale used is the first in the list
+    * @return array
+    */
+    private function getOrderedLanguagesByCurrentLocale(){
+        //get all languages available in the plaftform
+        $coreLang = $this->getServiceManager()->get('MelisCoreTableLang');
+        $languages = $coreLang->fetchAll()->toArray();
+
+        //get the current locale used from meliscore session
+        $melisCoreContainer = new Container('meliscore');
+        $locale = $melisCoreContainer['melis-lang-locale']; 
+
+        //set the current locale as the first value in the array
+        foreach ($languages as $key => $langData) {
+            if (trim($langData["lang_locale"]) == trim($locale)) {
+                unset($languages[$key]);
+                array_unshift($languages,$langData);
+            }
+        }
+
+        return $languages;
+    }
+
+    /**
+    * This will add translation fields to each dropdown values
+    * @param $fieldNum
+    * @param $stepFormtmp
+    * @param $fieldDefaultOptions
+    * @return Form
+    */
+    private function setDropdownValueTranslation($fieldNum, $stepFormtmp, $fieldDefaultOptions){
         $container = new Container('templatingplugincreator');//to store the session data
         $translator = $this->getServiceManager()->get('translator');
         $inputFilter = $stepFormtmp->getInputFilter();
         $templatingPluginCreatorSrv = $this->getServiceManager()->get('MelisTemplatingPluginCreatorService');
       
-        //explode fieldDefaultValues by comma
-        $explode = explode(',',$fieldDefaultValues);
+        //explode fieldDefaultOptions by comma
+        $explode = explode(',',$fieldDefaultOptions);
 
-        foreach($explode as $value){
+        foreach ($explode as $value) {
             $element = new \Laminas\Form\Element\Text($templatingPluginCreatorSrv->removeNonAlphaNumeric($value)."_label");
             $element->setLabel(sprintf($translator->translate('tr_melistemplatingplugincreator_tpc_dropdown_value_label'), $value));            
             $element->setAttributes([
@@ -1281,7 +1266,7 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
             ]);
 
             //set default value of the label for the field number 1 [template/[path]]
-            if($fieldNum == 1){                
+            if ($fieldNum == 1) {                
                 $moduleName = $this->getDestinationModule();
                 $newPluginName = $templatingPluginCreatorSrv->convertToViewName($container['melis-templatingplugincreator']['step_1']['tpc_plugin_name']);
 
@@ -1309,7 +1294,6 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
         }
 
         $stepFormtmp->setInputFilter($inputFilter); 
-
         return $stepFormtmp;
     }
 
@@ -1339,39 +1323,46 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
         $validTranslationFormCount = array();
 
         // Generate form for each language and field
-        foreach($languages As $key => $lang){    
-            foreach($formData['step-form'] as $fieldKey => $val){ 
+        foreach ($languages As $key => $lang) {    
+            foreach ($formData['step-form'] as $fieldKey => $val) { 
                 $stepFormtmp = $factory->createForm($appConfigForm);
                 $tabNumber = $val['tpc_tab_num'];
-                $fieldNumber = $val['tpc_field_num'];
-
-                //if field dislay type is dropdown, and default values are given in step 3, add translation field for the dropdow values
+                $fieldNumber = $val['tpc_field_num'];                
                 $fieldDisplayType = $container['melis-templatingplugincreator']['step_3']['tab_'.$tabNumber]['field_'.$fieldNumber]['tpc_field_display_type'];
-                $fieldDefaultValues = $container['melis-templatingplugincreator']['step_3']['tab_'.$tabNumber]['field_'.$fieldNumber]['tpc_field_default_value'];
+                // $fieldDefaultValues = $container['melis-templatingplugincreator']['step_3']['tab_'.$tabNumber]['field_'.$fieldNumber]['tpc_field_default_value'];
+                $fieldDefaultValueOptions = $container['melis-templatingplugincreator']['step_3']['tab_'.$tabNumber]['field_'.$fieldNumber]['tpc_field_default_options'];
                 
-                if($fieldDisplayType == self::DROPDOWN && !empty($fieldDefaultValues)){                  
-                    $stepFormtmp = $this->setDropdownValueTranslation($fieldNumber, $stepFormtmp, $fieldDefaultValues);
+                //if field dislay type is dropdown, and default values are given in step 3, add translation field for each dropdown value
+                if ($fieldDisplayType == self::DROPDOWN && !empty($fieldDefaultValueOptions)) {                  
+                    $stepFormtmp = $this->setDropdownValueTranslation($fieldNumber, $stepFormtmp, $fieldDefaultValueOptions);
                 }
 
-                if($val['tpc_lang_local'] == $lang['lang_locale']){                       
+                if ($val['tpc_lang_local'] == $lang['lang_locale']) {  
+
                     $validTranslationFormCount['tab_'.$tabNumber]['field_'.$fieldNumber] = isset($validTranslationFormCount['tab_'.$tabNumber]['field_'.$fieldNumber])?$validTranslationFormCount['tab_'.$tabNumber]['field_'.$fieldNumber]:0;
 
                     $stepFormtmp->setData($val); 
 
-                    if($stepFormtmp->isValid()){                        
+                    if ($stepFormtmp->isValid()) {                        
                         //add to session the posted values
                         $container['melis-templatingplugincreator']['step_'.$curStep][$lang['lang_locale']]['tab_'.$tabNumber]['field_'.$fieldNumber] = $stepFormtmp->getData();
 
                         $validTranslationFormCount['tab_'.$tabNumber]['field_'.$fieldNumber] = $validTranslationFormCount['tab_'.$tabNumber]['field_'.$fieldNumber] + 1;
 
-                        if(!empty($translationFormErrors['tab_'.$tabNumber]['field_'.$fieldNumber])){
+                        //if same field of another language is set, consider the field as valid 
+                        if (!empty($translationFormErrors['tab_'.$tabNumber]['field_'.$fieldNumber])) {
                             unset($translationFormErrors['tab_'.$tabNumber]['field_'.$fieldNumber]);
                             $invalidTranslationFormCount--;
                         }
 
-                    }else{     
+                    } else {   
+
+                        //if not valid, unset from session if previously saved
+                        if(!empty($container['melis-templatingplugincreator']['step_'.$curStep][$lang['lang_locale']]['tab_'.$tabNumber]['field_'.$fieldNumber])) {
+                            unset($container['melis-templatingplugincreator']['step_'.$curStep][$lang['lang_locale']]['tab_'.$tabNumber]['field_'.$fieldNumber]);
+                        }   
                        
-                        if($validTranslationFormCount['tab_'.$tabNumber]['field_'.$fieldNumber] == 0 && empty($translationFormErrors['tab_'.$tabNumber]['field_'.$fieldNumber])){
+                        if ($validTranslationFormCount['tab_'.$tabNumber]['field_'.$fieldNumber] == 0 && empty($translationFormErrors['tab_'.$tabNumber]['field_'.$fieldNumber])) {
                             $invalidTranslationFormCount++;
                        
                             $translationFormErrors['tab_'.$tabNumber]['field_'.$fieldNumber] = $this->formatErrors($stepFormtmp->getMessages(), $stepFormtmp->getElements());
@@ -1381,8 +1372,7 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
             }   
         }
 
-
-        if($invalidTranslationFormCount == 0){           
+        if ($invalidTranslationFormCount == 0) {           
             $isValid = 1;            
             $translationFormErrors = array();
         }       
@@ -1397,7 +1387,7 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
      * @param array $formData
      * @return array
     */
-    private function validateFieldForm($curStep, $formData){      
+    private function validateFieldForm($curStep, $formData){   
         $container = new Container('templatingplugincreator');//to store the session data
         $translator = $this->getServiceManager()->get('translator');
 
@@ -1408,38 +1398,38 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
         $appConfigForm = $melisCoreConfig->getFormMergedAndOrdered('melistemplatingplugincreator/forms/melistemplatingplugincreator_step'.$curStep.'_field_form', 'melistemplatingplugincreator_step'.$curStep.'_field_form'); 
         $invalidFieldFormCount = 0;
         $isValid = 1;      
-        $fieldFormErrors = array();       
-
+        $fieldFormErrors = array();   
         $fieldCount = $formData['step-form']['tpc_main_property_field_count'];
         $tabNumber = $formData['step-form']['tpc_property_tab_number'];
 
-        for($i=1; $i<=$fieldCount; $i++){
+        for ($i=1; $i<=$fieldCount; $i++) {
             // Generating form for each field
             $stepFormtmp = $factory->createForm($appConfigForm);
             $fieldFormName = $stepFormtmp->getAttribute('name');
 
             //no validation needed if the field set is template_path only since the values are predefined
-            if($fieldCount == 1){
+            if ($fieldCount == 1) {
                 $val['tpc_field_name'] = $formData['step-form']['tpc_field_name'];
                 $val['tpc_field_display_type'] = self::DROPDOWN;
                 $val['tpc_field_is_required'] = 1;                   
+                $val['tpc_field_default_options'] = $formData['step-form']['tpc_field_default_value']; 
                 $val['tpc_field_default_value'] = $formData['step-form']['tpc_field_default_value']; 
                                
                 //add to session the posted values
                 $container['melis-templatingplugincreator']['step_'.$curStep]['tab_'.$tabNumber]['field_'.$i] = $val;
 
-            }else{
+            } else {
 
-                foreach($formData['step-form'] as $key => $val){                   
-                    if($key == $i){                    
-                        //handling for template_path field  
-                        if($val['tpc_field_name'] == 'template_path'){
+                foreach ($formData['step-form'] as $key => $val) {                   
+                    if ($key == $i) {                    
+                        //handling for 'template_path' field  
+                        if ($val['tpc_field_name'] == 'template_path') {
                             $val['tpc_field_display_type'] = !empty($val['tpc_field_display_type'])?$val['tpc_field_display_type']:self::DROPDOWN;
                             $val['tpc_field_is_required'] = !empty($val['tpc_field_is_required'])?$val['tpc_field_is_required']:'1'; 
                         }       
 
                         //add digit validator if selected display type is NumericInput
-                        if(($val['tpc_field_display_type'] == self::NUMERIC_INPUT || $val['tpc_field_display_type'] == self::PAGE_INPUT) && !empty($val['tpc_field_default_value'])){
+                        if (($val['tpc_field_display_type'] == self::NUMERIC_INPUT || $val['tpc_field_display_type'] == self::PAGE_INPUT) && !empty($val['tpc_field_default_value'])) {
 
                             $inputFilter = $stepFormtmp->getInputFilter();
                             $translator = $this->getServiceManager()->get('translator');
@@ -1463,25 +1453,25 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
                                                 
                         $stepFormtmp->setData($val); 
 
-                        if($stepFormtmp->isValid()){                                
+                        if ($stepFormtmp->isValid()) {                                
                             //add to session the posted values
                             $container['melis-templatingplugincreator']['step_'.$curStep]['tab_'.$tabNumber]['field_'.$i] = $stepFormtmp->getData();
-                        }else{        
+                        } else {        
                             $invalidFieldFormCount++;
                             $fieldFormErrors[$fieldFormName.'-'.$i] = $stepFormtmp->getMessages(); 
                         } 
 
                         break; 
 
-                    }else{
+                    } else {
                         continue;
                     } 
                 }  
-            }           
-              
+            } 
         }    
-     
-        if($invalidFieldFormCount > 0){            
+
+        //tag current step as invalid if at least 1 field form has error
+        if ($invalidFieldFormCount > 0) {            
             $isValid = 0;
             $fieldFormErrors = $this->formatFieldFormErrors($fieldFormErrors, $stepFormtmp->getElements());            
         }    
@@ -1499,11 +1489,9 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
     private function formatFieldFormErrors($errors, $formElements){ 
         $fieldFormErrors = array();
 
-        foreach ($errors as $formKey => $fieldFormError)
-        { 
-            foreach($fieldFormError as $keyError  => $valueError){
-                foreach($formElements as $keyForm => $valueForm)
-                {
+        foreach ($errors as $formKey => $fieldFormError) { 
+            foreach ($fieldFormError as $keyError  => $valueError) {
+                foreach ($formElements as $keyForm => $valueForm) {
                     $elementName = $valueForm->getAttribute('name');
                     //override form label with the custom one if given
                     $elementLabel = !empty($valueError['label'])?$valueError['label']:$valueForm->getLabel();              
@@ -1527,10 +1515,8 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
      * @return array
     */
     private function formatErrors($errors, $formElements){  
-        foreach ($errors as $keyError => $valueError)
-        {       
-            foreach ($formElements as $keyForm => $valueForm)
-            {
+        foreach ($errors as $keyError => $valueError) {       
+            foreach ($formElements as $keyForm => $valueForm) {
                 $elementName = $valueForm->getAttribute('name');
                 //override form label with the custom one if given
                 $elementLabel = !empty($valueError['label'])?$valueError['label']:$valueForm->getLabel();              
@@ -1540,7 +1526,6 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
                     $errors[$keyError]['label'] = $elementLabel;
             }
         }
-
         return $errors;
     }
 

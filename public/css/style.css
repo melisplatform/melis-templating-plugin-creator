@@ -161,7 +161,6 @@
     max-width: 100%;
 }
 
-
 .melis-templating-plugin-creator-steps-content .padding-left-0{
     padding-left:0px;
 }
@@ -203,11 +202,6 @@
     font-weight: 600 !important; 
 }
 
-/*.melis-templating-plugin-creator-steps-content #melisdashboardplugincreator_step3 .plugin-creator-radio label{  
-    font-size: 18px !important;
-}
-*/
-
 .melis-templating-plugin-creator-steps-content .plugin-creator-radio label > input[type="radio"] {
     display: none;
 }
@@ -239,9 +233,6 @@
 #tpc_existing_module_name{
     min-width: 200px;
 }
-
-
-
 
 /*Step 3 Field Accordion*/
 .field-accordion [data-toggle="collapse-widget"] .collapse-toggle {
@@ -280,4 +271,9 @@
 .field-accordion .accordionTitle {
     cursor: pointer;
     border-radius: 5px 5px 0 0;
+}
+
+/*for the tags input*/
+.melis-templating-plugin-creator-steps-content .label.label-info{
+    background: #e61c23 !important;
 }

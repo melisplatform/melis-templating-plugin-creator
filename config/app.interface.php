@@ -30,7 +30,8 @@ return [
                  */
                 'build' => [
                     // configuration to override "use_build_assets" configuration, if you want to use the normal assets for this module.
-                    'disable_bundle' => true,
+                    //value is 'false' if not local env
+                    'disable_bundle' => false,
                     // lists of assets that will be loaded in the layout
                     'css' => [
                         '/MelisTemplatingPluginCreator/build/css/bundle.css',
@@ -66,34 +67,7 @@ return [
                         'name' => 'tr_melistemplatingplugincreator_finalization',
                         'icon' => 'fa-cogs'
                     ],                                       
-                ],      
-                'pluginIcons' => [
-                    'charts'  => 'fa-bar-chart-o',
-                    'calendar'  => 'fa-calendar',                                     
-                    'warning_sign'  => 'fa-warning',
-                    'table'  => 'fa-table',
-                    'cogwheel' => 'fa-cog',
-                    'chat'  => 'fa-comment',           
-                    'link'  => 'fa-chain',                                       
-                    'google_maps'  => 'fa-map-marker',  
-                    'bin' => 'fa-trash-o',
-                    'filter' => 'fa-filter',
-                    'search' => 'fa-search',
-                    'table' => 'fa-table',
-                    'tag' => 'fa-tag',
-                    'bookmark' => 'fa-bookmark',
-                    'group' => 'fa-group',
-                    'bell' => 'fa-bell',
-                    'clock' => 'fa-clock-o',
-                    'wrench' => 'fa-wrench',
-                    'ban' => 'fa-ban',
-                    'share' => 'fa-share',
-                    'file' => 'fa-file',
-                    'list' => 'fa-list',
-                    'heart' => 'fa-heart',
-                    'inbox' => 'fa-inbox',
-                    'envelope' => 'fa-envelope'
-                ],              
+                ],        
                 'plugin_thumbnail' => [
                     'min_size' => 1,
                     'max_size' => '512000'                   

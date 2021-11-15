@@ -12,7 +12,7 @@
                      ));                      
                  ?>                 
             </div>  
-    <?php    }else{ ?>
+    <?php  } else { ?>
                 <?php echo $this->partial('melis-templating-plugin-creator/partial/render-step'.$curStep, array(
                     'stepForm' => $this->stepForm,
                     'data' => $this->data,                   
@@ -23,21 +23,19 @@
     <div class='d-flex justify-content-between'>
         <div style="text-align: left;">
             <?php 
-                if($curStep != 1){ ?>
-                        <button class="btn btn-default btn-steps" data-curstep="<?=$this->curStep?>" data-nextstep="<?=$this->curStep-1?>"><?php echo $this->translate('tr_melistemplatingplugincreator_back') ?></button>
-            <?php    }
+                if ($curStep != 1) { ?>
+                    <button class="btn btn-default btn-steps" data-curstep="<?=$this->curStep?>" data-nextstep="<?=$this->curStep-1?>"><?php echo $this->translate('tr_melistemplatingplugincreator_back') ?></button>
+            <?php  }
             ?>
         </div>
        
        <?php 
-        if($this->curStep == 6){ ?>
-
+        if ($this->curStep == 6) { ?>
             <div style="text-align: right;">
                 <button class="btn btn-default btn-steps tpc-validate" data-curstep="<?=$this->curStep?>" data-nextstep="<?=$this->curStep?>" data-validate="true"><?php echo $this->translate('tr_melistemplatingplugincreator_finish_and_create_the_plugin') ?></button>
             </div>
             
-        <?php }else{ ?>
-           
+        <?php } else { ?>           
             <div style="text-align: right;">
                 <button class="btn btn-default btn-steps tpc-validate" data-curstep="<?=$this->curStep?>" data-nextstep="<?=$this->nextStep?>" data-validate="true"><?php echo $this->translate('tr_melistemplatingplugincreator_next') ?></button>
             </div>
