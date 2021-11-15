@@ -48,7 +48,7 @@
 		
 		/*Step1 Form*/
 		'tr_melistemplatingplugincreator_title_step_1' => 'Plugin’s properties',
-        'tr_melistemplatingplugincreator_desc_step_1' => 'Enter the name of the plugin.<br>Then choose the code’s destination, new module or existing module.',
+        'tr_melistemplatingplugincreator_desc_step_1' => 'Enter the name of the plugin.<br>Then choose the code’s destination, new module or existing site module.',
 	    'tr_melistemplatingplugincreator_tpc_plugin_name' => 'Plugin name',
 	    'tr_melistemplatingplugincreator_tpc_plugin_name tooltip' => 'Enter Plugin name.',
 	    'tr_melistemplatingplugincreator_tpc_plugin_type' => 'View type',      
