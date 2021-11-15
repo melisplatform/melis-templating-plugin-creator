@@ -73,6 +73,20 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
         if (!is_writable($_SERVER['DOCUMENT_ROOT'] . '/../module'))
             $filePermissionErr[] = 'tr_melistemplatingplugincreator_fp_module';
 
+        //check if temp-thumbnail directory exists and is writable
+        $tempThumbnailDirectory = $this->getTempThumbnailDirectory();    
+        if(is_writable($tempThumbnailDirectory)){
+            dump('temp-thumbnail is writable');
+        }else{
+            dump('temp-thumbnail not writable');
+        }
+
+        if($this->createFolder($tempThumbnailDirectory) && is_writable($tempThumbnailDirectory)) { 
+            chown($tempThumbnailDirectory, 'www-data');
+        }else{
+            $filePermissionErr[] = 'tr_melistemplatingplugincreator_fp_temp_thumbnail';
+        }
+
         if (!empty($filePermissionErr)){
             $view->fPErr = $filePermissionErr;
             return $view;
@@ -821,7 +835,7 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
         } else {            
             $status = mkdir($path, 0777, true);           
         }
-        return $status;
+        return $status;             
     }
 
     /**
@@ -835,11 +849,9 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
         $_FILES = array($uploadedFile);
 
         try {
-            $tool =   $this->getServiceManager()->get('MelisCoreTool');          
-            $melisModule = $this->getServiceManager()->get('MelisAssetManagerModulesService');                        
-            $names = explode("\\", __NAMESPACE__);                       
-            $moduleName = $names[0];
-            $thumbnailTempPath = $melisModule->getModulePath($moduleName,true).'/public/temp-thumbnail/';
+            $tool =   $this->getServiceManager()->get('MelisCoreTool'); 
+            $thumbnailTempPath = $this->getTempThumbnailDirectory();    
+            //append session id to temp-thumbnail path
             $sessionID = $container->getManager()->getId(); 
             $thumbnailTempPath = $thumbnailTempPath.$sessionID.'/';
             $upload = false;
@@ -855,7 +867,6 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
             ]);           
 
             if (!empty($uploadedFile['name'])) { 
-               
                 if ($this->createFolder($thumbnailTempPath)) {    
                     //call templating plugin creator service 
                     $tpcService = $this->getServiceManager()->get('MelisTemplatingPluginCreatorService');
@@ -990,7 +1001,7 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
             'errors' => $uploadFormErrorMessages,
             'pluginThumbnail' => !empty($container['melis-templatingplugincreator']['step_2']['plugin_thumbnail'])?$container['melis-templatingplugincreator']['step_2']['plugin_thumbnail']:null,
             'textTitle' => $translator->translate($stepsConfig['melistemplatingplugincreator_step2']['name']),
-            'textMessage' => ''
+            'textMessage' => $textMessage
         );
 
         return new JsonModel($results);
@@ -1546,5 +1557,19 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
         }
 
         return $moduleName;
+    }
+
+    /**
+     * Retrieves the temp thumbnail directory
+     * @return string
+    */
+    private function getTempThumbnailDirectory(){
+        // Set the user
+        $melisModule = $this->getServiceManager()->get('MelisAssetManagerModulesService');                        
+        $names = explode("\\", __NAMESPACE__);                       
+        $moduleName = $names[0];        
+        $tempThumbnailDirectory = $melisModule->getModulePath($moduleName,true).'/public/temp-thumbnail/';
+
+        return $tempThumbnailDirectory;
     }
 }
