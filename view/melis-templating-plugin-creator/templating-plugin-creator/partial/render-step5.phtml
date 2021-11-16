@@ -33,15 +33,15 @@
                         <tbody>
                             <tr>
                                 <td><?php echo $sessionData['tpc_plugin_name'] ?></td> 
-                                <td><?php echo ucwords(str_replace("_", ' ', $sessionData['tpc_plugin_destination'])) ?></td>
+                                <td><?php echo $sessionData['tpc_plugin_destination'] == 'new_module'?$this->translate('tr_melistemplatingplugincreator_destination_new_opt'):$this->translate('tr_melistemplatingplugincreator_destination_existing_opt') ?></td>
 
-                                  <?php 
-                                        if ($sessionData['tpc_plugin_destination'] == 'new_module') { ?>
-                                            <td><?php echo $sessionData['tpc_new_module_name'] ?></td>
-                                    <?php } else { ?>
-                                           <td><?php echo $sessionData['tpc_existing_module_name'] ?></td>
-                                   <?php }
-                                    ?>
+                              <?php 
+                                    if ($sessionData['tpc_plugin_destination'] == 'new_module') { ?>
+                                        <td><?php echo $sessionData['tpc_new_module_name'] ?></td>
+                                <?php } else { ?>
+                                       <td><?php echo $sessionData['tpc_existing_module_name'] ?></td>
+                               <?php }
+                                ?>
                             </tr>
                         </tbody>                        
                     </table>

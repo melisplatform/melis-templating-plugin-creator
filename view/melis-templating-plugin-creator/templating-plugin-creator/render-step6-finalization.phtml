@@ -17,7 +17,7 @@
 
 <script>
     <?php if ($this->restartRequired) { ?>
-        function countdown(){
+        var countdown = function(){
             var tcResCd = parseInt($("#tc-restart-cd").text());
             var countDown = setInterval(function() {
                 if (tcResCd < 1){

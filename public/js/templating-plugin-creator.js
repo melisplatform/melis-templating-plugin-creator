@@ -175,7 +175,7 @@ $(function(){
     //set errors to be displayed for each field
     function setFieldErrors(curStep, fieldKey, fieldError, errorTexts){
         //update field key for the display
-        fieldKey = "Field " + fieldKey.slice(fieldKey.length - 1);
+        fieldKey = translations.tr_melistemplatingplugincreator_field + " " + fieldKey.slice(fieldKey.length - 1);
 
         errorTexts +=
                     '<p class="modal-error-cont"><b title="' +
@@ -285,6 +285,23 @@ $(function(){
             $("#tpc_new_module_name").parents('.form-group').hide();
             $("#tpc_new_module_name").val('');
             $("#tpc_existing_module_name").parents('.form-group').show();    
+        }
+    });
+
+    /*manually sets the checked properties of Activate Plugin checkbox in the step 5 form*/
+    $body.on("click", ".melis-tpc-final-content .fa", function(){
+        if ($(this).hasClass("fa-check-square-o")){
+            // unChecking
+            $(this).addClass("fa-square-o");
+            $(this).removeClass("text-success");
+            $(this).removeClass("fa-check-square-o");
+            $(this).next("input").attr("checked", false);
+        }else{
+            // Checking
+            $(this).removeClass("fa-square-o");
+            $(this).addClass("fa-check-square-o");
+            $(this).addClass("text-success");
+            $(this).next("input").attr("checked", true);
         }
     });
 

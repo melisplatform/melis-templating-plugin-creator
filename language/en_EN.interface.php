@@ -13,7 +13,7 @@
 	    'tr_melistemplatingplugincreator_fp_msg' => 'In-order to create templating plugin using this module, please give the rights to write in the following directories or contact the administrator if the problem persists',
 	    'tr_melistemplatingplugincreator_fp_config' => '<b>/config/melis.module.load.php</b> - this file is required to activate a new module after its creation',
 	 	'tr_melistemplatingplugincreator_fp_module' => '<b>/module</b> - The directory where the created modules are saved',
-        'tr_melistemplatingplugincreator_fp_temp_thumbnail' => '<b>/public/temp-thumbnail</b> - The directory where the uploaded plugin thumbnails are temporarily saved',
+        'tr_melistemplatingplugincreator_fp_temp_thumbnail' => '<b>/melis-templating-plugin-creator/public/temp-thumbnail</b> - The directory where the uploaded plugin thumbnails are temporarily saved',
 
 	 	 // Error messages
 	    'tr_melistemplatingplugincreator_err_message' => 'Unable to proceed to the next step, please try again',
