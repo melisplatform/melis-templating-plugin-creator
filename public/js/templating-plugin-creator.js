@@ -441,6 +441,9 @@ $(function(){
     $body.on("keyup", ".melis-templating-plugin-creator-steps-content #tpc_main_property_field_count", function() {         
         var fieldCount = $('#tpc_main_property_field_count').val();
 
+        //remove highlight errors
+        $("#tpc_main_property_field_count").parents('.form-group').find("label").css("color","#686868");  
+
         //empty field form div
         $('#field-form-div').empty();
       

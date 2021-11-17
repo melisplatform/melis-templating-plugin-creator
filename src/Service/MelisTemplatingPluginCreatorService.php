@@ -59,9 +59,9 @@ class MelisTemplatingPluginCreatorService extends MelisGeneralService
             $moduleDir = $_SERVER['DOCUMENT_ROOT'].'/../module/'.$this->moduleName;
 
             //unset the tools tree section of the newly created module
-            $this->emptyConfigToolsTreeSection($_SERVER['DOCUMENT_ROOT'].'/../module/'.$this->moduleName);
+            $this->emptyConfigToolsTreeSection($moduleDir);
         }
-
+        
         //set plugin name
         $this->pluginName = $this->generateModuleNameCase($this->steps['step_1']['tpc_plugin_name']);
        
@@ -653,7 +653,7 @@ class MelisTemplatingPluginCreatorService extends MelisGeneralService
             $langFile = $languageDir.$lang['lang_locale'].'.interface.php';
             $langFile = file_exists($langFile)?$langFile:$languageDir.$lang['lang_locale'].'.php';
 
-            if ($langFile) {
+            if (file_exists($langFile)) {
                  //get the existing translation of the language
                 $translationArr = include $langFile;
                 
@@ -665,7 +665,6 @@ class MelisTemplatingPluginCreatorService extends MelisGeneralService
                     
                     //set the plugin description
                     $translationArr['tr_'.$this->moduleName.$this->pluginName.'Plugin_Description'] = !empty($this->steps['step_2'][$lang['lang_locale']]['tpc_plugin_desc'])                                ?$this->removeExtraSpace($this->steps['step_2'][$lang['lang_locale']]['tpc_plugin_desc']):"";
-
                 } else {
                     //unset name and desc translation if doing rollback process
                     unset($translationArr['tr_'.$this->moduleName.$this->pluginName.'Plugin_Name']);
@@ -738,15 +737,15 @@ class MelisTemplatingPluginCreatorService extends MelisGeneralService
                         }
                     }
                 }   
-            }     
 
-            //write back to file the updated translation array
-            $configFactory = new Factory();
-            $write = $configFactory->toFile($langFile, $translationArr);
+                //write back to file the updated translation array
+                $configFactory = new Factory();
+                $write = $configFactory->toFile($langFile, $translationArr);
 
-            if (!$write) {
-                $errorCount++;
-            }
+                if (!$write) {
+                    $errorCount++;
+                }
+            }                
         }
 
         if ($errorCount) {

@@ -1,6 +1,6 @@
 <?php
     return [
-		'tr_melistemplatingplugincreator_title' => 'Créateur de plugin de template', 
+		'tr_melistemplatingplugincreator_title' => 'Créateur de plugin de template',
 		'tr_melistemplatingplugincreator_desc' => 'Le créateur de plugin de template génère des plugins de template prêt à l\'emploi.',
 		
 		//Buttons
@@ -8,7 +8,7 @@
         'tr_melistemplatingplugincreator_next' => 'Suivant',
         'tr_melistemplatingplugincreator_finish_and_create_the_plugin' => 'Terminer et créer le plugin',
 
-		 // Warnings
+		// Warnings
 	    'tr_melistemplatingplugincreator_fp_title' => 'Problème de droits',
 	    'tr_melistemplatingplugincreator_fp_msg' => 'Pour créer ce plugin veuillez donner des droits d\'écriture pour les dossiers suivants ou contactez l\'administrateur.',
 	    'tr_melistemplatingplugincreator_fp_config' => '<b>/config/melis.module.load.php</b> - Ce fichier est nécessaire pour activer le nouveau module après sa création',
@@ -122,5 +122,4 @@
         'tr_melistemplatingplugincreator_execute_aadtnl_setup' => 'Derniers réglages en cours',
         'tr_melistemplatingplugincreator_please_wait' => 'Veuillez patienter',
         'tr_melistemplatingplugincreator_refreshing' => 'Rechargement' 
-
     ];
