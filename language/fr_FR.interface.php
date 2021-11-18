@@ -1,5 +1,6 @@
 <?php
     return [
+         // Tool Title & Desc
 		'tr_melistemplatingplugincreator_title' => 'Créateur de plugin de template',
 		'tr_melistemplatingplugincreator_desc' => 'Le créateur de plugin de template génère des plugins de template prêt à l\'emploi.',
 		
@@ -13,7 +14,7 @@
 	    'tr_melistemplatingplugincreator_fp_msg' => 'Pour créer ce plugin veuillez donner des droits d\'écriture pour les dossiers suivants ou contactez l\'administrateur.',
 	    'tr_melistemplatingplugincreator_fp_config' => '<b>/config/melis.module.load.php</b> - Ce fichier est nécessaire pour activer le nouveau module après sa création',
 	 	'tr_melistemplatingplugincreator_fp_module' => '<b>/module</b> - Le répertoire dans lequel les modules créés sont enregistrés',
-        'tr_melistemplatingplugincreator_fp_temp_thumbnail' => '<b>/melis-templating-plugin-creator/public/temp-thumbnail</b> - The directory where the uploaded plugin thumbnails are temporarily saved',
+        'tr_melistemplatingplugincreator_fp_temp_thumbnail' => '<b>/melis-templating-plugin-creator/public/temp-thumbnail</b> - Le répertoire dans lequel les images sont enregistrées temporairement',
 
 	 	// Error messages
 	    'tr_melistemplatingplugincreator_err_message' => 'Impossible de procéder à l\'étape suivante',

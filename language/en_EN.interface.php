@@ -1,5 +1,6 @@
 <?php
     return [    	
+         // Tool Title & Desc
 		'tr_melistemplatingplugincreator_title' => 'Templating Plugin Creator',
 		'tr_melistemplatingplugincreator_desc' => 'The templating plugin creator generates new ready-to-use templating plugins.',
 
