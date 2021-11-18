@@ -85,7 +85,7 @@
         'tr_melistemplatingplugincreator_tpc_main_property_field_count' => 'Number of Fields',
         'tr_melistemplatingplugincreator_tpc_main_property_field_count tooltip' => 'Enter the number of fields',
         'tr_melistemplatingplugincreator_tpc_field_name' => 'Name',
-        'tr_melistemplatingplugincreator_tpc_field_name tooltip' => 'Enter a valid name attribute (no spaces, must start with a letter and the rest must be either of the following: alphanumeric character, an underscore, a dash, a colon or a period)',
+        'tr_melistemplatingplugincreator_tpc_field_name tooltip' => 'Enter a valid name attribute (no spaces, must start with a letter and the rest must be either of the following: alphanumeric character or underscore)',
         'tr_melistemplatingplugincreator_tpc_field_display_type' => 'Display Type',
         'tr_melistemplatingplugincreator_tpc_field_display_type tooltip' => 'Select the field\'s display type',
         'tr_melistemplatingplugincreator_tpc_field_is_required' => 'Is Required',

@@ -273,6 +273,16 @@
     border-radius: 5px 5px 0 0;
 }
 
+/*for the accordion */
+.melis-templating-plugin-creator-steps-content .widget .widget-head h4 {
+    color: #fff;
+}
+
+.melis-templating-plugin-creator-steps-content [data-toggle=collapse-widget] .collapse:not(.list) {
+ padding:25px;
+}
+
+
 /*for the tags input*/
 .melis-templating-plugin-creator-steps-content .label.label-info{
     background: #e61c23 !important;

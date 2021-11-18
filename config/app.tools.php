@@ -564,7 +564,7 @@ return [
                                 [
                                     'name' => 'regex',
                                     'options' => [
-                                        'pattern' => '/^[A-Za-z]+[\w\-\:\.]*$/',
+                                        'pattern' => '/^[A-Za-z]+[\w]*$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_melistemplatingplugincreator_err_invalid_field_name'],
                                         'encoding' => 'UTF-8',
                                     ],

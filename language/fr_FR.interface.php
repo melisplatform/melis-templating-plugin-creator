@@ -83,7 +83,7 @@
         'tr_melistemplatingplugincreator_tpc_main_property_field_count' => 'Nombre de champs',
         'tr_melistemplatingplugincreator_tpc_main_property_field_count tooltip' => 'Saisissez le nombre de champs',
         'tr_melistemplatingplugincreator_tpc_field_name' => 'Nom',
-        'tr_melistemplatingplugincreator_tpc_field_name tooltip' => 'Saisissez un nom d\'attribut valide (pas d\'espace, doit commencer par une lettre et ne comprendre que les caractères suivants : alphanumérique, underscore, tiret, virgule ou point)',
+        'tr_melistemplatingplugincreator_tpc_field_name tooltip' => 'Saisissez un nom d\'attribut valide (pas d\'espace, doit commencer par une lettre et ne comprendre que les caractères suivants : alphanumérique, underscore)',
         'tr_melistemplatingplugincreator_tpc_field_display_type' => 'Type d\'affichage',
         'tr_melistemplatingplugincreator_tpc_field_display_type tooltip' => 'Sélectionnez le type d\'affichage du champ',
         'tr_melistemplatingplugincreator_tpc_field_is_required' => 'Requis',

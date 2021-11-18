@@ -1546,10 +1546,9 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
         $moduleName = ''; 
 
         if ($container['melis-templatingplugincreator']['step_1']['tpc_plugin_destination'] == self::NEW_MODULE) {
-            $moduleName = $templatingPluginCreatorSrv->generateModuleNameCase($container['melis-templatingplugincreator']['step_1']['tpc_new_module_name']);
-            
+            $moduleName = $templatingPluginCreatorSrv->generateModuleNameCase($container['melis-templatingplugincreator']['step_1']['tpc_new_module_name']);            
         } else {
-            $moduleName = $templatingPluginCreatorSrv->generateModuleNameCase($container['melis-templatingplugincreator']['step_1']['tpc_existing_module_name']);
+            $moduleName = $container['melis-templatingplugincreator']['step_1']['tpc_existing_module_name'];           
         }
 
         return $moduleName;
