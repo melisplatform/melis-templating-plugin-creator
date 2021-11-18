@@ -61,7 +61,7 @@ class MelisTemplatingPluginCreatorService extends MelisGeneralService
             //unset the tools tree section of the newly created module
             $this->emptyConfigToolsTreeSection($moduleDir);
         }
-        
+
         //set plugin name
         $this->pluginName = $this->generateModuleNameCase($this->steps['step_1']['tpc_plugin_name']);
        
@@ -494,15 +494,14 @@ class MelisTemplatingPluginCreatorService extends MelisGeneralService
         //set module name and directory
         if ($this->steps['step_1']['tpc_plugin_destination'] == self::EXISTING_MODE) {                     
             $moduleDir = '/module/MelisSites';
-        } else {
-            $this->moduleName = $this->generateModuleNameCase($this->steps['step_1']['tpc_new_module_name']);           
+        } else {                     
             $moduleDir = '/module';
         }
 
         $templatingPluginViewContent = str_replace('ModuleDir', $moduleDir, $templatingPluginViewContent);
 
         //generate view file
-        $res = $this->generateFile($this->convertToViewName($this->pluginName).'.phtml', $targetDir, $templatingPluginViewContent);
+        $res = $this->generateFile($this->convertToViewName($this->steps['step_1']['tpc_plugin_name']).'.phtml', $targetDir, $templatingPluginViewContent);
 
         return $res;
     }
@@ -515,7 +514,7 @@ class MelisTemplatingPluginCreatorService extends MelisGeneralService
     protected function generatePluginModalForm($moduleDir)
     {
         $targetDir = $moduleDir.'/view/plugins';
-        $tabName = 'plugin-'.$this->convertToViewName($this->pluginName).'-tab-';
+        $tabName = 'plugin-'.$this->convertToViewName($this->steps['step_1']['tpc_plugin_name']).'-tab-';
         $tabCount = 1;//default to 1 for now
        
         for ($t=1; $t<=$tabCount; $t++) {
@@ -767,9 +766,8 @@ class MelisTemplatingPluginCreatorService extends MelisGeneralService
         $res = false;
 
         //get the existing module.config.php
-        $moduleConfigFile = $moduleDir.'/config/module.config.php';
-        $moduleToViewName = $this->convertToViewName($this->moduleName);
-        $pluginToViewName = $this->convertToViewName($this->pluginName);
+        $moduleConfigFile = $moduleDir.'/config/module.config.php';       
+        $pluginToViewName = $this->convertToViewName($this->steps['step_1']['tpc_plugin_name']);
         
         //get the content of module.config.php 
         $moduleFileContent = file_get_contents($moduleConfigFile);
@@ -777,10 +775,10 @@ class MelisTemplatingPluginCreatorService extends MelisGeneralService
         if ($appendConfig) {         
 
             //add the template map entries
-            $moduleFileContent = $this->setTemplateMapEntry($moduleDir, $moduleFileContent, $moduleToViewName, $pluginToViewName);
+            $moduleFileContent = $this->setTemplateMapEntry($moduleDir, $moduleFileContent, $pluginToViewName);
 
             //add the controller plugin entry
-            $moduleFileContent = $this->setControllerPluginEntry($moduleFileContent, $moduleToViewName, $pluginToViewName);
+            $moduleFileContent = $this->setControllerPluginEntry($moduleFileContent);
     
         } else {       
             //find the controller_plugin and template_map keys of the created Templating plugin, then remove           
@@ -825,12 +823,11 @@ class MelisTemplatingPluginCreatorService extends MelisGeneralService
      /**
      * This method updates module.config.php of the destination module by adding a template_map key entry of the Templating plugin
      * @param string $moduleDir
-     * @param string $moduleFileContent
-     * @param string $moduleToViewName
+     * @param string $moduleFileContent    
      * @param string pluginToViewName
      * @return string
      */
-    protected function setTemplateMapEntry($moduleDir, $moduleFileContent, $moduleToViewName, $pluginToViewName)
+    protected function setTemplateMapEntry($moduleDir, $moduleFileContent, $pluginToViewName)
     {   
         //set template map entry for the plugin's main template     
         $templateMapKey = $this->moduleName."/plugins/".$pluginToViewName;        
@@ -884,12 +881,10 @@ class MelisTemplatingPluginCreatorService extends MelisGeneralService
 
     /**
      * This method updates module.config.php of the destination module by adding a controller_plugin key entry of the Templating plugin   
-     * @param string $moduleFileContent
-     * @param string $moduleToViewName
-     * @param string pluginToViewName
+     * @param string $moduleFileContent 
      * @return string
      */
-    protected function setControllerPluginEntry($moduleFileContent, $moduleToViewName, $pluginToViewName)
+    protected function setControllerPluginEntry($moduleFileContent)
     {       
         $controllerPluginKey = $this->moduleName.$this->pluginName.'Plugin';
         $controllerPluginValue =  "\\".$this->moduleName."\Controller\Plugin\\".$controllerPluginKey."::class";
@@ -977,7 +972,7 @@ class MelisTemplatingPluginCreatorService extends MelisGeneralService
             $fileContent = str_replace('PluginName', $this->pluginName, $fileContent);
             $fileContent = str_replace('pluginName', lcfirst($this->pluginName), $fileContent);
             $fileContent = str_replace('pluginname', strtolower($this->pluginName), $fileContent);
-            $fileContent = str_replace('plugin-name', $this->convertToViewName($this->pluginName), $fileContent);
+            $fileContent = str_replace('plugin-name', $this->convertToViewName($this->steps['step_1']['tpc_plugin_name']), $fileContent);
            
             //set the module name
             $fileContent = str_replace('ModuleTpl', $this->moduleName, $fileContent);

@@ -287,3 +287,8 @@
 .melis-templating-plugin-creator-steps-content .label.label-info{
     background: #e61c23 !important;
 }
+
+/*for the thumbs-up*/
+.text-primary-custom {  
+    color: #28a745 !important; 
+}
