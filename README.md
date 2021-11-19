@@ -21,7 +21,7 @@ Run the composer command:
 composer require melisplatform/melis-templating-plugin-creator
 ```
 
-Go to /melis-templating-plugin-creator/public/ and change the file owner of the 'temp-thumbnail' directory to 'www-data'.  This is where the plugin thumbnails are temporarily saved.:
+Go to /melis-templating-plugin-creator/public/ and change the file owner of the 'temp-thumbnail' directory to 'www-data'.  This is where the plugin thumbnails are temporarily saved.
 
 ```
 chown www-data temp-thumbnail
