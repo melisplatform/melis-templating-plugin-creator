@@ -529,8 +529,8 @@ $(function(){
     });
 
     //remove 'Default Option' value from 'Default Value' Dropdown
-    $body.on('itemRemoved', '#tpc_field_default_options', function(event) { 
-       $(this).parents('form').find('#tpc_field_default_value option[value='+event.item+']').remove();       
+    $body.on('itemRemoved', '#tpc_field_default_options', function(event) {            
+       $(this).parents('form').find("#tpc_field_default_value option[value='"+event.item+"']").remove();  
     });
 
     /*this will dynamically get the field forms, form count is based on the entered '# of Fields' value

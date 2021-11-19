@@ -14,7 +14,7 @@
         echo $this->form()->openTag($form);
     
         foreach ($form->getElements() As $key => $val) { ?>               
-            <div class="form-group" <?=($key=='tpc_tab_count' || (empty($val->getValue()) && ($key=='tpc_new_module_name' || $key=='tpc_existing_module_name')))?'style="display:none"':''?>>    
+            <div class="form-group" <?=( empty($val->getValue()) && ($key=='tpc_new_module_name' || $key=='tpc_existing_module_name'))?'style="display:none"':''?>>    
                     
                 <?php $required = '';
                 if (!empty($val->getAttribute('required'))) {
