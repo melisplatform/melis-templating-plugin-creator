@@ -652,8 +652,14 @@ class MelisTemplatingPluginCreatorService extends MelisGeneralService
             $langFile = $languageDir.$lang['lang_locale'].'.interface.php';
             $langFile = file_exists($langFile)?$langFile:$languageDir.$lang['lang_locale'].'.php';
 
-            if (file_exists($langFile)) {
-                 //get the existing translation of the language
+            //create file if not yet exists
+            if (!file_exists($langFile)) {
+                $languageTpl = $this->getTemplateContent('/language-tpl.php');
+                $this->generateFile($lang['lang_locale'].'.php', $languageDir, $languageTpl);               
+            }
+
+            if (file_exists($langFile)) {               
+                //get the existing translation of the language
                 $translationArr = include $langFile;
                 
                 //set here the name and description of the plugin
@@ -743,7 +749,7 @@ class MelisTemplatingPluginCreatorService extends MelisGeneralService
 
                 if (!$write) {
                     $errorCount++;
-                }
+                }              
             }                
         }
 
