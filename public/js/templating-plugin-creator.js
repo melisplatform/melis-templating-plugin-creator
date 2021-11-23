@@ -8,7 +8,6 @@ $(function(){
         var curStep = $(this).data("curstep");
         var nextStep = $(this).data("nextstep");
 
-        var dataString = new Array;
         var mainFormData = new FormData();
         var stepForm = $(".melis-templating-plugin-creator-steps-content form.templating-plugin-creator-step-"+curStep);
 
@@ -445,20 +444,47 @@ $(function(){
     /*when '# of Fields' is filled up, set and display the field forms */
     $body.on("keyup", ".melis-templating-plugin-creator-steps-content #tpc_main_property_field_count", function() {         
         var fieldCount = $('#tpc_main_property_field_count').val();
-
-        //remove highlight errors
-        $("#tpc_main_property_field_count").parents('.form-group').find("label").css("color","#686868");  
-
-        //empty field form div
-        $('#field-form-div').empty();
-      
+    
         if($.isNumeric(fieldCount)){
             if(fieldCount > 0 && fieldCount <= 25){
-                getFieldForms(fieldCount, $('#tpc_main_property_field_count').parents().find('.tpc-validate').data('curstep'), $('#tpc_property_tab_number').val());           
-            }else{           
+                //remove highlight errors
+                $("#tpc_main_property_field_count").parents('.form-group').find("label").css("color","#686868");  
+                            
+                //get first the current values of the field form if there are any
+                var curStep = $(this).parents().find(".tpc-validate").data("curstep");               
+                var fieldFormData = new FormData();
+                var fieldForm = $(".melis-templating-plugin-creator-steps-content form.templating-plugin-creator-step-"+curStep);
+                
+                fieldForm.each(function(index, val){
+                    var form_name = $(this).closest('form').attr('name');    
+                    var countForm = $('form[name='+form_name+']').length;
+                    var formData = new FormData($(this)[0]);
+                    var formValues = formData.entries();
+                       
+                    for(var pair of formValues){   
+                        if(countForm > 1){
+                            fieldFormData.append('step-form['+index+']['+pair[0]+']',pair[1]);
+                        }else{
+                            fieldFormData.append('step-form['+pair[0]+']',pair[1]);
+                        } 
+                    } 
+                    
+                });    
+
+                //append current step
+                fieldFormData.append('curStep',curStep); 
+                
+                //retrieve field forms              
+                getFieldForms(fieldFormData);                  
+
+            }else{    
+                //empty field form div
+                $('#field-form-div').empty();       
                 melisHelper.melisKoNotification(translations.tr_melistemplatingplugincreator_title_step_3, translations.tr_melistemplatingplugincreator_value_must_be_between_1_to_25, null);
             }  
         }else{
+            //empty field form div
+            $('#field-form-div').empty();
              melisHelper.melisKoNotification(translations.tr_melistemplatingplugincreator_title_step_3, translations.tr_melistemplatingplugincreator_integer_only, null);
         }       
     });
@@ -541,20 +567,20 @@ $(function(){
     /*this will dynamically get the field forms, form count is based on the entered '# of Fields' value
     * Main properties is tab 1, then next tab is 2 and so forth
     */
-    function getFieldForms(fieldCount, curStep, tab){
+    function getFieldForms(fieldFormData){
         var url = '/melis/MelisTemplatingPluginCreator/TemplatingPluginCreator/getFieldForm'; 
         $.ajax({
             type: 'POST',
             url: url,
-            data: {
-                    fieldCount: fieldCount, 
-                    curStep: curStep,
-                    tab: tab
-                },
+            data: fieldFormData,
             dataType: 'text',
-            encode: true
-        }).done(function (data) {   
+            encode: true,
+            cache: false,
+            contentType: false,
+            processData: false
+        }).done(function (data) {  
             $('#field-form-div').html(data);
+            fieldFormInit();
             widgetCollapsibleInit();         
         }).fail(function () {
             alert( translations.tr_meliscore_error_message );
@@ -632,4 +658,69 @@ var widgetCollapsibleInit = function(){
             $(this).parents('.widget:first').find('.widget-body').collapse('toggle');
         });
     }); 
+};
+
+
+/*reference: /melis-commerce/public/js/widget-collapsible.init.js*/
+var fieldFormInit = function(){  
+    $.each($("#melistemplatingplugincreator_step3 form[name=templating-plugin-creator-step-3-field-form]").not(":eq(0)"), function( key, error ) {   
+        var tpc_default_val_input = '<input class = "form-control" type = "text" id = "tpc_field_default_value" name = "tpc_field_default_value" value="">';
+        var defaultVal = $(this).find('#tpc_field_default_value').val();
+
+        if ($(this).find("#tpc_field_display_type").val() == "Dropdown") {   
+
+            //show Default Options field         
+            $(this).find("#tpc_field_default_options").parents('.form-group').show();  
+            $(this).find('#tpc_field_default_options').tagsinput('refresh');             
+       
+            //set Default Value field as select type
+            $(this).find('#tpc_field_default_value').replaceWith('<div class="col-md-2 padding-left-0"><select id="tpc_field_default_value" name="tpc_field_default_value" class="form-control">'+
+                '<option value="">Choose</option>'+
+                '</select></div>');
+
+            //set 'Default Value' select options based on Default Options value
+            var defaultOptions = $(this).find('#tpc_field_default_options').val();         
+            if(defaultOptions.length){               
+                console.log('default options not null, add values to default field');
+                defaultOptions = defaultOptions.split(',');
+                var defaultValueField = $(this).find('#tpc_field_default_value');
+                $.each(defaultOptions, function(key, value) {   
+                    defaultValueField.append('<option value="'+value+'">'+value+'</option>');
+                });
+
+                if (defaultVal != '') {
+                    $(this).find('#tpc_field_default_value option[value="'+defaultVal+'"]').attr('selected','selected');
+                }                  
+            }
+
+        } else if ($(this).find("#tpc_field_display_type").val() == "DatePicker") {
+            //initialize datepicker
+            $(this).find('#tpc_field_default_value').datetimepicker({format: "YYYY-MM-DD"});
+
+        } else if ($(this).find("#tpc_field_display_type").val() == "DateTimePicker") {
+            //initialize datepicker
+            $(this).find('#tpc_field_default_value').datetimepicker({format: "YYYY-MM-DD HH:mm:ss"});
+
+        } else if ($(this).find("#tpc_field_display_type").val() == "Switch") {        
+
+            //set Default Value options     
+            $(this).find('#tpc_field_default_value').replaceWith('<div class="col-md-2 padding-left-0"><select id="tpc_field_default_value" name="tpc_field_default_value" class="form-control">'+
+                '<option value="">Choose</option><option value="1" >On</option><option value="0">Off</option></select></div>');
+            $(this).find('#tpc_field_default_value').val(defaultVal);  
+
+        } else if ($(this).find("#tpc_field_display_type").val() == "PageInput") {  
+            /*add sitemap icon to 'Default Value' input field*/
+            $(this).find('#tpc_field_default_value').closest('.form-group.input-group').empty().
+            prepend('<div class="d-flex flex-row justify-content-between">'+tpc_default_val_input+'<a class="btn btn-default meliscms-site-selector"><i class="fa fa-sitemap"></i></a></div>');
+
+            $(this).find('#tpc_field_default_value').val(defaultVal);  
+        } else if ($(this).find("#tpc_field_display_type").val() == 'MelisCoreTinyMCE'){    
+
+            var fieldId = Math.round(new Date().getTime() + (Math.random() * 100));           
+
+            $(this).find('#tpc_field_default_value').replaceWith('<textarea data-tinymce-id="'+fieldId+'" id="'+fieldId+'" class="form-control" name="tpc_field_default_value">'+defaultVal+'</textarea>');
+            
+            melisTinyMCE.createTinyMCE("tool", "textarea[data-tinymce-id=\'"+fieldId+"\']", {height: 200, relative_urls: false,  remove_script_host: false, convert_urls : false});
+        }                 
+    });    
 };

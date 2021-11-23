@@ -531,9 +531,9 @@ class MelisTemplatingPluginCreatorService extends MelisGeneralService
                 $displayType = $this->steps['step_3']['tab_'.$t]['field_'.$f]['tpc_field_display_type'];
               
                 if ($displayType == self::DATE_PICKER) {
-                    $datePickerFields = !empty($datePickerFields)?",#".$fieldName:"#".$fieldName;
+                    $datePickerFields .= !empty($datePickerFields)?",#".$fieldName:"#".$fieldName;
                 } elseif ($displayType == self::DATETIME_PICKER) {
-                    $dateTimePickerFields = !empty($dateTimePickerFields)?",#".$fieldName:"#".$fieldName;
+                    $dateTimePickerFields .= !empty($dateTimePickerFields)?",#".$fieldName:"#".$fieldName;
                 }
             }
 

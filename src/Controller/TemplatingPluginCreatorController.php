@@ -25,6 +25,7 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
     const DROPDOWN = "Dropdown";
     const NUMERIC_INPUT = "NumericInput";
     const PAGE_INPUT = "PageInput";
+    const TINY_MCE = 'MelisCoreTinyMCE';
       
     /**
      * This will render the templating plugin creator tool
@@ -1083,18 +1084,15 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
      * @return array
     */
     public function getFieldFormAction(){
-        $container = new Container('templatingplugincreator');//to store the session data
-        $translator = $this->getServiceManager()->get('translator');
-      
         $request = $this->getRequest();
         $postValues = get_object_vars($request->getPost()); 
-        $fieldCount = $postValues['fieldCount'];
+        $fieldCount = $postValues['step-form']['tpc_main_property_field_count'];
         $curStep = $postValues['curStep'];
-        $tab =  $postValues['tab'];//reserved for 'Tab Properties' tab for the next version
-
+        $tab =  $postValues['step-form']['tpc_property_tab_number'];
+      
         $view = new ViewModel();
         $view->setTemplate('melis-templating-plugin-creator/partial/field-form');
-        $view->fieldFormArr = $this->getFieldForms($curStep, $tab, $fieldCount);
+        $view->fieldFormArr = $this->getFieldForms($curStep, $tab, $fieldCount, $postValues);
         return $view;
     }
 
@@ -1103,9 +1101,10 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
      * @param curstep
      * @param tab number
      * @param field count
+     * @param postValues
      * @return array
     */
-    private function getFieldForms($curStep, $tab, $fieldCount){
+    private function getFieldForms($curStep, $tab, $fieldCount, $postValues=null){  
         $container = new Container('templatingplugincreator');//to store the session data     
         $melisCoreConfig = $this->getServiceManager()->get('MelisCoreConfig');          
         $factory = new \Laminas\Form\Factory();
@@ -1135,12 +1134,36 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
                 $stepFormtmp->get('tpc_field_display_type')->setAttribute('disabled',true);
                 $stepFormtmp->get('tpc_field_is_required')->setAttribute('disabled',true);
                 $stepFormtmp->get('tpc_field_default_value')->setAttribute('readonly','readonly');
-                $stepFormtmp->get('tpc_field_default_options')->setAttribute('readonly','readonly');                    
+                $stepFormtmp->get('tpc_field_default_options')->setAttribute('readonly','readonly');  
+
+            }else{
+
+                //set here the current entered value, not yet saved to session, of the form field if there are any as a default
+                if (isset($postValues['step-form'][$i]['tpc_field_name'])) {                    
+                    $stepFormtmp->get('tpc_field_name')->setValue($postValues['step-form'][$i]['tpc_field_name']);
+                }
+
+                if (isset($postValues['step-form'][$i]['tpc_field_display_type'])) {
+                    $stepFormtmp->get('tpc_field_display_type')->setValue($postValues['step-form'][$i]['tpc_field_display_type']);
+                }
+
+                if (isset($postValues['step-form'][$i]['tpc_field_is_required'])) {
+                    $stepFormtmp->get('tpc_field_is_required')->setValue($postValues['step-form'][$i]['tpc_field_is_required']);
+                }
+                
+                if (isset($postValues['step-form'][$i]['tpc_field_default_value'])) {
+                    $stepFormtmp->get('tpc_field_default_value')->setValue($postValues['step-form'][$i]['tpc_field_default_value']);
+                }
+               
+                if (isset($postValues['step-form'][$i]['tpc_field_default_options'])) {
+                    $stepFormtmp->get('tpc_field_default_options')->setValue($postValues['step-form'][$i]['tpc_field_default_options']); 
+                }                                
+                
             }
 
             //hide default_options field
             $stepFormtmp->get('tpc_field_default_options')->setLabelAttributes(array('style' => 'display: none;','color' => 'red'));    
-            $stepFormtmp->get('tpc_field_default_options')->setAttributes(array('style' => 'display: none;'));         
+            $stepFormtmp->get('tpc_field_default_options')->setAttributes(array('style' => 'display: none;'));     
 
             //set data here for each form except for the template_path field since it's predefined
             if (!empty($container['melis-templatingplugincreator']['step_'.$curStep]['tab_'.$tab]['field_'.$i]) && $i!=1) {
@@ -1155,10 +1178,7 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
                     $stepFormtmp->get('tpc_field_default_options')->setAttributes(array('style' => 'display: block;'));                    
                 }
 
-
-                //test
-                if ($stepFormtmp->get('tpc_field_display_type')->getValue() == 'MelisCoreTinyMCE') {         
-                    //dump('display type is tiny mce, value is: '. $container['melis-templatingplugincreator']['step_'.$curStep]['tab_'.$tab]['field_'.$i]['tpc_field_default_value']);           
+                if ($stepFormtmp->get('tpc_field_display_type')->getValue() == self::TINY_MCE) { 
                     $stepFormtmp->get('tpc_field_default_value')->setValue(htmlentities($container['melis-templatingplugincreator']['step_'.$curStep]['tab_'.$tab]['field_'.$i]['tpc_field_default_value']));                 
                 }
 
