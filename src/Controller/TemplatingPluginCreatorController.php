@@ -197,16 +197,31 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
 
             //if current step is valid, save form data to session and get the view of the next step 
             if ($stepForm->isValid()) { 
-                //validate new module name entered for duplicates
+                //validate new module name entered for duplicates or if the name is a reserved word
                 if (!empty($postValues['step-form']['tpc_new_module_name'])) {
+                    $newModuleName = strtolower($postValues['step-form']['tpc_new_module_name']);
+
+                    //retrieve the list of reserved words           
+                    $melisCoreConfig = $this->getServiceManager()->get('MelisCoreConfig');
+                    $reservedKeywords = $melisCoreConfig->getItem('melistemplatingplugincreator/datas/reserved_keywords');
+
+                    if (in_array(trim($newModuleName), $reservedKeywords)) {
+                         // Adding error message to form field
+                        $translator = $this->getServiceManager()->get('translator');
+                        $stepForm->get('tpc_new_module_name')->setMessages([
+                            'ReservedKeyword' => sprintf($translator->translate('tr_melistemplatingplugincreator_err_module_name_reserved_keyword'), $postValues['step-form']['tpc_new_module_name'])
+                        ]);
+
+                        $errorMessages = $stepForm->getMessages();
+                    }
+
                     /**
                      * Validating the module entered if it's already existing on the platform
                      */
                     $modulesSvc = $this->getServiceManager()->get('ModulesService');
                     $assetModuleService = $this->getServiceManager()->get('MelisAssetManagerModulesService');
                     $existingModules = array_merge($modulesSvc->getModulePlugins(), \MelisCore\MelisModuleManager::getModules(), $assetModuleService->getSitesModules());
-                    $existingModules = array_map('strtolower', $existingModules);
-                    $newModuleName = strtolower($postValues['step-form']['tpc_new_module_name']);
+                    $existingModules = array_map('strtolower', $existingModules);                    
 
                     //set error if the entered module name has duplicate
                     if (in_array(trim($newModuleName), $existingModules)) {                      
