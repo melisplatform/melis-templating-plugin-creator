@@ -174,8 +174,12 @@ $(function(){
 
     //set errors to be displayed for each field
     function setFieldErrors(curStep, fieldKey, fieldError, errorTexts){
-        //update field key for the display
-        fieldKey = translations.tr_melistemplatingplugincreator_field + " " + fieldKey.slice(fieldKey.length - 1);
+        //update field key for the display      
+        if (curStep == 3) {
+            fieldKey = translations.tr_melistemplatingplugincreator_field + " " + fieldKey.split('-').pop();
+        } else if(curStep == 4) {
+            fieldKey = translations.tr_melistemplatingplugincreator_field + " " + fieldKey.split('_').pop();
+        }   
 
         errorTexts +=
                     '<p class="modal-error-cont"><b title="' +
@@ -255,7 +259,8 @@ $(function(){
         }else if(step == 4){
             $.each( errors, function( key, error ) { 
                 $.each( error, function( key1, error1 ) {                      
-                    var fieldNumber = key1.slice(key1.length - 1);                    
+                    //var fieldNumber = key1.slice(key1.length - 1);    
+                    var fieldNumber = key1.split('_').pop();             
                     $.each( error1, function( key2, error2) {  
                         $.each($("#melistemplatingplugincreator_step4 form"), function() { 
                             var formId = $(this).attr('id');                           
