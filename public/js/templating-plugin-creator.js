@@ -440,55 +440,62 @@ $(function(){
 
         melisCoreTool.done("#removePluginThumbnail");
     });
-    
-    /*when '# of Fields' is filled up, set and display the field forms */
-    $body.on("keyup", ".melis-templating-plugin-creator-steps-content #tpc_main_property_field_count", function() {         
+
+
+    /*when '# of Fields' is filled up, set and display the field forms, wait for 1 sec before execution so that we can be sure that the user is done typing */
+    var typingTimer;                //timer identifier
+    var doneTypingInterval = 1000;  //time in ms (1 second)    
+    $body.on("keyup", ".melis-templating-plugin-creator-steps-content #tpc_main_property_field_count", function() { 
         var fieldCount = $('#tpc_main_property_field_count').val();
-    
-        if($.isNumeric(fieldCount)){
-            if(fieldCount > 0 && fieldCount <= 25){
-                //remove highlight errors
-                $("#tpc_main_property_field_count").parents('.form-group').find("label").css("color","#686868");  
-                            
-                //get first the current values of the field form if there are any
-                var curStep = $(this).parents().find(".tpc-validate").data("curstep");               
-                var fieldFormData = new FormData();
-                var fieldForm = $(".melis-templating-plugin-creator-steps-content form.templating-plugin-creator-step-"+curStep);
-                
-                fieldForm.each(function(index, val){
-                    var form_name = $(this).closest('form').attr('name');    
-                    var countForm = $('form[name='+form_name+']').length;
-                    var formData = new FormData($(this)[0]);
-                    var formValues = formData.entries();
-                       
-                    for(var pair of formValues){   
-                        if(countForm > 1){
-                            fieldFormData.append('step-form['+index+']['+pair[0]+']',pair[1]);
-                        }else{
-                            fieldFormData.append('step-form['+pair[0]+']',pair[1]);
-                        } 
-                    } 
+
+        clearTimeout(typingTimer);
+        
+        typingTimer = setTimeout(function() {
+            if($.isNumeric(fieldCount)){
+                if(fieldCount > 0 && fieldCount <= 25){
+                    //remove highlight errors
+                    $("#tpc_main_property_field_count").parents('.form-group').find("label").css("color","#686868");  
+                                
+                    //get first the current values of the field form if there are any
+                    var curStep = $('#tpc_main_property_field_count').parents().find(".tpc-validate").data("curstep");               
+                    var fieldFormData = new FormData();
+                    var fieldForm = $(".melis-templating-plugin-creator-steps-content form.templating-plugin-creator-step-"+curStep);
                     
-                });    
+                    fieldForm.each(function(index, val){
+                        var form_name = $(this).closest('form').attr('name');    
+                        var countForm = $('form[name='+form_name+']').length;
+                        var formData = new FormData($(this)[0]);
+                        var formValues = formData.entries();
+                           
+                        for(var pair of formValues){   
+                            if(countForm > 1){
+                                fieldFormData.append('step-form['+index+']['+pair[0]+']',pair[1]);
+                            }else{
+                                fieldFormData.append('step-form['+pair[0]+']',pair[1]);
+                            } 
+                        } 
+                        
+                    });    
 
-                //append current step
-                fieldFormData.append('curStep',curStep); 
-                
-                //retrieve field forms              
-                getFieldForms(fieldFormData);                  
+                    //append current step
+                    fieldFormData.append('curStep',curStep); 
 
-            }else{    
+                    //retrieve field forms              
+                    getFieldForms(fieldFormData);                  
+
+                }else{    
+                    //empty field form div
+                    $('#field-form-div').empty();       
+                    melisHelper.melisKoNotification(translations.tr_melistemplatingplugincreator_title_step_3, translations.tr_melistemplatingplugincreator_value_must_be_between_1_to_25, null);
+                }  
+            }else{
                 //empty field form div
-                $('#field-form-div').empty();       
-                melisHelper.melisKoNotification(translations.tr_melistemplatingplugincreator_title_step_3, translations.tr_melistemplatingplugincreator_value_must_be_between_1_to_25, null);
-            }  
-        }else{
-            //empty field form div
-            $('#field-form-div').empty();
-             melisHelper.melisKoNotification(translations.tr_melistemplatingplugincreator_title_step_3, translations.tr_melistemplatingplugincreator_integer_only, null);
-        }       
+                $('#field-form-div').empty();
+                 melisHelper.melisKoNotification(translations.tr_melistemplatingplugincreator_title_step_3, translations.tr_melistemplatingplugincreator_integer_only, null);
+            } 
+        }, doneTypingInterval);        
     });
-
+    
     /*when 'display type' field is selected, update the 'default value' field accordingly*/
     $body.on('focusin', '.melis-templating-plugin-creator-steps-content #tpc_field_display_type', function(){        
         $(this).data('val', $(this).val());
