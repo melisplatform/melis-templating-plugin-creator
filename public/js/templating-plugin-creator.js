@@ -49,8 +49,7 @@ $(function(){
             mainFormData.append('validate',true);          
         }         
         
-        //commented while still testing
-        //$("#id_melistemplatingplugincreator_steps").append(loader);
+        $("#id_melistemplatingplugincreator_steps").append(loader);
 
         $.ajax({
             type: 'POST',
@@ -63,7 +62,7 @@ $(function(){
             processData: false
         }).done(function (data) {
             
-            //$("#id_melistemplatingplugincreator_steps #loader img").removeClass('spinning-cog').addClass('shrinking-cog');
+            $("#id_melistemplatingplugincreator_steps #loader img").removeClass('spinning-cog').addClass('shrinking-cog');
 
             setTimeout(function(){
                 if(!data.errors) {    
