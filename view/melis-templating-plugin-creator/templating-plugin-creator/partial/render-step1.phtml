@@ -46,11 +46,11 @@
                         <?php  }                               
                         ?>
                         </div>
-            <?php } elseif ($key == 'tpc_new_module_name') { ?>     
+                <?php } elseif ($key == 'tpc_new_module_name') { ?>     
                         <div class = "form-group input-group">
                             <input class = "<?=$val->getAttribute('class')?>" type = "text" id = "<?=$key?>" name = "<?=$key?>" required="required" value="<?=$val->getValue()?>">
                         </div>
-            <?php } elseif ($key == 'tpc_existing_module_name') { ?>
+                <?php } elseif ($key == 'tpc_existing_module_name') { ?>
                         <div class = "form-group input-group">
                             <div class="col-md-2 padding-left-0">
                                 <select id="<?=$key?>" name="<?=$key?>" required="required" class = "<?=$val->getAttribute('class')?>">

@@ -260,7 +260,7 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
                 }
 
                 //if current step form is valid, save form data to session and get the next step's form 
-                if(empty($errorMessages)){
+                if (empty($errorMessages)) {
                     //save to session   
                     $container['melis-templatingplugincreator']['step_1'] = $stepForm->getData(); 
                                                   
@@ -268,7 +268,7 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
                     list($stepForm,$data) = $this->getStepFormAndData($nextStep);
                 }       
 
-            }else{     
+            } else {     
                 $errorMessages = $stepForm->getMessages();               
             }
 
@@ -348,7 +348,7 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
                 $pluginThumbnail = !empty($container['melis-templatingplugincreator']['step_2']['plugin_thumbnail'])?$container['melis-templatingplugincreator']['step_2']['plugin_thumbnail']:null;
 
                 //if no saved uploaded thumbnail, try to upload again
-                if(empty($pluginThumbnail)){
+                if (empty($pluginThumbnail)) {
 
                     //process uploading of thumbnail
                     list($isValid2ndForm, $pluginThumbnail, $textMessage) = $this->uploadPluginThumbnail($postValues['step-form']['tpc_plugin_upload_thumbnail']);
@@ -447,7 +447,7 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
             //get next step's form if all forms are valid
             if ($isValidMainForm && $isValidFieldForm) {
                 list($stepForm, $data) = $this->getStepFormAndData($nextStep);
-            }else{
+            } else {
                 //merge language and upload form errors 
                 $errors = ArrayUtils::merge($mainFormErrorMessages, $fieldFormErrorMessages);  
             }
@@ -714,7 +714,7 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
         foreach ($languages As $key => $lang) {           
             $stepFormtmp = $factory->createForm($appConfigForm);
         
-            if (!empty($container['melis-templatingplugincreator']['step_'.$step][$lang['lang_locale']])){
+            if (!empty($container['melis-templatingplugincreator']['step_'.$step][$lang['lang_locale']])) {
                 $stepFormtmp->setData($container['melis-templatingplugincreator']['step_'.$step][$lang['lang_locale']]);
             }                                   
 
@@ -1136,7 +1136,7 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
                 $stepFormtmp->get('tpc_field_default_value')->setAttribute('readonly','readonly');
                 $stepFormtmp->get('tpc_field_default_options')->setAttribute('readonly','readonly');  
 
-            }else{
+            } else {
 
                 //set here the current entered value, not yet saved to session, of the form field if there are any as a default
                 if (isset($postValues['step-form'][$i]['tpc_field_name'])) {                    
@@ -1157,8 +1157,7 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
                
                 if (isset($postValues['step-form'][$i]['tpc_field_default_options'])) {
                     $stepFormtmp->get('tpc_field_default_options')->setValue($postValues['step-form'][$i]['tpc_field_default_options']); 
-                }                                
-                
+                } 
             }
 
             //hide default_options field
@@ -1181,7 +1180,6 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
                 if ($stepFormtmp->get('tpc_field_display_type')->getValue() == self::TINY_MCE) { 
                     $stepFormtmp->get('tpc_field_default_value')->setValue(htmlentities($container['melis-templatingplugincreator']['step_'.$curStep]['tab_'.$tab]['field_'.$i]['tpc_field_default_value']));                 
                 }
-
             }           
 
             $stepFormArr[] = $stepFormtmp;
@@ -1246,8 +1244,7 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
                     // Adding translation form for each field
                     $stepFormArr['mainPropertyTranslationForm'][$lang['lang_locale']]['tab_'.$t]['field_'.$i] = $stepFormtmp;
                 } 
-            }
-                           
+            }        
 
             // Language label
             $languages[$key]['lang_label'] = $this->langLabel($lang['lang_locale'], $lang['lang_name']);
@@ -1371,7 +1368,6 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
                 $tabNumber = $val['tpc_tab_num'];
                 $fieldNumber = $val['tpc_field_num'];                
                 $fieldDisplayType = $container['melis-templatingplugincreator']['step_3']['tab_'.$tabNumber]['field_'.$fieldNumber]['tpc_field_display_type'];
-                // $fieldDefaultValues = $container['melis-templatingplugincreator']['step_3']['tab_'.$tabNumber]['field_'.$fieldNumber]['tpc_field_default_value'];
                 $fieldDefaultValueOptions = $container['melis-templatingplugincreator']['step_3']['tab_'.$tabNumber]['field_'.$fieldNumber]['tpc_field_default_options'];
                 
                 //if field dislay type is dropdown, and default values are given in step 3, add translation field for each dropdown value

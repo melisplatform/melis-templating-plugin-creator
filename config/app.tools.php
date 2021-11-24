@@ -221,14 +221,7 @@ return [
                         'action' => '',
                     ],
                     'hydrator'  => 'Laminas\Hydrator\ArraySerializable',
-                    'elements' => [
-                        [
-                            'spec' => [
-                                'name' => 'tpc_lang_local',
-                                'type' => 'Hidden',
-                                'id' => ''
-                            ],
-                        ],
+                    'elements' => [                       
                         [
                             'spec' => [
                                 'name' => 'tpc_plugin_title',
@@ -259,7 +252,14 @@ return [
                                     'rows' => 4
                                 ],
                             ],
-                        ],                      
+                        ],    
+                        [
+                            'spec' => [
+                                'name' => 'tpc_lang_local',
+                                'type' => 'Hidden',
+                                'id' => ''
+                            ],
+                        ],                  
                     ],
                     'input_filter' => [
                         'tpc_plugin_title' => [

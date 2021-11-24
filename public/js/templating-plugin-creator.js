@@ -308,7 +308,6 @@ $(function(){
         }
     });
 
-
     /*when templating plugin creator tab is closed, delete the temp thumbnail folder for the current session if there are any*/
     $body.on("click", "a[data-id=id_melistemplatingplugincreator_tool]", function(e){          
         $.ajax({
@@ -439,7 +438,6 @@ $(function(){
 
         melisCoreTool.done("#removePluginThumbnail");
     });
-
 
     /*when '# of Fields' is filled up, set and display the field forms, wait for 1 sec before execution so that we can be sure that the user is done typing */
     var typingTimer;                //timer identifier
@@ -666,8 +664,6 @@ var widgetCollapsibleInit = function(){
     }); 
 };
 
-
-/*reference: /melis-commerce/public/js/widget-collapsible.init.js*/
 var fieldFormInit = function(){  
     $.each($("#melistemplatingplugincreator_step3 form[name=templating-plugin-creator-step-3-field-form]").not(":eq(0)"), function( key, error ) {   
         var tpc_default_val_input = '<input class = "form-control" type = "text" id = "tpc_field_default_value" name = "tpc_field_default_value" value="">';
@@ -684,7 +680,7 @@ var fieldFormInit = function(){
                 '<option value="">Choose</option>'+
                 '</select></div>');
 
-            //set 'Default Value' select options based on Default Options value
+            //set 'Default Value' select options based on 'Default Options' value
             var defaultOptions = $(this).find('#tpc_field_default_options').val();         
             if(defaultOptions.length){               
                 console.log('default options not null, add values to default field');
@@ -700,11 +696,11 @@ var fieldFormInit = function(){
             }
 
         } else if ($(this).find("#tpc_field_display_type").val() == "DatePicker") {
-            //initialize datepicker
+            //initialize datetimepicker
             $(this).find('#tpc_field_default_value').datetimepicker({format: "YYYY-MM-DD"});
 
         } else if ($(this).find("#tpc_field_display_type").val() == "DateTimePicker") {
-            //initialize datepicker
+            //initialize datetimepicker
             $(this).find('#tpc_field_default_value').datetimepicker({format: "YYYY-MM-DD HH:mm:ss"});
 
         } else if ($(this).find("#tpc_field_display_type").val() == "Switch") {        
@@ -722,6 +718,7 @@ var fieldFormInit = function(){
             $(this).find('#tpc_field_default_value').val(defaultVal);  
         } else if ($(this).find("#tpc_field_display_type").val() == 'MelisCoreTinyMCE'){    
 
+            //set random id
             var fieldId = Math.round(new Date().getTime() + (Math.random() * 100));           
 
             $(this).find('#tpc_field_default_value').replaceWith('<textarea data-tinymce-id="'+fieldId+'" id="'+fieldId+'" class="form-control" name="tpc_field_default_value">'+defaultVal+'</textarea>');

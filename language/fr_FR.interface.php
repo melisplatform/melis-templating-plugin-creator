@@ -119,7 +119,7 @@
         'tr_melistemplatingplugincreator_activate_plugin_after_creation' => 'Activer le plugin à la création',
         'tr_melistemplatingplugincreator_activate_plugin_note' => '<b>Note </b>: Activer le plugin rechargera la plateforme',
         'tr_melistemplatingplugincreator_finalization_success_title' => 'Le plugin a été créé avec succès',
-        'tr_melistemplatingplugincreator_finalization_success_desc_with_counter' => 'La plateforme va se recharger dans <strong><span id="tc-restart-cd">5</span></strong>',
+        'tr_melistemplatingplugincreator_finalization_success_desc_with_counter' => 'La plateforme va se recharger dans <strong><span id="tpc-restart-cd">5</span></strong>',
         'tr_melistemplatingplugincreator_finalization_success_desc' => 'Vous pouvez activer le plugin manuellement en rechargeant la page',
         'tr_melistemplatingplugincreator_execute_aadtnl_setup' => 'Derniers réglages en cours',
         'tr_melistemplatingplugincreator_please_wait' => 'Veuillez patienter',

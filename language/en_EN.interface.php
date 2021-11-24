@@ -121,7 +121,7 @@
         'tr_melistemplatingplugincreator_activate_plugin_after_creation' => 'Activate plugin after creation',
         'tr_melistemplatingplugincreator_activate_plugin_note' => '<b>Note</b>: Activating the plugin will require to restart the platform',
         'tr_melistemplatingplugincreator_finalization_success_title' => 'The plugin has been successfully created',
-        'tr_melistemplatingplugincreator_finalization_success_desc_with_counter' => 'The platform will refresh in <strong><span id="tc-restart-cd">5</span></strong>',
+        'tr_melistemplatingplugincreator_finalization_success_desc_with_counter' => 'The platform will refresh in <strong><span id="tpc-restart-cd">5</span></strong>',
         'tr_melistemplatingplugincreator_finalization_success_desc' => 'You can manually activate the plugin by reloading the page',
         'tr_melistemplatingplugincreator_execute_aadtnl_setup' => 'Executing additional setup',
         'tr_melistemplatingplugincreator_please_wait' => 'Please wait',

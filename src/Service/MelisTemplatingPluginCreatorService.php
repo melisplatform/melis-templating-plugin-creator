@@ -135,7 +135,7 @@ class MelisTemplatingPluginCreatorService extends MelisGeneralService
         if (!$isSuccessful) {
             return false;
         }
-   
+        
         return true;
     }
 
@@ -201,7 +201,7 @@ class MelisTemplatingPluginCreatorService extends MelisGeneralService
             //update module.php to remove the Templating config 
             $this->updateModuleFile($moduleDir, false);  
 
-        }else{        
+        } else {        
             //remove newly created module if using new module              
             $this->removeDir($moduleDir);
         }
@@ -282,7 +282,6 @@ class MelisTemplatingPluginCreatorService extends MelisGeneralService
                 $fieldDisplayType = $this->steps['step_3']['tab_'.$i]['field_'.$j]['tpc_field_display_type'];
                 $fieldName = $this->steps['step_3']['tab_'.$i]['field_'.$j]['tpc_field_name'];
                 $classAttr = "'form-control'";//default
-
                 
                 if ($fieldDisplayType == 'Dropdown') {   
                     $pattern = "/^.*\btooltip\b.*$/m";
