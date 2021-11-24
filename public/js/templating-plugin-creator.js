@@ -439,9 +439,8 @@ $(function(){
         melisCoreTool.done("#removePluginThumbnail");
     });
 
-    /*when '# of Fields' is filled up, set and display the field forms, wait for 1 sec before execution so that we can be sure that the user is done typing */
-    var typingTimer;                //timer identifier
-    var doneTypingInterval = 1000;  //time in ms (1 second)    
+    /*when '# of Fields' is filled up, set and display the field forms, wait for half a second before execution so that we can be sure that the user is done typing */
+    var typingTimer; 
     $body.on("keyup", ".melis-templating-plugin-creator-steps-content #tpc_main_property_field_count", function() { 
         var fieldCount = $('#tpc_main_property_field_count').val();
 
@@ -490,7 +489,7 @@ $(function(){
                 $('#field-form-div').empty();
                  melisHelper.melisKoNotification(translations.tr_melistemplatingplugincreator_title_step_3, translations.tr_melistemplatingplugincreator_integer_only, null);
             } 
-        }, doneTypingInterval);        
+        }, 500);        
     });
     
     /*when 'display type' field is selected, update the 'default value' field accordingly*/
