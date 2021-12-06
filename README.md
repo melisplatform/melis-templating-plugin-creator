@@ -65,7 +65,7 @@ File:
 
 - **Melis Technology** - [www.melistechnology.com](https://www.melistechnology.com/)
 
-See also the list of [contributors](https://github.com/melisplatform/melis-newsletter/contributors) who participated in this project.
+See also the list of [contributors](https://github.com/melisplatform/melis-templating-plugin-creator/contributors) who participated in this project.
 
 ## License
 
