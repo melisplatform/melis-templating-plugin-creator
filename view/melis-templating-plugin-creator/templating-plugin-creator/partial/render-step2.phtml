@@ -17,7 +17,7 @@
 <div class="col-xs-12 col-md-9">
     <div class="tab-content">      
         <?php $ctr = 0; foreach ($this->stepForm['languageForm'] As $key => $form):?>
-            <div id="templating-plugin-creator-text-transaltions-<?php echo $key ?>" class="tab-pane <?php echo ($ctr++) ? '': 'active'?>">
+            <div id="templating-plugin-creator-text-transaltions-<?php echo $key ?>" class="tab-pane <?php echo ($ctr++) ? '' : 'active'?>">
                 <?php                  
                     $form->prepare();
                     $form->setAttribute('id', $key.'-'.$form->getAttribute('id'));
@@ -39,7 +39,7 @@
         echo $this->form()->closeTag();
 
         if (!empty($this->data['thumbnail'])) {
-            $explodePath = explode('/',$this->data['thumbnail']);
+            $explodePath = explode('/', $this->data['thumbnail']);
             $fileName = $explodePath[count($explodePath)-1];
 
             $form->get('tpc_plugin_upload_thumbnail')->setValue($fileName);
@@ -59,7 +59,7 @@
         if (!empty($this->data['thumbnail'])) { ?>
             <div class="col-xs-12 col-lg-6">
                 <div class="plugin_thumbnail_div" >
-                    <img src="<?= $this->data['thumbnail']?>" class = "plugin_thumbnail">  
+                    <img src="<?= $this->data['thumbnail']?>" class="plugin_thumbnail">  
                     <div class="hover-details">
                         <div class="me-p-btn-cont">
                             <a class="" href="<?= $this->data['thumbnail']?>" target="_blank">

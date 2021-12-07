@@ -1,5 +1,5 @@
 <?php
-    for($i=1; $i<=count($this->data['steps'])-2; $i++){         
+    for($i = 1; $i <= count($this->data['steps']) - 2; $i++){         
         $step = $this->data['steps']['melistemplatingplugincreator_step'.$i]; 
         $sessionData = $this->data['sessionData']['step_'.$i];  
         $curStep = $i;    
@@ -67,7 +67,7 @@
                                     echo '<tr>';
                                     echo '<td><b>' . $this->translate('tr_melistemplatingplugincreator_' . $col) . '</b></td>';
 
-                                    foreach ($this->data['languages'] As $lang){
+                                    foreach ($this->data['languages'] as $lang){
                                         $langTrans = '';                                        
                                         if (!empty($sessionData[$lang['lang_locale']])) {                                   
                                             if (!empty($sessionData[$lang['lang_locale']][$col])) {
@@ -121,7 +121,7 @@
 
                         <tbody>
                             <?php 
-                                for ($field=1; $field<=$sessionData['main_form']['tpc_main_property_field_count']; $field++) { 
+                                for ($field = 1; $field <= $sessionData['main_form']['tpc_main_property_field_count']; $field++) { 
                                     $tabNumber = $sessionData['main_form']['tpc_property_tab_number'];
                                     $fieldName = $sessionData['tab_'.$tabNumber]['field_'.$field]['tpc_field_name'];
                                     $isRequired = $sessionData['tab_'.$tabNumber]['field_'.$field]['tpc_field_is_required'];
@@ -143,9 +143,9 @@
                                         <td><?=$this->translate('tr_melistemplatingplugincreator_field'). ' '.$field?></td>
                                         <td><?=$fieldName?></td> 
                                         <td><?=$displayTypeOptions[$displayType]?></td> 
-                                        <td><?=$isRequired==1?'Yes':'No'?></td> 
-                                        <td><?=!empty($defaultOptions)?$defaultOptions:'N/A'?></td> 
-                                        <td><?=$displayType=='Switch'?(isset($defaultValue)?($defaultValue==1?'On':'Off'):''):$defaultValue?></td> 
+                                        <td><?=$isRequired==1 ? 'Yes' : 'No'?></td> 
+                                        <td><?=$defaultOptions ?: 'N/A'?></td> 
+                                        <td><?=$displayType == 'Switch' ? (isset($defaultValue) ? ($defaultValue == 1 ? 'On' : 'Off') : '') : $defaultValue?></td> 
                                     </tr>                                    
                             <?php    }
 
@@ -161,7 +161,7 @@
                     ?>
                     <div class="table-responsive">                        
                        <?php 
-                        for ($ctr=1; $ctr<=$fieldCount; $ctr++) {                       
+                        for ($ctr = 1; $ctr <= $fieldCount; $ctr++) {                       
 
                             ?>
                             <table class="table table-striped table-primary">
@@ -169,7 +169,7 @@
                                     <tr>
                                         <th><?=$this->translate('tr_melistemplatingplugincreator_field'). ' '.$ctr?> [<?=$this->data['sessionData']['step_3']['tab_'.$tabNumber]['field_'.$ctr]['tpc_field_name']?>]</th>
                                         <?php
-                                        foreach ($this->data['languages'] As $lang){
+                                        foreach ($this->data['languages'] as $lang){
                                             echo '<th>' . $lang['lang_name'] . '</th>';                                    
                                         }
                                         ?>                            
@@ -184,7 +184,7 @@
                                             echo '<tr>';
                                             echo '<td><b>' . $this->translate('tr_melistemplatingplugincreator_' . $col) . '</b></td>';
 
-                                            foreach ($this->data['languages'] As $lang) {
+                                            foreach ($this->data['languages'] as $lang) {
                                                 $langTrans = '';                                                
                                                 if (!empty($sessionData[$lang['lang_locale']]['tab_'.$tabNumber]['field_'.$ctr])) {
                                                     if (!empty($sessionData[$lang['lang_locale']]['tab_'.$tabNumber]['field_'.$ctr][$col])) {
@@ -208,7 +208,7 @@
 
                                                 $val = str_replace(' ','_',preg_replace("/(\W)+/", "", $val));
 
-                                                foreach ($this->data['languages'] As $lang){
+                                                foreach ($this->data['languages'] as $lang){
                                                     $langTrans = '';                                                                                   
                                                     if (!empty($sessionData[$lang['lang_locale']]['tab_'.$tabNumber]['field_'.$ctr][$val.'_label'])) {
                                                         $langTrans = $sessionData[$lang['lang_locale']]['tab_'.$tabNumber]['field_'.$ctr][$val.'_label'];

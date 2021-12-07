@@ -167,7 +167,8 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
      * @param boolean $validate
      * @return ViewModel
     */ 
-    private function processStep1($viewStep, $nextStep, $validate){
+    private function processStep1($viewStep, $nextStep, $validate)
+    {
         $container = new Container('templatingplugincreator');//session container
         $curStep = 1;       
         $data = array();
@@ -305,7 +306,8 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
      * @param boolean $validate
      * @return ViewModel
     */ 
-    private function processStep2($viewStep, $nextStep, $validate){   
+    private function processStep2($viewStep, $nextStep, $validate)
+    {   
         $container = new Container('templatingplugincreator');//session container
         $sessionID = $container->getManager()->getId(); 
         $curStep = 2;       
@@ -345,7 +347,7 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
 
             if ($stepForm2->isValid()) {        
                 //get the saved thumbnail done via ajax
-                $pluginThumbnail = !empty($container['melis-templatingplugincreator']['step_2']['plugin_thumbnail'])?$container['melis-templatingplugincreator']['step_2']['plugin_thumbnail']:null;
+                $pluginThumbnail = !empty($container['melis-templatingplugincreator']['step_2']['plugin_thumbnail']) ? $container['melis-templatingplugincreator']['step_2']['plugin_thumbnail'] : null;
 
                 //if no saved uploaded thumbnail, try to upload again
                 if (empty($pluginThumbnail)) {
@@ -407,7 +409,8 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
      * @param boolean $validate
      * @return ViewModel
     */ 
-    private function processStep3($viewStep, $nextStep, $validate){       
+    private function processStep3($viewStep, $nextStep, $validate)
+    {       
         $container = new Container('templatingplugincreator');//session container
         $curStep = 3;       
         $data = array();
@@ -469,7 +472,8 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
      * @param boolean $validate
      * @return ViewModel
     */ 
-    private function processStep4($viewStep, $nextStep, $validate){   
+    private function processStep4($viewStep, $nextStep, $validate)
+    {   
         $container = new Container('templatingplugincreator');//session container
         $sessionID = $container->getManager()->getId(); 
         $curStep = 4;       
@@ -511,7 +515,8 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
      * @param boolean $validate
      * @return ViewModel
     */  
-    private function processStep5($viewStep, $nextStep, $validate){           
+    private function processStep5($viewStep, $nextStep, $validate)
+    {           
         $data = array();        
         $stepForm = null;   
 
@@ -530,7 +535,8 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
      * @param boolean $validate
      * @return ViewModel
     */
-    private function processStep6($viewStep, $nextStep, $validate){
+    private function processStep6($viewStep, $nextStep, $validate)
+    {
         $container = new Container('templatingplugincreator');//session container             
         $data = array();       
         $errors = array();
@@ -540,7 +546,7 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
         if ($validate) { 
             $request = $this->getRequest();
             $postValues = get_object_vars($request->getPost());          
-            $isActivatePlugin = !empty($postValues['step-form']['tpc_activate_plugin'])?1:0;
+            $isActivatePlugin = !empty($postValues['step-form']['tpc_activate_plugin']) ? 1 : 0;
 
             //if destination of the plugin is the new module, create first the new module before adding the templating plugin files
             if ($container['melis-templatingplugincreator']['step_1']['tpc_plugin_destination'] == self::NEW_MODULE) {              
@@ -599,7 +605,8 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
      * @param bool $validate
      * @return array
     */
-    private function getStepFormAndData($curStep, $validate = false){
+    private function getStepFormAndData($curStep, $validate = false)
+    {
         $container = new Container('templatingplugincreator');//session container
 
         //get the current step's form config
@@ -1011,7 +1018,7 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
         $results = array(
             'success' => $isValid2ndForm,
             'errors' => $uploadFormErrorMessages,
-            'pluginThumbnail' => !empty($container['melis-templatingplugincreator']['step_2']['plugin_thumbnail'])?$container['melis-templatingplugincreator']['step_2']['plugin_thumbnail']:null,
+            'pluginThumbnail' => !empty($container['melis-templatingplugincreator']['step_2']['plugin_thumbnail']) ? $container['melis-templatingplugincreator']['step_2']['plugin_thumbnail'] : null,
             'textTitle' => $translator->translate($stepsConfig['melistemplatingplugincreator_step2']['name']),
             'textMessage' => $textMessage
         );
@@ -1048,7 +1055,8 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
      * @param byte unit
      * @return kb unit
     */
-    private function formatBytes($bytes) {
+    private function formatBytes($bytes) 
+    {
         $size = $bytes;
         $units = array( 'B', 'Ko', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB');
         $power = $size > 0 ? floor(log($size, 1024)) : 0;
@@ -1083,7 +1091,8 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
      * This will dynamically get the field forms based on the given number of fields
      * @return array
     */
-    public function getFieldFormAction(){
+    public function getFieldFormAction()
+    {
         $request = $this->getRequest();
         $postValues = get_object_vars($request->getPost()); 
         $fieldCount = $postValues['step-form']['tpc_main_property_field_count'];
@@ -1104,7 +1113,8 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
      * @param postValues
      * @return array
     */
-    private function getFieldForms($curStep, $tab, $fieldCount, $postValues=null){  
+    private function getFieldForms($curStep, $tab, $fieldCount, $postValues = null)
+    {  
         $container = new Container('templatingplugincreator');//to store the session data     
         $melisCoreConfig = $this->getServiceManager()->get('MelisCoreConfig');          
         $factory = new \Laminas\Form\Factory();
@@ -1113,12 +1123,12 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
         $appConfigForm = $melisCoreConfig->getFormMergedAndOrdered('melistemplatingplugincreator/forms/melistemplatingplugincreator_step'.$curStep.'_field_form', 'melistemplatingplugincreator_step'.$curStep.'_field_form');  
          $stepFormArr = array();
    
-        for ($i=1; $i<=$fieldCount; $i++) {
+        for ($i = 1; $i <= $fieldCount; $i++) {
             // Generating form for each language
             $stepFormtmp = $factory->createForm($appConfigForm);
            
             //set the default value of the first field (template_path)
-            if ($i==1) {
+            if ($i == 1) {
                 $templatingPluginCreatorSrv = $this->getServiceManager()->get('MelisTemplatingPluginCreatorService');
                 $moduleName = $this->getDestinationModule();               
                 $newPluginName = $templatingPluginCreatorSrv->convertToViewName($container['melis-templatingplugincreator']['step_1']['tpc_plugin_name']);
@@ -1165,11 +1175,11 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
             $stepFormtmp->get('tpc_field_default_options')->setAttributes(array('style' => 'display: none;'));     
 
             //set data here for each form except for the template_path field since it's predefined
-            if (!empty($container['melis-templatingplugincreator']['step_'.$curStep]['tab_'.$tab]['field_'.$i]) && $i!=1) {
+            if (!empty($container['melis-templatingplugincreator']['step_'.$curStep]['tab_'.$tab]['field_'.$i]) && $i != 1) {
                 $stepFormtmp->setData($container['melis-templatingplugincreator']['step_'.$curStep]['tab_'.$tab]['field_'.$i]);
 
                 //if the selected display type is Dropdown, add data-role=tagsinput attribute
-                if ($stepFormtmp->get('tpc_field_display_type')->getValue() == self::DROPDOWN && $i!=1) {
+                if ($stepFormtmp->get('tpc_field_display_type')->getValue() == self::DROPDOWN && $i != 1) {
                     $stepFormtmp->get('tpc_field_default_options')->setAttribute('data-role','tagsinput');
 
                     //show default_options field
@@ -1193,7 +1203,8 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
     * This retrieves the translation forms for the plugin's properties and the list of languages available in the platform
     * @return array
     */
-    private function getMainPropertiesTranslationForm(){
+    private function getMainPropertiesTranslationForm()
+    {
         $container = new Container('templatingplugincreator');
    
         //get the language form set for the given step
@@ -1212,8 +1223,8 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
             $tabNumber = $container['melis-templatingplugincreator']['step_3']['main_form']['tpc_property_tab_number'];
             $tabCount = 1;//default to 1 for now
 
-            for ($t=1; $t<=$tabCount; $t++) {
-                for ($i=1; $i<=$fieldCount; $i++) {
+            for ($t = 1; $t <= $tabCount; $t++) {
+                for ($i = 1; $i <= $fieldCount; $i++) {
                     $stepFormtmp = $factory->createForm($appConfigForm);        
              
                     //set value of the hidden fields
@@ -1223,12 +1234,11 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
                     $stepFormtmp->get('tpc_field_name')->setValue($container['melis-templatingplugincreator']['step_3']['tab_'.$t]['field_'.$i]['tpc_field_name']);    
            
                     //set default label for template_path field
-                    if ($i==1) {
+                    if ($i == 1) {
                         $stepFormtmp->get('tpc_field_label')->setValue('Template');
                     }                        
             
                     $fieldDisplayType = $container['melis-templatingplugincreator']['step_3']['tab_'.$t]['field_'.$i]['tpc_field_display_type'];
-                    //$fieldDefaultValues = $container['melis-templatingplugincreator']['step_3']['tab_'.$t]['field_'.$i]['tpc_field_default_value'];
                     $fieldDefaultOptions = $container['melis-templatingplugincreator']['step_3']['tab_'.$t]['field_'.$i]['tpc_field_default_options'];
                    
                     //if field dislay type is dropdown, and default values are given in step 3, add translation fields for each dropdown values                
@@ -1257,7 +1267,8 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
     * This retrieves the list of languages available in the platform where the current locale used is the first in the list
     * @return array
     */
-    private function getOrderedLanguagesByCurrentLocale(){
+    private function getOrderedLanguagesByCurrentLocale()
+    {
         //get all languages available in the plaftform
         $coreLang = $this->getServiceManager()->get('MelisCoreTableLang');
         $languages = $coreLang->fetchAll()->toArray();
@@ -1284,7 +1295,8 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
     * @param $fieldDefaultOptions
     * @return Form
     */
-    private function setDropdownValueTranslation($fieldNum, $stepFormtmp, $fieldDefaultOptions){
+    private function setDropdownValueTranslation($fieldNum, $stepFormtmp, $fieldDefaultOptions)
+    {
         $container = new Container('templatingplugincreator');//to store the session data
         $translator = $this->getServiceManager()->get('translator');
         $inputFilter = $stepFormtmp->getInputFilter();
@@ -1343,7 +1355,8 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
      * @param array $formData
      * @return array
     */
-    private function validateFieldTranslations($curStep, $formData){
+    private function validateFieldTranslations($curStep, $formData)
+    {
         $container = new Container('templatingplugincreator');//to store the session data
         $translator = $this->getServiceManager()->get('translator');
         // Meliscore languages
@@ -1362,7 +1375,7 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
         $validTranslationFormCount = array();
 
         // Generate form for each language and field
-        foreach ($languages As $key => $lang) {    
+        foreach ($languages as $key => $lang) {    
             foreach ($formData['step-form'] as $fieldKey => $val) { 
                 $stepFormtmp = $factory->createForm($appConfigForm);
                 $tabNumber = $val['tpc_tab_num'];
@@ -1377,7 +1390,7 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
 
                 if ($val['tpc_lang_local'] == $lang['lang_locale']) {  
 
-                    $validTranslationFormCount['tab_'.$tabNumber]['field_'.$fieldNumber] = isset($validTranslationFormCount['tab_'.$tabNumber]['field_'.$fieldNumber])?$validTranslationFormCount['tab_'.$tabNumber]['field_'.$fieldNumber]:0;
+                    $validTranslationFormCount['tab_'.$tabNumber]['field_'.$fieldNumber] = isset($validTranslationFormCount['tab_'.$tabNumber]['field_'.$fieldNumber]) ? $validTranslationFormCount['tab_'.$tabNumber]['field_'.$fieldNumber] : 0;
 
                     $stepFormtmp->setData($val); 
 
@@ -1425,7 +1438,8 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
      * @param array $formData
      * @return array
     */
-    private function validateFieldForm($curStep, $formData){   
+    private function validateFieldForm($curStep, $formData)
+    {   
         $container = new Container('templatingplugincreator');//to store the session data
         $translator = $this->getServiceManager()->get('translator');
 
@@ -1440,7 +1454,7 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
         $fieldCount = $formData['step-form']['tpc_main_property_field_count'];
         $tabNumber = $formData['step-form']['tpc_property_tab_number'];
 
-        for ($i=1; $i<=$fieldCount; $i++) {
+        for ($i = 1; $i <= $fieldCount; $i++) {
             // Generating form for each field
             $stepFormtmp = $factory->createForm($appConfigForm);
             $fieldFormName = $stepFormtmp->getAttribute('name');
@@ -1524,7 +1538,8 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
      * @param array $formElements
      * @return array
     */
-    private function formatFieldFormErrors($errors, $formElements){ 
+    private function formatFieldFormErrors($errors, $formElements)
+    { 
         $fieldFormErrors = array();
 
         foreach ($errors as $formKey => $fieldFormError) { 
@@ -1552,7 +1567,8 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
      * @param array $formElements
      * @return array
     */
-    private function formatErrors($errors, $formElements){  
+    private function formatErrors($errors, $formElements)
+    {  
         foreach ($errors as $keyError => $valueError) {       
             foreach ($formElements as $keyForm => $valueForm) {
                 $elementName = $valueForm->getAttribute('name');
@@ -1571,7 +1587,8 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
      * Retrieves the name of destination module
      * @return string
     */
-    private function getDestinationModule(){
+    private function getDestinationModule()
+    {
         $container = new Container('templatingplugincreator');//to store the session data
         $templatingPluginCreatorSrv = $this->getServiceManager()->get('MelisTemplatingPluginCreatorService');
         $moduleName = ''; 
@@ -1589,7 +1606,8 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
      * Retrieves the temp thumbnail directory
      * @return string
     */
-    private function getTempThumbnailDirectory(){
+    private function getTempThumbnailDirectory()
+    {
         // Set the user
         $melisModule = $this->getServiceManager()->get('MelisAssetManagerModulesService');                        
         $names = explode("\\", __NAMESPACE__);                       

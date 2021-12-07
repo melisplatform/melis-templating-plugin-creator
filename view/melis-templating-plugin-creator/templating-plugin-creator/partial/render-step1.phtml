@@ -13,8 +13,8 @@
         $form->prepare();       
         echo $this->form()->openTag($form);
     
-        foreach ($form->getElements() As $key => $val) { ?>               
-            <div class="form-group" <?=( empty($val->getValue()) && ($key=='tpc_new_module_name' || $key=='tpc_existing_module_name'))?'style="display:none"':''?>>    
+        foreach ($form->getElements() as $key => $val) { ?>               
+            <div class="form-group" <?=( empty($val->getValue()) && ($key=='tpc_new_module_name' || $key=='tpc_existing_module_name')) ? 'style="display:none"' : ''?>>    
                     
                 <?php $required = '';
                 if (!empty($val->getAttribute('required'))) {
@@ -23,23 +23,23 @@
                 ?>
 
                 <label class="d-flex flex-row justify-content-between" for="<?=$key?>">
-                    <div class = "label-text"><?=$val->getLabel().$required?></div>
-                    <div class = "slider-open-tooltip">
+                    <div class="label-text"><?=$val->getLabel().$required?></div>
+                    <div class="slider-open-tooltip">
                           <i class="fa fa-info-circle fa-lg float-right tip-info" data-toggle="tooltip" data-placement="left" title="" data-original-title="<?= $this->translate($val->getOptions()['tooltip'])?>"></i>
                     </div>
                 </label>                             
 
                 <?php 
                     if ($key == 'tpc_plugin_name' ) {?>                      
-                        <div class = "form-group input-group">
-                            <input class = "<?=$val->getAttribute('class')?>" type = "text" id = "<?=$key?>" name = "<?=$key?>" required="required" value="<?=$val->getValue()?>">
+                        <div class="form-group input-group">
+                            <input class="<?=$val->getAttribute('class')?>" type="text" id="<?=$key?>" name="<?=$key?>" required="required" value="<?=$val->getValue()?>">
                         </div>
                 <?php } elseif ($key == 'tpc_plugin_destination') { ?>
-                        <div class = "row">
+                        <div class="row">
                             <?php foreach ($pluginDestinationOptions as $optKey => $optVal) { ?>
                                 <div class="col-md-2 plugin-creator-radio">
                                     <label class="melis-radio-box" for="<?=$optKey.$key?>">   
-                                        <input class = "<?=$val->getAttribute('class')?>" type="radio" value="<?=$optKey?>" name="<?=$key?>" id="<?= $optKey.$key?>" required="required"  <?=$pluginDestinationValue==$optKey?"checked":""?> />
+                                        <input class="<?=$val->getAttribute('class')?>" type="radio" value="<?=$optKey?>" name="<?=$key?>" id="<?= $optKey.$key?>" required="required"  <?=$pluginDestinationValue == $optKey ? "checked" : ""?> />
                                         <span><?=$optVal?></span>
                                     </label>
                                 </div>
@@ -47,18 +47,18 @@
                         ?>
                         </div>
                 <?php } elseif ($key == 'tpc_new_module_name') { ?>     
-                        <div class = "form-group input-group">
-                            <input class = "<?=$val->getAttribute('class')?>" type = "text" id = "<?=$key?>" name = "<?=$key?>" required="required" value="<?=$val->getValue()?>">
+                        <div class="form-group input-group">
+                            <input class="<?=$val->getAttribute('class')?>" type="text" id="<?=$key?>" name="<?=$key?>" required="required" value="<?=$val->getValue()?>">
                         </div>
                 <?php } elseif ($key == 'tpc_existing_module_name') { ?>
-                        <div class = "form-group input-group">
+                        <div class="form-group input-group">
                             <div class="col-md-2 padding-left-0">
-                                <select id="<?=$key?>" name="<?=$key?>" required="required" class = "<?=$val->getAttribute('class')?>">
+                                <select id="<?=$key?>" name="<?=$key?>" required="required" class="<?=$val->getAttribute('class')?>">
                                     <option value=""><?=$this->translate($existingModuleField->getOptions()['empty_option'])?></option>
                                     <?php 
                                         if($existingModuleOptions){
                                             foreach($existingModuleOptions as $module){ ?>
-                                                <option value="<?=$module?>" <?=$existingModuleField->getValue()==$module?"selected":""?>><?=$module?></option>
+                                                <option value="<?=$module?>" <?=$existingModuleField->getValue() == $module ? "selected" : ""?>><?=$module?></option>
                                         <?php  }
                                         }
                                     ?>

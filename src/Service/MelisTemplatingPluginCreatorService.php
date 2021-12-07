@@ -192,7 +192,7 @@ class MelisTemplatingPluginCreatorService extends MelisGeneralService
             //delete form view file for each tab
             $tabCount = 1;//default to 1 for now
             $tabName = 'plugin-'.$this->convertToViewName($this->pluginName).'-tab-';
-            for ($t=1; $t<=$tabCount; $t++) {   
+            for ($t = 1; $t <= $tabCount; $t++) {   
                 if (file_exists($moduleDir.'/view/plugins/'.$tabName.$t.'-modal-form.phtml')) {
                     unlink($moduleDir.'/view/plugins/'.$tabName.$t.'-modal-form.phtml');
                 }   
@@ -232,16 +232,16 @@ class MelisTemplatingPluginCreatorService extends MelisGeneralService
         }
 
         if ($match) {
-            for ($t=1; $t<=$tabCount; $t++) {
+            for ($t = 1; $t <= $tabCount; $t++) {
                 $tabFieldCount = $this->steps['step_3']['main_form']['tpc_main_property_field_count'];
                 
                 //starts with field #2 since the field 1[template_path] is already added in the template file
-                for ($f=2; $f<=$tabFieldCount; $f++) {
+                for ($f = 2; $f <= $tabFieldCount; $f++) {
                     $fieldName = $this->steps['step_3']['tab_'.$t]['field_'.$f]['tpc_field_name'];
                     $displayType = $this->steps['step_3']['tab_'.$t]['field_'.$f]['tpc_field_display_type'];
                     $defaultValue = $this->steps['step_3']['tab_'.$t]['field_'.$f]['tpc_field_default_value'];
 
-                    if ($f!=2) {
+                    if ($f != 2) {
                         $tab = "\t\t\t\t\t\t";
                     }
                     $fields .= $tab."'".$fieldName."' => '".$defaultValue."',\r\n";
@@ -251,7 +251,7 @@ class MelisTemplatingPluginCreatorService extends MelisGeneralService
         }
 
         //set the tab properties    
-        for ($i=1; $i<=$tabCount; $i++) {       
+        for ($i = 1; $i <= $tabCount; $i++) {       
             $tabPropertiesTpl = $this->getTemplateContent('/Code/tab-properties');           
            
             //set the tab#
@@ -265,15 +265,15 @@ class MelisTemplatingPluginCreatorService extends MelisGeneralService
             $tabInputFilterCollection = '';
 
             //set tab's elements and input filters
-            for ($j=1; $j<=$fieldCount; $j++) {
+            for ($j = 1; $j <= $fieldCount; $j++) {
                 //set template path default value
-                if ($j==1) {
+                if ($j == 1) {
                     $templatingPluginConfigContent = str_replace('#template_path',$this->steps['step_3']['tab_'.$i]['field_'.$j]['tpc_field_default_value'], $templatingPluginConfigContent);
                 }
 
                 /********************* start setting tab elements ********************/
                 $tabElements = "";
-                if ($j!=1) {
+                if ($j != 1) {
                     $tabElements = "\t\t\t\t\t\t\t\t\t";
                 }
                
@@ -378,7 +378,7 @@ class MelisTemplatingPluginCreatorService extends MelisGeneralService
                 $validators = [];
                 $displayType = $this->steps['step_3']['tab_'.$i]['field_'.$j]['tpc_field_display_type'];
 
-                if ($j!=1) {
+                if ($j != 1) {
                     $tabInputFilters = "\t\t\t\t\t\t\t\t\t";
                 }
 
@@ -453,13 +453,13 @@ class MelisTemplatingPluginCreatorService extends MelisGeneralService
         $tabXML = "";
 
         //retrieve all fields from all tabs
-        for ($t=1; $t<=$tabCount; $t++) {
+        for ($t = 1; $t <= $tabCount; $t++) {
             $tabFieldCount = $this->steps['step_3']['main_form']['tpc_main_property_field_count'];            
             
-            for ($f=1; $f<=$tabFieldCount; $f++) {
+            for ($f = 1; $f <= $tabFieldCount; $f++) {
                 $fieldName = $this->steps['step_3']['tab_'.$t]['field_'.$f]['tpc_field_name'];
 
-                if ($f!=1) {
+                if ($f != 1) {
                     $tabConfig = "\t\t\t";
                     $tabXML = "\t\t";
                 }
@@ -516,7 +516,7 @@ class MelisTemplatingPluginCreatorService extends MelisGeneralService
         $tabName = 'plugin-'.$this->convertToViewName($this->steps['step_1']['tpc_plugin_name']).'-tab-';
         $tabCount = 1;//default to 1 for now
        
-        for ($t=1; $t<=$tabCount; $t++) {
+        for ($t = 1; $t <= $tabCount; $t++) {
             $datePickerFields = "";
             $dateTimePickerFields = "";
             $datePickerScript = "";
@@ -525,14 +525,14 @@ class MelisTemplatingPluginCreatorService extends MelisGeneralService
 
             //set js script if one of the fields' display type is either datepicker or datetimepicker
             $fieldCount = $this->steps['step_3']['main_form']['tpc_main_property_field_count']; 
-            for ($f=1; $f<=$fieldCount; $f++) {
+            for ($f = 1; $f <= $fieldCount; $f++) {
                 $fieldName = $this->steps['step_3']['tab_'.$t]['field_'.$f]['tpc_field_name'];
                 $displayType = $this->steps['step_3']['tab_'.$t]['field_'.$f]['tpc_field_display_type'];
               
                 if ($displayType == self::DATE_PICKER) {
-                    $datePickerFields .= !empty($datePickerFields)?",#".$fieldName:"#".$fieldName;
+                    $datePickerFields .= !empty($datePickerFields) ? ",#".$fieldName : "#".$fieldName;
                 } elseif ($displayType == self::DATETIME_PICKER) {
-                    $dateTimePickerFields .= !empty($dateTimePickerFields)?",#".$fieldName:"#".$fieldName;
+                    $dateTimePickerFields .= !empty($dateTimePickerFields) ? ",#".$fieldName : "#".$fieldName;
                 }
             }
 
@@ -677,12 +677,12 @@ class MelisTemplatingPluginCreatorService extends MelisGeneralService
                    
                 //set here the tab title and field translations of each tab
                 $tabCount = 1; //this default to 1 for now    
-                for ($t=1; $t<=$tabCount; $t++) {
+                for ($t = 1; $t <= $tabCount; $t++) {
                     $tabFieldCount = $this->steps['step_3']['main_form']['tpc_main_property_field_count'];
                     $tr_keyword = 'tr_'.strtolower($this->moduleName).'_'.strtolower($this->pluginName).'_plugin_tab';
                       
                     //set the title for Properties Tab, always present in templating plugin, in version 2, tab title is set as required field
-                    if ($t==1) {
+                    if ($t == 1) {
                         $tr_keyword = $tr_keyword.'_properties';                    
 
                         //set the default translation for the Properties tab name
@@ -703,15 +703,15 @@ class MelisTemplatingPluginCreatorService extends MelisGeneralService
                     }
                     
                     //set translation for label and tooltip of each field
-                    for ($f=1; $f<=$tabFieldCount; $f++) {
+                    for ($f = 1; $f <= $tabFieldCount; $f++) {
                         $fieldName = $this->steps['step_3']['tab_'.$t]['field_'.$f]['tpc_field_name'];
                         $trKeywordLabel = 'tr_melis_'.strtolower($this->moduleName).'_'.strtolower($this->pluginName).'_'.$fieldName.'_label'; 
                         $trKeywordTooltip = 'tr_melis_'.strtolower($this->moduleName).'_'.strtolower($this->pluginName).'_'.$fieldName.' tooltip';
                         
                         //set translations for field label and tooltip                     
                         if ($appendConfig) {
-                            $translationArr[$trKeywordLabel] = !empty($this->steps['step_4'][$lang['lang_locale']]['tab_'.$t]['field_'.$f]['tpc_field_label'])?$this->removeExtraSpace($this->steps['step_4'][$lang['lang_locale']]['tab_'.$t]['field_'.$f]['tpc_field_label']):'';;
-                            $translationArr[$trKeywordTooltip] = !empty($this->steps['step_4'][$lang['lang_locale']]['tab_'.$t]['field_'.$f]['tpc_field_tooltip'])?$this->removeExtraSpace($this->steps['step_4'][$lang['lang_locale']]['tab_'.$t]['field_'.$f]['tpc_field_tooltip']):'';
+                            $translationArr[$trKeywordLabel] = !empty($this->steps['step_4'][$lang['lang_locale']]['tab_'.$t]['field_'.$f]['tpc_field_label']) ? $this->removeExtraSpace($this->steps['step_4'][$lang['lang_locale']]['tab_'.$t]['field_'.$f]['tpc_field_label']) : '';;
+                            $translationArr[$trKeywordTooltip] = !empty($this->steps['step_4'][$lang['lang_locale']]['tab_'.$t]['field_'.$f]['tpc_field_tooltip']) ? $this->removeExtraSpace($this->steps['step_4'][$lang['lang_locale']]['tab_'.$t]['field_'.$f]['tpc_field_tooltip']) : '';
 
                         } else {
                             //unset if performing rollback  
@@ -732,7 +732,7 @@ class MelisTemplatingPluginCreatorService extends MelisGeneralService
                                 
                                 //set translations for dropdown values' labels
                                 if ($appendConfig) {
-                                    $translationArr[$dropdownKeyword] = !empty($this->steps['step_4'][$lang['lang_locale']]['tab_'.$t]['field_'.$f][$val.'_label'])?$this->steps['step_4'][$lang['lang_locale']]['tab_'.$t]['field_'.$f][$val.'_label']:'';
+                                    $translationArr[$dropdownKeyword] = !empty($this->steps['step_4'][$lang['lang_locale']]['tab_'.$t]['field_'.$f][$val.'_label']) ? $this->steps['step_4'][$lang['lang_locale']]['tab_'.$t]['field_'.$f][$val.'_label'] : '';
                                 } else {
                                     //unset if performing rollback
                                     unset($translationArr[$dropdownKeyword]);
@@ -797,7 +797,7 @@ class MelisTemplatingPluginCreatorService extends MelisGeneralService
 
             //add to array the template_path keys of the modal forms for each plugin tab
             $tabCount = 1;//default 1 for now  
-            for ($t=1; $t<=$tabCount; $t++) {            
+            for ($t = 1; $t <= $tabCount; $t++) {            
                 $key = $this->moduleName."/plugins/plugin-".$pluginToViewName."-tab-".$t."-modal-form";  
                 $keyArr[] = $key;                       
             }  
@@ -841,7 +841,7 @@ class MelisTemplatingPluginCreatorService extends MelisGeneralService
 
         //set template map entry for plugin's modal form for each tab    
         $tabCount = 1;//default 1 for now    
-        for ($t=1; $t<=$tabCount; $t++) {            
+        for ($t = 1; $t <= $tabCount; $t++) {            
             $key = $this->moduleName."/plugins/plugin-".$pluginToViewName."-tab-".$t."-modal-form";            
             $val = ".'/../view/plugins/plugin-".$pluginToViewName."-tab-".$t."-modal-form".".phtml'"; 
             $templateMap .= "'".$key."' => __DIR__".$val.",\r\n";

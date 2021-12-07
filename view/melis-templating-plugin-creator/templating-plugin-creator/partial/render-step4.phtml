@@ -3,7 +3,7 @@
         <ul class="nav-tabs product-text-tab">    
             <?php                 
                 $ctr = 0;
-                foreach ($this->data['languages'] As $key => $val) { ?>
+                foreach ($this->data['languages'] as $key => $val) { ?>
                 <li class="<?php echo ($ctr++) ?: 'active'?>">
                     <a class="clearfix" data-toggle="tab" href="#templating-plugin-creator-text-translations-<?php echo $val['lang_locale']?>" aria-expanded="false">
                         <?php echo $val['lang_label']?>
@@ -16,10 +16,10 @@
 </div>
 <div class="col-xs-12 col-md-9">
     <div class="tab-content">      
-        <?php $ctr = 0; foreach ($this->stepForm['mainPropertyTranslationForm'] As $key => $tab) { 
+        <?php $ctr = 0; foreach ($this->stepForm['mainPropertyTranslationForm'] as $key => $tab) { 
             ?>
-            <div id="templating-plugin-creator-text-translations-<?php echo $key ?>" class="tab-pane <?php echo ($ctr++) ? '': 'active'?>">               
-                <div id='field-form-div' class = "tab-pane active">                     
+            <div id="templating-plugin-creator-text-translations-<?php echo $key ?>" class="tab-pane <?php echo ($ctr++) ? '' : 'active'?>">               
+                <div id='field-form-div' class="tab-pane active">                     
                     <div class="tab-content variant-prices-forms">
                         <div id="" class="tab-pane field-accordion active"> 
                     <?php
@@ -27,11 +27,11 @@
                         foreach ($tab as $form) {  
                             foreach ($form as $fieldForm) {
                                 ?>
-                                <div class="widget" data-toggle="collapse-widget" data-collapse-closed="<?=$i==1?'false':'true'?>">
+                                <div class="widget" data-toggle="collapse-widget" data-collapse-closed="<?=$i==1 ? 'false' : 'true'?>">
                                     <div class="widget-head melis-primary-bg accordionTitle">
                                         <h4 class="heading"><?=$fieldForm->get('tpc_field_name')->getValue()?></h4>
                                     </div>
-                                    <div class="widget-body <?=$i==1?'show':''?>">
+                                    <div class="widget-body <?=$i == 1 ? 'show' : ''?>">
                                        <?php                                     
                                         $fieldForm->prepare();
                                         $fieldForm->setAttribute('id', $key.'-'.$fieldForm->getAttribute('id').'-field-'.$i);

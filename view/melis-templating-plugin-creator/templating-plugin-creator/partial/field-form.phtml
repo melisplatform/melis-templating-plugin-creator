@@ -4,11 +4,11 @@
     $i=1;
     foreach($this->fieldFormArr as $fieldForm){
        ?>                    
-            <div class="widget" data-toggle="collapse-widget" data-collapse-closed="<?=$i==1?'false':'true'?>">
+            <div class="widget" data-toggle="collapse-widget" data-collapse-closed="<?=$i == 1 ? 'false' : 'true'?>">
                 <div class="widget-head melis-primary-bg accordionTitle">
                     <h4 class="heading"><?=$this->translate('tr_melistemplatingplugincreator_field').' '.$i ?></h4>
                 </div>
-                <div class="widget-body <?=$i==1?'show':''?>">
+                <div class="widget-body <?=$i == 1 ? 'show' : ''?>">
                    <?php                  
                     $fieldForm->prepare();
                     $fieldForm->setAttribute('id', $fieldForm->getAttribute('id').'-'.$i);
@@ -27,8 +27,8 @@
                     $fieldForm->prepare();       
                     echo $this->form()->openTag($fieldForm);
                 
-                    foreach ($fieldForm->getElements() As $key => $val) { ?>               
-                        <div class="form-group" <?=(empty($val->getValue()) && $key=='tpc_field_default_options')?'style="display:none"':''?>>    
+                    foreach ($fieldForm->getElements() as $key => $val) { ?>               
+                        <div class="form-group" <?=(empty($val->getValue()) && $key == 'tpc_field_default_options')?'style="display:none"':''?>>    
                                 
                             <?php $required = '';
                             if (!empty($val->getAttribute('required'))) {
@@ -51,12 +51,12 @@
                             <?php } elseif ($key == 'tpc_field_is_required') { ?>     
                                     <div class = "form-group input-group">
                                         <div class="col-md-2 padding-left-0">
-                                            <select id="<?=$key?>" name="<?=$key?>" required="required" class = "<?=$val->getAttribute('class')?>" <?=$val->getAttribute('disabled') == "true"?"disabled":""?>>
+                                            <select id="<?=$key?>" name="<?=$key?>" required="required" class = "<?=$val->getAttribute('class')?>" <?=$val->getAttribute('disabled') == "true" ? "disabled" : ""?>>
                                                 <option value=""><?=$this->translate($isRequired->getOptions()['empty_option'])?></option>
                                                 <?php 
                                                     if($isRequiredOptions){
                                                         foreach($isRequiredOptions as $requiredKey => $requiredval){ ?>
-                                                            <option value="<?=$requiredKey?>" <?=($isRequired->getValue() != "" && $isRequired->getValue()==$requiredKey)?"selected":""?>><?=$requiredval?></option>
+                                                            <option value="<?=$requiredKey?>" <?=($isRequired->getValue() != "" && $isRequired->getValue() == $requiredKey) ? "selected" : ""?>><?=$requiredval?></option>
                                                     <?php  }
                                                     }
                                                 ?>
