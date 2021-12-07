@@ -1034,7 +1034,8 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
     {           
         $container = new Container('templatingplugincreator');
         
-        if (!empty($container['melis-templatingplugincreator'])) {       
+        if (!empty($container['melis-templatingplugincreator']) && !empty($container['melis-templatingplugincreator']['step_2']['plugin_thumbnail'])) {      
+
             //call templating plugin creator service 
             $tpcService = $this->getServiceManager()->get('MelisTemplatingPluginCreatorService');
 

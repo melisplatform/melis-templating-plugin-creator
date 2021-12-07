@@ -309,7 +309,7 @@ $(function(){
     });
 
     /*when templating plugin creator tab is closed, delete the temp thumbnail folder for the current session if there are any*/
-    $body.on("click", "a[data-id=id_melistemplatingplugincreator_tool]", function(e){          
+    $body.on("click", "a.close-tab[data-id=id_melistemplatingplugincreator_tool]", function(e){   
         $.ajax({
             type: 'POST',
             url: '/melis/MelisTemplatingPluginCreator/TemplatingPluginCreator/removeTempThumbnailDir',
