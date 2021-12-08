@@ -584,7 +584,7 @@ $(function(){
         }).done(function (data) {  
             $('#field-form-div').html(data);
             fieldFormInit();
-            widgetCollapsibleInit();         
+            widgetCollapsibleInitTemplating();         
         }).fail(function () {
             alert( translations.tr_meliscore_error_message );
         });  
@@ -624,7 +624,7 @@ var templatingPluginCreatorTool = {
 };
 
 /*reference: /melis-commerce/public/js/widget-collapsible.init.js*/
-var widgetCollapsibleInit = function(){    
+var widgetCollapsibleInitTemplating = function(){    
     $('.widget[data-toggle="collapse-widget"] .widget-body')
         .on('show.bs.collapse', function(){
             $(this).parents('.widget:first').attr('data-collapse-closed', "false");
@@ -651,6 +651,7 @@ var widgetCollapsibleInit = function(){
         
         // bind the toggle button
         $(this).find('.accordionTitle').on('click', function(){
+          
             //close all accordion before toggling the selected one
             var accordionCont = $(".prices-accordion.active");
             $.each(accordionCont, function(){
