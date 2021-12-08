@@ -42,8 +42,8 @@
                                             <option value=""><?=$this->translate($siteField->getOptions()['empty_option'])?></option>
                                             <?php 
                                                 if ($existingSiteOptions) {
-                                                    foreach ($existingSiteOptions as $siteName) { ?>
-                                                        <option value="<?=$siteName?>" <?=$siteField->getValue() == $siteName ? "selected" : ""?>><?=$siteName?></option>
+                                                    foreach ($existingSiteOptions as $siteName => $siteLabel) { ?>
+                                                        <option value="<?=$siteName?>" <?=$siteField->getValue() == $siteName ? "selected" : ""?>><?=$siteLabel?></option>
                                                 <?php  }
                                                 }
                                             ?>

@@ -54,6 +54,7 @@ return [
     'form_elements' => [
         'factories' => [      
             'MelisTemplatingPluginCreatorModuleSelect' => \MelisTemplatingPluginCreator\Form\Factory\MelisTemplatingPluginCreatorModuleSelectFactory::class,
+            'MelisTemplatingPluginCreatorSiteSelect' => \MelisTemplatingPluginCreator\Form\Factory\MelisTemplatingPluginCreatorSiteSelectFactory::class,
         ],
     ],
     'view_manager' => [

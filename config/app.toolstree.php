@@ -54,7 +54,7 @@ return [
                         'id' => 'id_melistemplatingplugincreator_tool',
                         'melisKey' => 'melistemplatingplugincreator_tool',
                         'name' => 'tr_melistemplatingplugincreator_title',
-                        'icon' => 'fa fa-puzzle-piece',
+                        'icon' => 'fa fa-th-large',
                         'follow_regular_rendering' => false,
                     ],
                     'forward' => [

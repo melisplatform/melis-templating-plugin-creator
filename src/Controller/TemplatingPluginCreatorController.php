@@ -576,7 +576,7 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
                 $tpcService = $this->getServiceManager()->get('MelisTemplatingPluginCreatorService');
                 $result = $tpcService->generateTemplatingPlugin();
 
-                //after generating the plugin files, activate it to the selected module if destination is new module
+                //after generating the plugin files, activate plugin to the selected site if destination is new module
                 if ($result) {
                     //activate module in the chosen site
                     if ($container['melis-templatingplugincreator']['step_1']['tpc_plugin_destination'] == self::NEW_MODULE) {

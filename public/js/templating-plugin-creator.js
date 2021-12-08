@@ -536,14 +536,14 @@ $(function(){
 
             /*set the 'default_value' field as dropdown*/
             $(this).parents('form').find('#tpc_field_default_value').replaceWith('<div class="col-md-2 padding-left-0"><select id="tpc_field_default_value" name="tpc_field_default_value" class="form-control">'+
-                '<option value="">Choose</option></select></div>');   
+                '<option value="">'+translations.tr_melistemplatingplugincreator_tpc_select_placeholder+'</option></select></div>');   
         } else if (current == 'DatePicker') {                      
             $(this).parents('form').find('#tpc_field_default_value').datetimepicker({format: "YYYY-MM-DD"});            
         } else if (current == 'DateTimePicker'){           
             $(this).parents('form').find('#tpc_field_default_value').datetimepicker({format: "YYYY-MM-DD HH:mm:ss"});           
         } else if (current == 'Switch'){           
             $(this).parents('form').find('#tpc_field_default_value').replaceWith('<div class="col-md-2 padding-left-0"><select id="tpc_field_default_value" name="tpc_field_default_value" class="form-control">'+
-                '<option value="">Choose</option><option value="1">On</option><option value="0">Off</option></select></div>');   
+                '<option value="">'+translations.tr_melistemplatingplugincreator_tpc_select_placeholder+'</option><option value="1">On</option><option value="0">Off</option></select></div>');   
         } else if (current == 'PageInput') {    
             /*add sitemap icon to default_val input field*/
             $(this).parents('form').find('#tpc_field_default_value').closest('.form-group.input-group').empty().
@@ -677,13 +677,12 @@ var fieldFormInit = function(){
        
             //set Default Value field as select type
             $(this).find('#tpc_field_default_value').replaceWith('<div class="col-md-2 padding-left-0"><select id="tpc_field_default_value" name="tpc_field_default_value" class="form-control">'+
-                '<option value="">Choose</option>'+
+                '<option value="">'+translations.tr_melistemplatingplugincreator_tpc_select_placeholder+'</option>'+
                 '</select></div>');
 
             //set 'Default Value' select options based on 'Default Options' value
             var defaultOptions = $(this).find('#tpc_field_default_options').val();         
-            if(defaultOptions.length){               
-                console.log('default options not null, add values to default field');
+            if(defaultOptions.length){     
                 defaultOptions = defaultOptions.split(',');
                 var defaultValueField = $(this).find('#tpc_field_default_value');
                 $.each(defaultOptions, function(key, value) {   
@@ -707,7 +706,7 @@ var fieldFormInit = function(){
 
             //set Default Value options     
             $(this).find('#tpc_field_default_value').replaceWith('<div class="col-md-2 padding-left-0"><select id="tpc_field_default_value" name="tpc_field_default_value" class="form-control">'+
-                '<option value="">Choose</option><option value="1" >On</option><option value="0">Off</option></select></div>');
+                '<option value="">'+translations.tr_melistemplatingplugincreator_tpc_select_placeholder+'</option><option value="1" >On</option><option value="0">Off</option></select></div>');
             $(this).find('#tpc_field_default_value').val(defaultVal);  
 
         } else if ($(this).find("#tpc_field_display_type").val() == "PageInput") {  

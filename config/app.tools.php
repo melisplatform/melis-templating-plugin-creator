@@ -773,7 +773,7 @@ return [
 
                         [
                             'spec' => [
-                                'type' => 'MelisTemplatingPluginCreatorModuleSelect',
+                                'type' => 'MelisTemplatingPluginCreatorSiteSelect',
                                 'name' => 'tpc_existing_site_name',
                                 'options' => [
                                     'disable_inarray_validator' => true,
