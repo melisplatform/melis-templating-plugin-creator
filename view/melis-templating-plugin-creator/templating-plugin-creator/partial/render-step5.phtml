@@ -19,13 +19,13 @@
                     <table class="table table-striped table-primary table-bordered">
                         <thead>
                             <tr>
-                                <th><?php echo $this->translate('tr_melistemplatingplugincreator_tpc_plugin_name') ?></th>
+                                <th><?php echo $this->data['lang_locale'] == 'en_EN' ? ucwords($this->translate('tr_melistemplatingplugincreator_tpc_plugin_name')) : $this->translate('tr_melistemplatingplugincreator_tpc_plugin_name') ?></th>
                                 <th><?php echo $this->translate('tr_melistemplatingplugincreator_tpc_plugin_destination') ?></th>
                                 <?php 
                                     if ($sessionData['tpc_plugin_destination'] == 'new_module') { ?>
-                                         <th><?php echo ucwords($this->translate('tr_melistemplatingplugincreator_tpc_new_module_name')) ?></th>
+                                         <th><?php echo $this->data['lang_locale'] == 'en_EN' ? ucwords($this->translate('tr_melistemplatingplugincreator_tpc_new_module_name')) : $this->translate('tr_melistemplatingplugincreator_tpc_new_module_name') ?></th>
                                 <?php } else { ?>
-                                        <th><?php echo ucwords($this->translate('tr_melistemplatingplugincreator_destination_existing_opt')). ' Name ' ?></th>
+                                        <th><?php echo $this->data['lang_locale'] == 'en_EN' ? ucwords($this->translate('tr_melistemplatingplugincreator_destination_existing_opt')) : $this->translate('tr_melistemplatingplugincreator_destination_existing_opt') ?></th>
                                <?php }
                                 ?>                                
                             </tr>

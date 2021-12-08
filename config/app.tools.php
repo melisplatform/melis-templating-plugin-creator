@@ -769,8 +769,34 @@ return [
                                     'value' => ''                                
                                 ],
                             ],
-                        ],                       
-                    ],                                    
+                        ],  
+
+                        [
+                            'spec' => [
+                                'type' => 'MelisTemplatingPluginCreatorModuleSelect',
+                                'name' => 'tpc_existing_site_name',
+                                'options' => [
+                                    'disable_inarray_validator' => true,
+                                    'label' => 'tr_melistemplatingplugincreator_tpc_existing_site_name',
+                                    'tooltip' => 'tr_melistemplatingplugincreator_tpc_existing_site_name tooltip',  
+                                    'empty_option' => 'tr_melistemplatingplugincreator_tpc_existing_site_placeholder',                                 
+                                ],
+                                'attributes' => [
+                                    'id' => 'tpc_existing_site_name',
+                                    'class' => 'form-control',
+                                    'value' => '',
+                                    'placeholder' => '',
+                                    'required' => 'required',                                    
+                                ],
+                            ],
+                        ],                     
+                    ],   
+                    'input_filter' => [
+                        'tpc_activate_plugin' => [
+                            'name'     => 'tpc_activate_plugin',
+                            'required' => false,                            
+                        ],                        
+                    ],                                 
                 ],
             ]
         ]

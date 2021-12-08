@@ -12,7 +12,7 @@
 		// Warnings
 	    'tr_melistemplatingplugincreator_fp_title' => 'Problème de droits',
 	    'tr_melistemplatingplugincreator_fp_msg' => 'Pour créer ce plugin veuillez donner des droits d\'écriture pour les dossiers suivants ou contactez l\'administrateur.',
-	    'tr_melistemplatingplugincreator_fp_config' => '<b>/config/melis.module.load.php</b> - Ce fichier est nécessaire pour activer le nouveau module après sa création',
+	    'tr_melistemplatingplugincreator_fp_config' => 'Pour activer le plugin veuillez donner les droits d\'écriture sur le fichier suivant: <b>%s/config/module.load.php</b>',
 	 	'tr_melistemplatingplugincreator_fp_module' => '<b>/module</b> - Le répertoire dans lequel les modules créés sont enregistrés',
         'tr_melistemplatingplugincreator_fp_temp_thumbnail' => '<b>/melis-templating-plugin-creator/public/temp-thumbnail</b> - Le répertoire dans lequel les images sont enregistrées temporairement',
 
@@ -123,5 +123,9 @@
         'tr_melistemplatingplugincreator_finalization_success_desc' => 'Vous pouvez activer le plugin manuellement en rechargeant la page',
         'tr_melistemplatingplugincreator_execute_aadtnl_setup' => 'Derniers réglages en cours',
         'tr_melistemplatingplugincreator_please_wait' => 'Veuillez patienter',
-        'tr_melistemplatingplugincreator_refreshing' => 'Rechargement' 
+        'tr_melistemplatingplugincreator_refreshing' => 'Rechargement',
+        'tr_melistemplatingplugincreator_tpc_existing_site_name' => 'Site',
+        'tr_melistemplatingplugincreator_tpc_existing_site_name tooltip' => 'Sélectionnez le site pour lequel le plugin sera activé.',
+        'tr_melistemplatingplugincreator_tpc_existing_site_placeholder' => 'Choisissez',
+        'tr_melistemplatingplugincreator_tpc_existing_site_name_none' => 'Aucun', 
     ];

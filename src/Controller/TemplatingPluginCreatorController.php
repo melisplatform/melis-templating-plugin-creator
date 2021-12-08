@@ -40,7 +40,8 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
         $container['melis-templatingplugincreator'] = [];
 
         //generate new session id, this will be used in creating a temp folder path for plugin thumbnails
-        $container->getManager()->regenerateId();
+        $container->getManager()->regenerateId();       
+        $container['melis-templatingplugincreator']['sessionID'] = $container->getManager()->getId();
 
         return $view;
     }
@@ -67,10 +68,6 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
         /**
          * Checking file permission to file and directories needed to create and activate the plugin
          */
-        $filePermissionErr = [];
-        if (!is_writable($_SERVER['DOCUMENT_ROOT'] . '/../config/melis.module.load.php'))
-            $filePermissionErr[] = 'tr_melistemplatingplugincreator_fp_config';
-
         if (!is_writable($_SERVER['DOCUMENT_ROOT'] . '/../module'))
             $filePermissionErr[] = 'tr_melistemplatingplugincreator_fp_module';
 
@@ -309,7 +306,7 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
     private function processStep2($viewStep, $nextStep, $validate)
     {   
         $container = new Container('templatingplugincreator');//session container
-        $sessionID = $container->getManager()->getId(); 
+        $sessionID = $container['melis-templatingplugincreator']['sessionID'];
         $curStep = 2;       
         $data = array();
         $errors = array();
@@ -475,7 +472,6 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
     private function processStep4($viewStep, $nextStep, $validate)
     {   
         $container = new Container('templatingplugincreator');//session container
-        $sessionID = $container->getManager()->getId(); 
         $curStep = 4;       
         $data = array();
         $errors = array();       
@@ -545,56 +541,114 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
         //generate templating plugin
         if ($validate) { 
             $request = $this->getRequest();
-            $postValues = get_object_vars($request->getPost());          
-            $isActivatePlugin = !empty($postValues['step-form']['tpc_activate_plugin']) ? 1 : 0;
+            $postValues = get_object_vars($request->getPost());        
 
-            //if destination of the plugin is the new module, create first the new module before adding the templating plugin files
-            if ($container['melis-templatingplugincreator']['step_1']['tpc_plugin_destination'] == self::NEW_MODULE) {              
-                // Initializing the Tool creator session container
-                $toolContainer = new Container('melistoolcreator');
-                $toolContainer['melis-toolcreator'] = [];    
-                $toolContainer['melis-toolcreator']['step1']['tcf-name'] = $container['melis-templatingplugincreator']['step_1']['tpc_new_module_name'];
-                $toolContainer['melis-toolcreator']['step1']['tcf-tool-type'] = 'blank';
-                $toolContainer['melis-toolcreator']['step1']['tcf-tool-edit-type'] = 'modal';
-        
-                $toolCreatorSrv = $this->getServiceManager()->get('MelisToolCreatorService');
-                $toolCreatorSrv->createTool();             
-            }
-       
-            //call service to generate the templating plugin 
-            $tpcService = $this->getServiceManager()->get('MelisTemplatingPluginCreatorService');
-            $result = $tpcService->generateTemplatingPlugin();
+            //validate the step 6's main form
+            $factory = new \Laminas\Form\Factory();
+            $formElements = $this->getServiceManager()->get('FormElementManager');
+            $factory->setFormElementManager($formElements);
+            $melisCoreConfig = $this->getServiceManager()->get('MelisCoreConfig');
+            $appConfigForm = $melisCoreConfig->getFormMergedAndOrdered('melistemplatingplugincreator/forms/melistemplatingplugincreator_step6_form', 'melistemplatingplugincreator_step6_form');
+            $stepForm = $factory->createForm($appConfigForm);         
+            $stepForm->setData($postValues['step-form']);
 
-            if ($result) {
-                if ($container['melis-templatingplugincreator']['step_1']['tpc_plugin_destination'] == self::NEW_MODULE) {
-                    // Activate new module
-                    $moduleSvc = $this->getServiceManager()->get('ModulesService');
-                    $moduleSvc->activateModule($toolCreatorSrv->moduleName());
+            //if plugin destination is not new module, remove the site field validation
+            if (!empty($container['melis-templatingplugincreator']['step_1']['tpc_plugin_destination']) && $container['melis-templatingplugincreator']['step_1']['tpc_plugin_destination'] != self::NEW_MODULE) {             
+                $stepForm->getInputFilter()->remove('tpc_existing_site_name');                
+            }  
 
-                    // Reloading module paths
-                    unlink($_SERVER['DOCUMENT_ROOT'].'/../config/melis.modules.path.php');
-
-                    //unset tool container
-                    unset($toolContainer['melis-toolcreator']);  
+            if ($stepForm->isValid()) {               
+                               
+                //if destination of the plugin is the new module, create first the new module before adding the templating plugin files
+                if ($container['melis-templatingplugincreator']['step_1']['tpc_plugin_destination'] == self::NEW_MODULE) {                       
+                    // Initializing the Tool creator session container
+                    $toolContainer = new Container('melistoolcreator');
+                    $toolContainer['melis-toolcreator'] = [];    
+                    $toolContainer['melis-toolcreator']['step1']['tcf-name'] = $container['melis-templatingplugincreator']['step_1']['tpc_new_module_name'];
+                    $toolContainer['melis-toolcreator']['step1']['tcf-tool-type'] = 'blank';
+                    $toolContainer['melis-toolcreator']['step1']['tcf-tool-edit-type'] = 'modal';
+            
+                    $toolCreatorSrv = $this->getServiceManager()->get('MelisToolCreatorService');
+                    $toolCreatorSrv->createTool();             
                 }
-               
-                //reload page to activate the plugin
-                if ($isActivatePlugin) {   
-                    $viewStep->restartRequired = 1;
-                } else {      
-                    $viewStep->restartRequired = 0;
-                }   
+           
+                //call service to generate the templating plugin 
+                $tpcService = $this->getServiceManager()->get('MelisTemplatingPluginCreatorService');
+                $result = $tpcService->generateTemplatingPlugin();
 
+                //after generating the plugin files, activate it to the selected module if destination is new module
+                if ($result) {
+                    //activate module in the chosen site
+                    if ($container['melis-templatingplugincreator']['step_1']['tpc_plugin_destination'] == self::NEW_MODULE) {
+                        $translator = $this->getServiceManager()->get('translator');                        
+                        $siteModuleName = $postValues['step-form']['tpc_existing_site_name'];
+
+                        //if site name is not 'None', activate the module to the chosen site module
+                        if ($siteModuleName != $translator->translate('tr_melistemplatingplugincreator_tpc_existing_site_name_none')) {
+                                                 
+                            $moduleSrv = $this->getServiceManager()->get('ModulesService');
+
+                            /**
+                             * get the module path
+                             * ref: MelisCmsSiteModuleLoadService/saveModuleLoad                        
+                             */
+                            if (!empty($moduleSrv->getComposerModulePath($siteModuleName))) {
+                                $modulePath = $moduleSrv->getComposerModulePath($siteModuleName);
+                            } else {
+                                $modulePath = $_SERVER['DOCUMENT_ROOT'] . '/../module/MelisSites/' . $siteModuleName;
+                            }
+
+                            //retrieve the current loaded modules of the destination site module
+                            $existingSiteModules = include $modulePath.'/config/module.load.php';                    
+
+                            if ($existingSiteModules) {
+                                //add the newly created module to the existing modules of the site
+                                $existingSiteModules[] = $tpcService->generateModuleNameCase($container['melis-templatingplugincreator']['step_1']['tpc_new_module_name']);
+                                $filePath = $modulePath.'/config/';
+
+                                //update the module.load.php of the site to reflect the newly created module
+                                if (is_writable($filePath)) {
+                                    //call service to generate the templating plugin 
+                                    $cmsSiteModuleService = $this->getServiceManager()->get('MelisCmsSiteModuleLoadService');
+                                    $status = $cmsSiteModuleService->createModuleLoader($filePath, $existingSiteModules);
+
+                                    if (!$status) {
+                                        $viewStep->textMessage = $translator->translate('tr_melistemplatingplugincreator_generate_plugin_error_encountered');
+                                    }
+
+                                } else {                               
+                                    $viewStep->textMessage = sprintf($translator->translate('tr_melistemplatingplugincreator_fp_config'), $siteModuleName);                    
+                                }                           
+                            }                        
+                        }
+                       
+                        //unset tool container
+                        unset($toolContainer['melis-toolcreator']);  
+                    }
+                    
+                    $isActivatePlugin = !empty($postValues['step-form']['tpc_activate_plugin']) ? 1 : 0;
+
+                    //reload page to activate the plugin
+                    if ($isActivatePlugin) {   
+                        $viewStep->restartRequired = 1;
+                    } else {      
+                        $viewStep->restartRequired = 0;
+                    }   
+
+                } else {
+                    //set errors
+                    $translator = $this->getServiceManager()->get('translator');
+                    $viewStep->textMessage = $translator->translate('tr_melistemplatingplugincreator_generate_plugin_error_encountered');
+                }      
             } else {
-                //set errors
-                $translator = $this->getServiceManager()->get('translator');
-                $viewStep->textMessage = $translator->translate('tr_melistemplatingplugincreator_generate_plugin_error_encountered');
-            }    
+                $errors = $this->formatErrors($stepForm->getMessages(), $stepForm->getElements());
+            }
         }
            
         list($stepForm, $data) = $this->getStepFormAndData($nextStep);              
         $viewStep->stepForm = $stepForm;//the form to be displayed       
         $viewStep->data = $data;
+        $viewStep->errors = $errors;
         return $viewStep;            
     }
 
@@ -685,6 +739,10 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
                 $coreLang = $this->getServiceManager()->get('MelisCoreTableLang');
                 $data['languages'] = $coreLang->fetchAll()->toArray();
 
+                //get the current locale used from meliscore session
+                $container = new Container('meliscore');
+                $data['lang_locale'] = $container['melis-lang-locale'];  
+
                 //get all steps
                 $data['steps'] = $this->getStepConfig();
                 break;
@@ -692,6 +750,7 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
             case 6:
                $appConfigForm = $melisCoreConfig->getFormMergedAndOrdered('melistemplatingplugincreator/forms/melistemplatingplugincreator_step6_form', 'melistemplatingplugincreator_step6_form');                               
                 $stepForm = $factory->createForm($appConfigForm); 
+                $data['pluginDestination'] = $container['melis-templatingplugincreator']['step_1']['tpc_plugin_destination'];
                 break;               
         }     
 
@@ -871,7 +930,7 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
             $tool =   $this->getServiceManager()->get('MelisCoreTool'); 
             $thumbnailTempPath = $this->getTempThumbnailDirectory();    
             //append session id to temp-thumbnail path
-            $sessionID = $container->getManager()->getId(); 
+            $sessionID = $container['melis-templatingplugincreator']['sessionID'];
             $thumbnailTempPath = $thumbnailTempPath.$sessionID.'/';
             $upload = false;
             $textMessage = '';
@@ -965,7 +1024,7 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
     public function processUploadAction()
     {   
         $container = new Container('templatingplugincreator');//session container
-        $sessionID = $container->getManager()->getId();    
+        $sessionID = $container['melis-templatingplugincreator']['sessionID'];    
         $errors = array();       
         $uploadFormErrorMessages = array();
         $textMessage = '';    

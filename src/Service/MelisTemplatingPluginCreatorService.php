@@ -614,7 +614,7 @@ class MelisTemplatingPluginCreatorService extends MelisGeneralService
 
         //session container     
         $container = new Container('templatingplugincreator');     
-        $sessionID = $container->getManager()->getId(); 
+        $sessionID = $container['melis-templatingplugincreator']['sessionID'];
 
         //get the templating plugin creator's module directory 
         $melisModule = $this->getServiceManager()->get('MelisAssetManagerModulesService');  

@@ -247,7 +247,7 @@
 
 .field-accordion [data-toggle="collapse-widget"] .collapse-toggle:before {
     font-family: "Glyphicons Halflings";
-    font-size: 15px;
+    font-size: 14px;
     display: block;
     width: 100%;
     height: 35px;

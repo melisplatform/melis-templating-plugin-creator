@@ -1,7 +1,7 @@
-<div class="col-xs-12 col-md-9">
+<div class="col-xs-12 col-md-8">
     <div class="tab-content">             
         <div class="row">
-            <div class="col-md-12">                               
+            <div class="col-md-6">                               
                <?php 
                     $form = $this->stepForm;
                     echo $this->form()->openTag($form);  
@@ -9,9 +9,51 @@
                     //get the activate plugin field
                     $tpcActivatePluginField = $form->get('tpc_activate_plugin'); 
 
+                    //get the existing site field
+                    $siteField = $form->get('tpc_existing_site_name'); 
+                    $existingSiteOptions = $siteField->getValueOptions();
+                    $existingSiteOptions[$this->translate('tr_melistemplatingplugincreator_tpc_existing_site_name_none')] = $this->translate('tr_melistemplatingplugincreator_tpc_existing_site_name_none');
+
                     $form->prepare();       
                     echo $this->form()->openTag($form);  
                     ?>
+                   
+                    <?php
+                        //display the site dropdown if chosen destination is New Module to select which site the plugin is activated
+                        if ($this->data['pluginDestination'] == 'new_module') {
+                            
+                            $required = '';
+                            if (!empty($siteField->getAttribute('required'))) {
+                                $required = '<sup>*</sup>';
+                            }  
+                            ?>
+
+                            <div class="form-group">
+                                <label class="d-flex flex-row justify-content-between" for="<?=$siteField->getAttribute('id')?>">
+                                <div class="label-text"><?=$siteField->getLabel().$required?></div>
+                                <div class="slider-open-tooltip">
+                                      <i class="fa fa-info-circle fa-lg float-right tip-info" data-toggle="tooltip" data-placement="left" title="" data-original-title="<?= $this->translate($siteField->getOptions()['tooltip'])?>"></i>
+                                    </div>
+                                </label>  
+
+                                <div class="form-group input-group">
+                                    <div class="padding-left-0">
+                                        <select id="<?=$siteField->getAttribute('id')?>" name="<?=$siteField->getAttribute('name')?>" class="<?=$siteField->getAttribute('class')?>">
+                                            <option value=""><?=$this->translate($siteField->getOptions()['empty_option'])?></option>
+                                            <?php 
+                                                if ($existingSiteOptions) {
+                                                    foreach ($existingSiteOptions as $siteName) { ?>
+                                                        <option value="<?=$siteName?>" <?=$siteField->getValue() == $siteName ? "selected" : ""?>><?=$siteName?></option>
+                                                <?php  }
+                                                }
+                                            ?>
+                                        </select>
+                                    </div>                            
+                                </div> 
+                            </div>
+                             
+                    <?php    } 
+                    ?>     
 
                     <div class="melis-tpc-final-content">
                         <p>
@@ -19,12 +61,16 @@
                             <input type="checkbox" name="<?=$tpcActivatePluginField->getAttribute('name')?>" value="1" checked class = "<?=$tpcActivatePluginField->getAttribute('class')?>"> <?=$tpcActivatePluginField->getOption('label')?> 
                         </p>
                     </div>
+
+                    <p><?=$this->translate('tr_melistemplatingplugincreator_activate_plugin_note')?></p>    
+
+
                 <?php    
                 echo $this->form()->closeTag(); 
                 ?>                     
             </div>
         </div>
-        <p><?=$this->translate('tr_melistemplatingplugincreator_activate_plugin_note')?></p>           
+              
     </div>
 </div>
 

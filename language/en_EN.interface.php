@@ -12,7 +12,7 @@
 		 // Warnings
 	    'tr_melistemplatingplugincreator_fp_title' => 'File permission denied',
 	    'tr_melistemplatingplugincreator_fp_msg' => 'In-order to create templating plugin using this module, please give the rights to write in the following directories or contact the administrator if the problem persists',
-	    'tr_melistemplatingplugincreator_fp_config' => '<b>/config/melis.module.load.php</b> - this file is required to activate a new module after its creation',
+	    'tr_melistemplatingplugincreator_fp_config' => 'In order to activate the plugin, please give the rights to write in the following file: <b>%s/config/module.load.php</b>',
 	 	'tr_melistemplatingplugincreator_fp_module' => '<b>/module</b> - The directory where the created modules are saved',
         'tr_melistemplatingplugincreator_fp_temp_thumbnail' => '<b>/melis-templating-plugin-creator/public/temp-thumbnail</b> - The directory where the uploaded plugin thumbnails are temporarily saved',
 
@@ -125,6 +125,10 @@
         'tr_melistemplatingplugincreator_finalization_success_desc' => 'You can manually activate the plugin by reloading the page',
         'tr_melistemplatingplugincreator_execute_aadtnl_setup' => 'Executing additional setup',
         'tr_melistemplatingplugincreator_please_wait' => 'Please wait',
-        'tr_melistemplatingplugincreator_refreshing' => 'Refreshing' 
+        'tr_melistemplatingplugincreator_refreshing' => 'Refreshing' ,
+        'tr_melistemplatingplugincreator_tpc_existing_site_name' => 'Site',
+        'tr_melistemplatingplugincreator_tpc_existing_site_name tooltip' => 'Select the site on which the plugin will be activated.',
+        'tr_melistemplatingplugincreator_tpc_existing_site_placeholder' => 'Choose',
+        'tr_melistemplatingplugincreator_tpc_existing_site_name_none' => 'None', 
 
     ];
