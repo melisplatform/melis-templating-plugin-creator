@@ -25,8 +25,11 @@ class MelisTemplatingPluginCreatorSiteSelectFactory extends MelisSelectFactory
 
         $valueoptions = [];
         if ($melisSites) {
-            foreach ($melisSites as $val) {               
-                $valueoptions[$val['site_name']] = $val['site_label'];                           
+            foreach ($melisSites as $val) {   
+                //exclude MelisDemoCms
+                if ($val['site_name'] != 'MelisDemoCms') {
+                    $valueoptions[$val['site_name']] = $val['site_label'];
+                }                         
             }
         }
         
