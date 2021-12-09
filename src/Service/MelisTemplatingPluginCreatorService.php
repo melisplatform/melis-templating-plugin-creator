@@ -30,6 +30,7 @@ class MelisTemplatingPluginCreatorService extends MelisGeneralService
     const PAGE_INPUT = "PageInput";
     const DATE_PICKER = 'DatePicker';
     const DATETIME_PICKER = 'DateTimePicker';
+    const SWITCH = 'Switch';
 
 
     public function __construct()
@@ -283,7 +284,7 @@ class MelisTemplatingPluginCreatorService extends MelisGeneralService
                 $fieldName = $this->steps['step_3']['tab_'.$i]['field_'.$j]['tpc_field_name'];
                 $classAttr = "'form-control'";//default
                 
-                if ($fieldDisplayType == 'Dropdown') {   
+                if ($fieldDisplayType == self::DROPDOWN) {   
                     $pattern = "/^.*\btooltip\b.*$/m";
                     if (preg_match_all($pattern, $tabElements, $matches)) {
                         $match = implode("\n", $matches[0]);//return as string
@@ -309,7 +310,7 @@ class MelisTemplatingPluginCreatorService extends MelisGeneralService
                         }  
                     }                               
                     
-                } elseif ($fieldDisplayType == 'Switch') {
+                } elseif ($fieldDisplayType == self::SWITCH) {
                     //set the switch options and put under the 'tooltip' key
                     $pattern = "/^.*\btooltip\b.*$/m";
                     if (preg_match_all($pattern, $tabElements, $matches)) {
@@ -319,7 +320,7 @@ class MelisTemplatingPluginCreatorService extends MelisGeneralService
                                         "'unchecked_value' => 0,"."\r\n\t\t\t\t\t\t\t\t\t\t\t\t".
                                         "'switchOptions' => ["."\r\n\t\t\t\t\t\t\t\t\t\t\t\t\t".
                                             "'label-on' => 'tr_meliscore_common_yes',"."\r\n\t\t\t\t\t\t\t\t\t\t\t\t\t".
-                                            "'label-off' => 'tr_meliscore_common_no',"."\r\n\t\t\t\t\t\t\t\t\t\t\t\t\t".
+                                            "'label-off' => 'tr_meliscore_common_nope',"."\r\n\t\t\t\t\t\t\t\t\t\t\t\t\t".
                                             "'label' => \"<i class='glyphicon glyphicon-resize-horizontal'></i>\","."\r\n\t\t\t\t\t\t\t\t\t\t\t\t".
                                         "],"."\r\n\t\t\t\t\t\t\t\t\t\t\t\t".
                                         "'disable_inarray_validator' => true";
@@ -458,15 +459,22 @@ class MelisTemplatingPluginCreatorService extends MelisGeneralService
             
             for ($f = 1; $f <= $tabFieldCount; $f++) {
                 $fieldName = $this->steps['step_3']['tab_'.$t]['field_'.$f]['tpc_field_name'];
+                $fieldDisplayType = $this->steps['step_3']['tab_'.$t]['field_'.$f]['tpc_field_display_type'];
+
+                $cond = '!empty';
+                //use isset if display type is switch option
+                if ($fieldDisplayType == self::SWITCH) {
+                    $cond = 'isset';
+                }
 
                 if ($f != 1) {
                     $tabConfig = "\t\t\t";
                     $tabXML = "\t\t";
                 }
 
-                $configValues .= $tabConfig."if (!empty(\$xml->".$fieldName."))\r\n\t\t\t\t";
+                $configValues .= $tabConfig."if (".$cond."(\$xml->".$fieldName."))\r\n\t\t\t\t";
                 $configValues .= "\$configValues['".$fieldName."'] = (string)\$xml->".$fieldName.";\r\n";   
-                $xmlValueFormatted .= $tabXML."if (!empty(\$parameters['".$fieldName."']))\r\n\t\t\t";
+                $xmlValueFormatted .= $tabXML."if (".$cond."(\$parameters['".$fieldName."']))\r\n\t\t\t";
                 $xmlValueFormatted .=  " \$xmlValueFormatted .= \"\\t\\t\". '<".$fieldName."><![CDATA[' . \$parameters['".$fieldName."'] . ']]></".$fieldName.">';\r\n";               
             }
         }
