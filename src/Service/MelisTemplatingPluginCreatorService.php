@@ -700,7 +700,7 @@ class MelisTemplatingPluginCreatorService extends MelisGeneralService
                             if ($lang['lang_locale'] == 'en_EN') {
                                 $tr_value = "Properties";
                             } elseif ($lang['lang_locale'] == 'fr_FR') {
-                                $tr_value = "Propriètès";
+                                $tr_value = "Propriétés";
                             }
 
                             $translationArr[$tr_keyword] = $tr_value;
