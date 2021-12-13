@@ -78,6 +78,8 @@
         'tr_melistemplatingplugincreator_delete_plugin_thumbnail_confirm' => 'Êtes-vous sûr(e) de vouloir supprimer l\'image?', 
         'tr_melistemplatingplugincreator_delete_plugin_thumbnail_error' => 'Erreur lors de la suppression de l\'image',
         'tr_melistemplatingplugincreator_input_file_uploading' => 'Upload...', 
+        'tr_melistemplatingplugincreator_input_file_upload_label' => 'Parcourir...',
+        'tr_melistemplatingplugincreator_input_file_upload_placeholder' => 'Aucun fichier sélectionné',
 
         //Step3 Form
         'tr_melistemplatingplugincreator_title_step_3' => 'Propriétés principales du plugin',

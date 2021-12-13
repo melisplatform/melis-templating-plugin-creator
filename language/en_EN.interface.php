@@ -80,6 +80,8 @@
         'tr_melistemplatingplugincreator_delete_plugin_thumbnail_confirm' => 'Are you sure you want to delete this thumbnail?', 
         'tr_melistemplatingplugincreator_delete_plugin_thumbnail_error' => 'Error encountered while deleting the plugin thumbnail',
         'tr_melistemplatingplugincreator_input_file_uploading' => 'Uploading', 
+        'tr_melistemplatingplugincreator_input_file_upload_label' => 'Browse...',
+        'tr_melistemplatingplugincreator_input_file_upload_placeholder' => 'No file selected.',
 
         //Step3 Form
         'tr_melistemplatingplugincreator_title_step_3' => 'Plugin\'s main properties',

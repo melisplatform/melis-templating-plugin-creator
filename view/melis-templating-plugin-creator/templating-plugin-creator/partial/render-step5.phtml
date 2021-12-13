@@ -128,6 +128,7 @@
                                     $displayType = $sessionData['tab_'.$tabNumber]['field_'.$field]['tpc_field_display_type'];
                                     $defaultOptions = $sessionData['tab_'.$tabNumber]['field_'.$field]['tpc_field_default_options'];
                                     $defaultValue = $sessionData['tab_'.$tabNumber]['field_'.$field]['tpc_field_default_value'];
+                    
                                     $displayTypeOptions = array(
                                         'MelisText' => 'Text / Classic input',
                                         'Dropdown' => 'Dropdown',
@@ -145,7 +146,7 @@
                                         <td><?=$displayTypeOptions[$displayType]?></td> 
                                         <td><?=$isRequired==1 ? 'Yes' : 'No'?></td> 
                                         <td><?=$defaultOptions ?: 'N/A'?></td> 
-                                        <td><?=$displayType == 'Switch' ? (isset($defaultValue) ? ($defaultValue == 1 ? 'On' : 'Off') : '') : $defaultValue?></td> 
+                                        <td><?=$displayType == 'Switch' ? ( (isset($defaultValue) && ($defaultValue != "")) ? ($defaultValue == 1 ? 'On' : 'Off') : '') : $defaultValue?></td> 
                                     </tr>                                    
                             <?php    }
 
