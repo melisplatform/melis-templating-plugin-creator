@@ -101,6 +101,7 @@
         'tr_melistemplatingplugincreator_tpc_select_placeholder' => 'Choose',           
         'tr_melistemplatingplugincreator_tpc_field_is_required_yes' => 'Yes',
         'tr_melistemplatingplugincreator_tpc_field_is_required_no' => 'No',  
+        'tr_melistemplatingplugincreator_tpc_field_name_exist' => '"%s" field name already exists under Field "%s", please try another one',
 
         //Step4 Form
         'tr_melistemplatingplugincreator_title_step_4' => 'Properties\' Translation',

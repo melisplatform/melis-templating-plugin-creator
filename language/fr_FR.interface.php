@@ -99,6 +99,7 @@
         'tr_melistemplatingplugincreator_tpc_select_placeholder' => 'Choisissez',           
         'tr_melistemplatingplugincreator_tpc_field_is_required_yes' => 'Oui',
         'tr_melistemplatingplugincreator_tpc_field_is_required_no' => 'Non',  
+        'tr_melistemplatingplugincreator_tpc_field_name_exist' => 'Le nom "%s" existe déjà sous le champ "%s", veuillez en saisir un autre',
 
         //Step4 Form
         'tr_melistemplatingplugincreator_title_step_4' => 'Traduction des propriétés',
