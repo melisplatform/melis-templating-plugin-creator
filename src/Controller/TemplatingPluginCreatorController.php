@@ -1509,7 +1509,7 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
         $factory->setFormElementManager($formElements);       
         $appConfigForm = $melisCoreConfig->getFormMergedAndOrdered('melistemplatingplugincreator/forms/melistemplatingplugincreator_step'.$curStep.'_field_form', 'melistemplatingplugincreator_step'.$curStep.'_field_form'); 
         $invalidFieldFormCount = 0;
-        $isValid = 1;      
+        $isValid = 1;     
         $fieldFormErrors = array();   
         $fieldCount = $formData['step-form']['tpc_main_property_field_count'];
         $tabNumber = $formData['step-form']['tpc_property_tab_number'];
@@ -1533,7 +1533,8 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
             } else {
 
                 foreach ($formData['step-form'] as $key => $val) {                   
-                    if ($key == $i) {                    
+                    if ($key == $i) {          
+
                         //handling for 'template_path' field  
                         if ($val['tpc_field_name'] == 'template_path') {
                             $val['tpc_field_display_type'] = !empty($val['tpc_field_display_type'])?$val['tpc_field_display_type']:self::DROPDOWN;
@@ -1565,7 +1566,24 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
                                                 
                         $stepFormtmp->setData($val); 
 
-                        if ($stepFormtmp->isValid()) {                                
+                        if ($stepFormtmp->isValid()) {    
+
+                            //check here if the field name has duplicates for the current session
+                            for ($k = 1; $k <= $i; $k++) {        
+                                if ($k != $i) {                                   
+                                    if (isset($container['melis-templatingplugincreator']['step_'.$curStep]['tab_'.$tabNumber]['field_'.$k]['tpc_field_name']) && $container['melis-templatingplugincreator']['step_'.$curStep]['tab_'.$tabNumber]['field_'.$k]['tpc_field_name'] == $val['tpc_field_name']) {
+                                                                                                            
+                                        $stepFormtmp->get('tpc_field_name')->setMessages([
+                                            'DuplicateFieldName' => sprintf($translator->translate('tr_melistemplatingplugincreator_tpc_field_name_exist'), $stepFormtmp->get('tpc_field_name')->getValue(), $k)
+                                        ]);
+
+                                        $invalidFieldFormCount++;
+                                        $fieldFormErrors[$fieldFormName.'-'.$i] = $stepFormtmp->getMessages();    
+                                        break;                                    
+                                    }
+                                }                                                                                    
+                            }
+                            
                             //add to session the posted values
                             $container['melis-templatingplugincreator']['step_'.$curStep]['tab_'.$tabNumber]['field_'.$i] = $stepFormtmp->getData();
                         } else {        
