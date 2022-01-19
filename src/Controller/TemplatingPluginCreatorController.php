@@ -81,7 +81,7 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
             $filePermissionErr[] = 'tr_melistemplatingplugincreator_fp_temp_thumbnail';
         }
         
-        if (!empty($filePermissionErr)){
+        if (!empty($filePermissionErr)) {
             $view->fPErr = $filePermissionErr;
             return $view;
         }
@@ -608,7 +608,6 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
 
                                 //update the module.load.php of the site to reflect the newly created module
                                 if (is_writable($filePath)) {
-                                    //call service to generate the templating plugin 
                                     $cmsSiteModuleService = $this->getServiceManager()->get('MelisCmsSiteModuleLoadService');
                                     $status = $cmsSiteModuleService->createModuleLoader($filePath, $existingSiteModules);
 
