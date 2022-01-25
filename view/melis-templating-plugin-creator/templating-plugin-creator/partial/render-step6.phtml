@@ -1,26 +1,21 @@
 <div class="col-xs-12 col-md-8">
     <div class="tab-content">             
         <div class="row">
-            <div class="col-md-6">                               
-               <?php 
-                    $form = $this->stepForm;
-                    echo $this->form()->openTag($form);  
-
-                    //get the activate plugin field
-                    $tpcActivatePluginField = $form->get('tpc_activate_plugin'); 
-
-                    //get the existing site field
-                    $siteField = $form->get('tpc_existing_site_name'); 
-                    $existingSiteOptions = $siteField->getValueOptions();
-                    $existingSiteOptions[$this->translate('tr_melistemplatingplugincreator_tpc_existing_site_name_none')] = $this->translate('tr_melistemplatingplugincreator_tpc_existing_site_name_none');
-
-                    $form->prepare();       
-                    echo $this->form()->openTag($form);  
-                    ?>
-                   
+            <div class="col-md-6">        
                     <?php
                         //display the site dropdown if chosen destination is New Module to select which site the plugin is activated
                         if ($this->data['pluginDestination'] == 'new_module') {
+
+                            $form = $this->stepForm;
+                            echo $this->form()->openTag($form);  
+
+                            //get the existing site field
+                            $siteField = $form->get('tpc_existing_site_name'); 
+                            $existingSiteOptions = $siteField->getValueOptions();
+                            $existingSiteOptions[$this->translate('tr_melistemplatingplugincreator_tpc_existing_site_name_none')] = $this->translate('tr_melistemplatingplugincreator_tpc_existing_site_name_none');
+
+                            $form->prepare();       
+                            echo $this->form()->openTag($form);  
                             
                             $required = '';
                             if (!empty($siteField->getAttribute('required'))) {
@@ -52,22 +47,10 @@
                                 </div> 
                             </div>
                              
-                    <?php    } 
-                    ?>     
-
-                    <div class="melis-tpc-final-content">
-                        <p>
-                            <i class="fa fa-check-square-o text-success fa-lg"></i>                            
-                            <input type="checkbox" name="<?=$tpcActivatePluginField->getAttribute('name')?>" value="1" checked class = "<?=$tpcActivatePluginField->getAttribute('class')?>"> <?=$tpcActivatePluginField->getOption('label')?> 
-                        </p>
-                    </div>
-
-                    <p><?=$this->translate('tr_melistemplatingplugincreator_activate_plugin_note')?></p>    
-
-
-                <?php    
-                echo $this->form()->closeTag(); 
-                ?>                     
+                    <?php    
+                        echo $this->form()->closeTag(); 
+                        } 
+                    ?>           
             </div>
         </div>
               
