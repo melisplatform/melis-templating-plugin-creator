@@ -119,6 +119,8 @@
         //Step6 Form
         'tr_melistemplatingplugincreator_title_step_6' => 'Finalisation',
         'tr_melistemplatingplugincreator_desc_step_6' => 'Cochez la case pour activer le plugin à la création.',
+        'tr_melistemplatingplugincreator_desc_step_6_new_module' => 'Sélectionnez le site pour lequel le plugin sera activé.',
+        'tr_melistemplatingplugincreator_desc_step_6_existing_module' => 'Pour générer et activer le plugin veuillez cliquer sur le bouton <b>"Terminer et créer le plugin"</b>.',
         'tr_melistemplatingplugincreator_activate_plugin_after_creation' => 'Activer le plugin à la création',
         'tr_melistemplatingplugincreator_activate_plugin_note' => '<b>Note </b>: Activer le plugin rechargera la plateforme',
         'tr_melistemplatingplugincreator_finalization_success_title' => 'Le plugin a été créé avec succès',

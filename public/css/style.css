@@ -293,3 +293,9 @@
 .text-primary-custom {  
     color: #28a745 !important; 
 }
+
+
+/*for the finalization*/
+.melis-templating-plugin-creator-steps-content #melistemplatingplugincreator_step6 p#finalization_success{
+    margin-top: 25px;
+}

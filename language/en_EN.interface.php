@@ -53,8 +53,7 @@
 		'tr_melistemplatingplugincreator_title_step_1' => 'Plugin’s properties',
         'tr_melistemplatingplugincreator_desc_step_1' => 'Enter the name of the plugin.<br>Then choose the code’s destination, new module or existing site module.',
 	    'tr_melistemplatingplugincreator_tpc_plugin_name' => 'Plugin name',
-	    'tr_melistemplatingplugincreator_tpc_plugin_name tooltip' => 'Enter Plugin name.',
-	    'tr_melistemplatingplugincreator_tpc_plugin_type' => 'View type',      
+	    'tr_melistemplatingplugincreator_tpc_plugin_name tooltip' => 'Enter Plugin name.',	    
         'tr_melistemplatingplugincreator_tpc_plugin_destination' => 'Destination',
         'tr_melistemplatingplugincreator_tpc_plugin_destination tooltip' => 'Select the plugin\'s destination',
         'tr_melistemplatingplugincreator_destination_new_opt' => 'New module',
@@ -121,6 +120,8 @@
         //Step6 Form
         'tr_melistemplatingplugincreator_title_step_6' => 'Finalization',
         'tr_melistemplatingplugincreator_desc_step_6' => 'Tick the box below if you wish to activate the plugin upon creation.',
+        'tr_melistemplatingplugincreator_desc_step_6_new_module' => 'Choose a site on which the plugin will be activated.',
+        'tr_melistemplatingplugincreator_desc_step_6_existing_module' => 'Click the <b>\'Finish and create the plugin\'</b> button to generate and activate the plugin', 
         'tr_melistemplatingplugincreator_activate_plugin_after_creation' => 'Activate plugin after creation',
         'tr_melistemplatingplugincreator_activate_plugin_note' => '<b>Note</b>: Activating the plugin will require to restart the platform',
         'tr_melistemplatingplugincreator_finalization_success_title' => 'The plugin has been successfully created',

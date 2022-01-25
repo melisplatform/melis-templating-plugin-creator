@@ -752,25 +752,7 @@ return [
                         'action' => '',
                     ],
                     'hydrator'  => 'Laminas\Hydrator\ArraySerializable',
-                    'elements' => [
-                        [
-                            'spec' => [
-                                'name' => 'tpc_activate_plugin',
-                                'type' => 'Checkbox',
-                                'options' => [
-                                    'label' => 'tr_melistemplatingplugincreator_activate_plugin_after_creation',
-                                    'tooltip' => '',                                                                 
-                                    'disable_inarray_validator' => true,
-                                ],
-                                'attributes' => [
-                                    'id' => 'tpc_activate_plugin',
-                                    'class' => 'hidden',
-                                    'required' => '',    
-                                    'value' => ''                                
-                                ],
-                            ],
-                        ],  
-
+                    'elements' => [                      
                         [
                             'spec' => [
                                 'type' => 'MelisTemplatingPluginCreatorSiteSelect',
@@ -790,13 +772,7 @@ return [
                                 ],
                             ],
                         ],                     
-                    ],   
-                    'input_filter' => [
-                        'tpc_activate_plugin' => [
-                            'name'     => 'tpc_activate_plugin',
-                            'required' => false,                            
-                        ],                        
-                    ],                                 
+                    ],                                                       
                 ],
             ]
         ]
