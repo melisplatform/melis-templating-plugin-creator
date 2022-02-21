@@ -43,7 +43,6 @@ No database is needed for this tool
   - the properties of the plugin need to be set(field name, display type, default options, default value and required attribute) as well as their translations which will then be used in the plugin modal form
   - the 'Template' property is already set by default 
   - after generation, the source code can be found inside the destination module ready to be updated based on the project's requirements
-  - the generated plugin by default, will be shown under the 'Others' section in the Plugins menu inside the Page Edition
 
 ### Templating Plugin Creator Service
 
