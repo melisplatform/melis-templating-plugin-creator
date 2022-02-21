@@ -106,6 +106,7 @@ return [
                             'validators' => [
                                 [
                                     'name' => 'NotEmpty',
+                                    'break_chain_on_failure' => true,
                                     'options' => [
                                         'messages' => [
                                             \Laminas\Validator\NotEmpty::IS_EMPTY => 'tr_melistemplatingplugincreator_err_empty',
@@ -114,6 +115,7 @@ return [
                                 ],
                                 [
                                     'name' => 'regex',
+                                    'break_chain_on_failure' => true,
                                     'options' => [
                                         'pattern' => '/^[a-zA-Z\x7f-\xff][a-zA-Z\x7f-\xff]*$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_melistemplatingplugincreator_err_invalid_name'],
@@ -160,7 +162,17 @@ return [
                             'required' => true,
                             'validators' => [
                                 [
+                                    'name' => 'NotEmpty',
+                                    'break_chain_on_failure' => true,
+                                    'options' => [
+                                        'messages' => [
+                                            \Laminas\Validator\NotEmpty::IS_EMPTY => 'tr_melistemplatingplugincreator_err_empty',
+                                        ],
+                                    ],
+                                ],
+                                [
                                     'name' => 'regex',
+                                    'break_chain_on_failure' => true,
                                     'options' => [
                                         'pattern' => '/^[a-zA-Z\x7f-\xff][a-zA-Z\x7f-\xff]*$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_melistemplatingplugincreator_err_invalid_name'],
@@ -176,15 +188,7 @@ return [
                                             \Laminas\Validator\StringLength::TOO_LONG => 'tr_melistemplatingplugincreator_err_long_50',
                                         ],
                                     ],
-                                ],                             
-                                [
-                                    'name' => 'NotEmpty',
-                                    'options' => [
-                                        'messages' => [
-                                            \Laminas\Validator\NotEmpty::IS_EMPTY => 'tr_melistemplatingplugincreator_err_empty',
-                                        ],
-                                    ],
-                                ]                              
+                                ],  
                             ],
                             'filters'  => [
                                 ['name' => 'StringTrim'],
@@ -267,6 +271,15 @@ return [
                             'required' => true,
                             'validators' => [
                                 [
+                                    'name' => 'NotEmpty',
+                                    'break_chain_on_failure' => true,
+                                    'options' => [
+                                        'messages' => [
+                                            \Laminas\Validator\NotEmpty::IS_EMPTY => 'tr_melistemplatingplugincreator_err_empty',
+                                        ],
+                                    ],
+                                ],
+                                [
                                     'name'    => 'StringLength',
                                     'options' => [
                                         'encoding' => 'UTF-8',
@@ -275,15 +288,7 @@ return [
                                             \Laminas\Validator\StringLength::TOO_LONG => 'tr_melistemplatingplugincreator_err_long_100',
                                         ],
                                     ],
-                                ],
-                                [
-                                    'name' => 'NotEmpty',
-                                    'options' => [
-                                        'messages' => [
-                                            \Laminas\Validator\NotEmpty::IS_EMPTY => 'tr_melistemplatingplugincreator_err_empty',
-                                        ],
-                                    ],
-                                ],
+                                ]                               
                             ],
                             'filters'  => [
                                 ['name' => 'StripTags'],
@@ -389,6 +394,7 @@ return [
                             'validators' => [
                                 [
                                     'name' => 'NotEmpty',
+                                    'break_chain_on_failure' => true,
                                     'options' => [
                                         'messages' => [
                                             \Laminas\Validator\NotEmpty::IS_EMPTY => 'tr_melistemplatingplugincreator_err_empty',
@@ -396,15 +402,15 @@ return [
                                     ],
                                 ],    
                                 [
-                                'name' => 'IsInt',
+                                    'name' => 'IsInt',
+                                    'break_chain_on_failure' => true,
                                     'options' => [
                                         'messages' => [
                                             \Laminas\I18n\Validator\IsInt::NOT_INT  => 'tr_melistemplatingplugincreator_integer_only'                                            
                                         ],                                                                       
                                     ],
-                                ],           
-
-                               [
+                                ],    
+                                [
                                     'name' => 'Between',
                                     'options' => [
                                         'messages' => [
@@ -555,6 +561,7 @@ return [
                             'validators' => [                                
                                 [
                                     'name' => 'NotEmpty',
+                                    'break_chain_on_failure' => true,
                                     'options' => [
                                         'messages' => [
                                             \Laminas\Validator\NotEmpty::IS_EMPTY => 'tr_melistemplatingplugincreator_err_empty',
@@ -697,6 +704,15 @@ return [
                             'required' => true,
                             'validators' => [
                                 [
+                                    'name' => 'NotEmpty',
+                                    'break_chain_on_failure' => true,
+                                    'options' => [
+                                        'messages' => [
+                                            \Laminas\Validator\NotEmpty::IS_EMPTY => 'tr_melistemplatingplugincreator_err_empty',
+                                        ],
+                                    ],
+                                ],
+                                [
                                     'name'    => 'StringLength',
                                     'options' => [
                                         'encoding' => 'UTF-8',
@@ -706,14 +722,7 @@ return [
                                         ],
                                     ],
                                 ],
-                                [
-                                    'name' => 'NotEmpty',
-                                    'options' => [
-                                        'messages' => [
-                                            \Laminas\Validator\NotEmpty::IS_EMPTY => 'tr_melistemplatingplugincreator_err_empty',
-                                        ],
-                                    ],
-                                ],
+                                
                             ],
                             'filters'  => [
                                 ['name' => 'StripTags'],
