@@ -540,12 +540,11 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
       
         //generate templating plugin
         if ($validate) { 
+            $request = $this->getRequest();
+            $postValues = get_object_vars($request->getPost()); 
 
             //if destination is new module, get the form config and validate form, else if destination is existing, proceed immediately to the plugin generation
-            if ($container['melis-templatingplugincreator']['step_1']['tpc_plugin_destination'] == self::NEW_MODULE) {
-                $request = $this->getRequest();
-                $postValues = get_object_vars($request->getPost());        
-
+            if ($container['melis-templatingplugincreator']['step_1']['tpc_plugin_destination'] == self::NEW_MODULE) {                      
                 //validate the step 6's main form
                 $factory = new \Laminas\Form\Factory();
                 $formElements = $this->getServiceManager()->get('FormElementManager');
@@ -616,8 +615,16 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
                        
                         //unset tool container
                         unset($toolContainer['melis-toolcreator']); 
-                        $viewStep->restartRequired = 0;
 
+                        $isActivatePlugin = !empty($postValues['step-form']['tpc_activate_plugin']) ? 1 : 0;
+
+                        //reload page to activate the plugin
+                        if ($isActivatePlugin) {   
+                            $viewStep->restartRequired = 1;
+                        } else {      
+                            $viewStep->restartRequired = 0;
+                        }   
+                        
                     } else {
                         //set errors
                         $translator = $this->getServiceManager()->get('translator');
@@ -632,8 +639,17 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
                 $tpcService = $this->getServiceManager()->get('MelisTemplatingPluginCreatorService');
                 $result = $tpcService->generateTemplatingPlugin();
 
-                if ($result) {
-                    $viewStep->restartRequired = 0;                    
+                if ($result) {                    
+
+                    $isActivatePlugin = !empty($postValues['step-form']['tpc_activate_plugin']) ? 1 : 0;
+
+                    //reload page to activate the plugin
+                    if ($isActivatePlugin) {   
+                        $viewStep->restartRequired = 1;
+                    } else {      
+                        $viewStep->restartRequired = 0;
+                    }   
+
                 } else {
                     //set errors
                     $translator = $this->getServiceManager()->get('translator');

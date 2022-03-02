@@ -1,59 +1,73 @@
 <div class="col-xs-12 col-md-8">
     <div class="tab-content">             
         <div class="row">
-            <div class="col-md-6">        
-                    <?php
-                        //display the site dropdown if chosen destination is New Module to select which site the plugin is activated
-                        if ($this->data['pluginDestination'] == 'new_module') {
+            <div class="col-md-8">        
+                <?php
 
-                            $form = $this->stepForm;
-                            echo $this->form()->openTag($form);  
+                    $form = $this->stepForm;
+                    echo $this->form()->openTag($form);  
 
-                            //get the existing site field
-                            $siteField = $form->get('tpc_existing_site_name'); 
-                            $existingSiteOptions = $siteField->getValueOptions();
-                            $existingSiteOptions[$this->translate('tr_melistemplatingplugincreator_tpc_existing_site_name_none')] = $this->translate('tr_melistemplatingplugincreator_tpc_existing_site_name_none');
+                    //get the activate plugin field
+                    $tpcActivatePluginField = $form->get('tpc_activate_plugin');
 
-                            $form->prepare();       
-                            echo $this->form()->openTag($form);  
-                            
-                            $required = '';
-                            if (!empty($siteField->getAttribute('required'))) {
-                                $required = '<sup>*</sup>';
-                            }  
-                            ?>
+                    //get the existing site field
+                    $siteField = $form->get('tpc_existing_site_name'); 
+                    $existingSiteOptions = $siteField->getValueOptions();
+                    $existingSiteOptions[$this->translate('tr_melistemplatingplugincreator_tpc_existing_site_name_none')] = $this->translate('tr_melistemplatingplugincreator_tpc_existing_site_name_none');
 
-                            <div class="form-group">
-                                <label class="d-flex flex-row justify-content-between" for="<?=$siteField->getAttribute('id')?>">
-                                <div class="label-text"><?=$siteField->getLabel().$required?></div>
-                                <div class="slider-open-tooltip">
-                                      <i class="fa fa-info-circle fa-lg float-right tip-info" data-toggle="tooltip" data-placement="left" title="" data-original-title="<?= $this->translate($siteField->getOptions()['tooltip'])?>"></i>
-                                    </div>
-                                </label>  
+                    $form->prepare();       
+                    echo $this->form()->openTag($form);  
 
-                                <div class="form-group input-group">
-                                    <div class="padding-left-0">
-                                        <select id="<?=$siteField->getAttribute('id')?>" name="<?=$siteField->getAttribute('name')?>" class="<?=$siteField->getAttribute('class')?>">
-                                            <option value=""><?=$this->translate($siteField->getOptions()['empty_option'])?></option>
-                                            <?php 
-                                                if ($existingSiteOptions) {
-                                                    foreach ($existingSiteOptions as $siteName => $siteLabel) { ?>
-                                                        <option value="<?=$siteName?>" <?=$siteField->getValue() == $siteName ? "selected" : ""?>><?=$siteLabel?></option>
-                                                <?php  }
-                                                }
-                                            ?>
-                                        </select>
-                                    </div>                            
-                                </div> 
-                            </div>
-                             
-                    <?php    
-                        echo $this->form()->closeTag(); 
-                        } 
-                    ?>           
+                    //display the site dropdown if chosen destination is New Module to select which site the plugin is activated
+                    if ($this->data['pluginDestination'] == 'new_module') {                          
+                        
+                        $required = '';
+                        if (!empty($siteField->getAttribute('required'))) {
+                            $required = '<sup>*</sup>';
+                        }  
+                        ?>
+
+                        <div class="form-group">
+                            <label class="d-flex flex-row justify-content-between" for="<?=$siteField->getAttribute('id')?>">
+                            <div class="label-text"><?=$siteField->getLabel().$required?></div>
+                            <div class="slider-open-tooltip">
+                                  <i class="fa fa-info-circle fa-lg float-right tip-info" data-toggle="tooltip" data-placement="left" title="" data-original-title="<?= $this->translate($siteField->getOptions()['tooltip'])?>"></i>
+                                </div>
+                            </label>  
+
+                            <div class="form-group input-group">
+                                <div class="padding-left-0">
+                                    <select id="<?=$siteField->getAttribute('id')?>" name="<?=$siteField->getAttribute('name')?>" class="<?=$siteField->getAttribute('class')?>">
+                                        <option value=""><?=$this->translate($siteField->getOptions()['empty_option'])?></option>
+                                        <?php 
+                                            if ($existingSiteOptions) {
+                                                foreach ($existingSiteOptions as $siteName => $siteLabel) { ?>
+                                                    <option value="<?=$siteName?>" <?=$siteField->getValue() == $siteName ? "selected" : ""?>><?=$siteLabel?></option>
+                                            <?php  }
+                                            }
+                                        ?>
+                                    </select>
+                                </div>                            
+                            </div> 
+                        </div> 
+                <?php    
+                     
+                    }  ?>
+
+                    <div class="melis-tpc-final-content">
+                        <p>
+                            <i class="fa fa-check-square-o text-success fa-lg"></i>                            
+                            <input type="checkbox" name="<?=$tpcActivatePluginField->getAttribute('name')?>" value="1" checked class = "<?=$tpcActivatePluginField->getAttribute('class')?>"> <?=$tpcActivatePluginField->getOption('label')?> 
+                        </p>
+                    </div>
+
+                    <p><?=$this->translate('tr_melistemplatingplugincreator_activate_plugin_note')?></p>   
+
+                <?php    
+                    echo $this->form()->closeTag(); 
+                ?>           
             </div>
-        </div>
-              
+        </div>              
     </div>
 </div>
 

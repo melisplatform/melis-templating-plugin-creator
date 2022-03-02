@@ -391,7 +391,7 @@ class MelisTemplatingPluginCreatorService extends MelisGeneralService
 
                 //set required attribute
                 $isRequired = $this->steps['step_3']['tab_'.$i]['field_'.$j]['tpc_field_is_required'];
-                $tabInputFilters = str_replace('#isRequired', ($isRequired==1?'true':'false'), $tabInputFilters);
+                $tabInputFilters = str_replace('#isRequired', ($isRequired == 1 ? 'true' : 'false'), $tabInputFilters);
 
                 //add empty field validator if field is required 
                 if ($isRequired == 1) {

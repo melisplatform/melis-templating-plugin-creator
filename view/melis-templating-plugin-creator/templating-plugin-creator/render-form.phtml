@@ -1,6 +1,6 @@
 <div id="<?php echo $this->id; ?>" class="steps-content">
     <h3><?php echo $this->translate('tr_melistemplatingplugincreator_title_step_'.$curStep) ?></h3>
-    <p><?= $curStep == 6 ? ($this->data['pluginDestination'] == 'new_module' ? $this->translate('tr_melistemplatingplugincreator_desc_step_6_new_module') :  $this->translate('tr_melistemplatingplugincreator_desc_step_6_existing_module')) : $this->translate('tr_melistemplatingplugincreator_desc_step_'.$curStep) ?></p>
+    <p><?= $curStep == 6 ? ($this->data['pluginDestination'] == 'new_module' ? $this->translate('tr_melistemplatingplugincreator_desc_step_6_new_module') :  $this->translate('tr_melistemplatingplugincreator_desc_step_6')) : $this->translate('tr_melistemplatingplugincreator_desc_step_'.$curStep) ?></p>
     
     <?php 
         if($curStep != 5){ ?>
