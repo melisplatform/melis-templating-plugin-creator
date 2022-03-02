@@ -299,3 +299,10 @@
 .melis-templating-plugin-creator-steps-content #melistemplatingplugincreator_step6 p#finalization_success{
     margin-top: 25px;
 }
+
+
+/*for the field widgets*/
+.templating-plugin-field-forms .widget {
+  margin-bottom: 10px;
+  border-radius: 5px 5px 0 0;
+}
