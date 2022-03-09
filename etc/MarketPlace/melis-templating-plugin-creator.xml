@@ -3,7 +3,7 @@
 		<mp_title>Melis Templating Plugin Creator</mp_title>
 		<mp_subtitle>The module that brings you a system that generates a ready-to-use templating plugin.</mp_subtitle>
 		<mp_description>
-			Melis Templating Plugin Creator is a tool that will generate a templating plugin to be used inside the MelisCMS Page Edition System with just a few clicks.  The generated plugin is ready to be used and the user just needs to update the generated files to update the plugin's content. <br />
+			Melis Templating Plugin Creator is a tool that will generate a templating plugin to be used inside the MelisCMS Page Edition System with just a few clicks.  <br /> The generated plugin is ready to be used and the user just needs to update the generated files to update the plugin's content. 
 		</mp_description>
 		<mp_maintainers>melisplatform</mp_maintainers>
 		<mp_group>Melis Core</mp_group>
