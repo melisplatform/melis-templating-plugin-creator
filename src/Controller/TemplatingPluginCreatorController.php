@@ -175,7 +175,7 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
         //validate form if Next button is triggered
         if ($validate) {  
             $request = $this->getRequest();
-            $postValues = get_object_vars($request->getPost()); 
+            $postValues = $request->getPost()->toArray(); 
             
             //get current step's form and data
             list($stepForm, $data) = $this->getStepFormAndData($curStep);
@@ -326,7 +326,7 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
         //validate form if Next button is triggered
         if ($validate) {         
             $request = $this->getRequest();
-            $postValues = get_object_vars($request->getPost()); 
+            $postValues = $request->getPost()->toArray();
             $uploadedFile = $request->getFiles()->toArray();
 
             //merge upload data with the other posted values
@@ -427,7 +427,7 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
         //validate form if Next button is triggered
         if ($validate) {              
             $request = $this->getRequest();
-            $postValues = get_object_vars($request->getPost()); 
+            $postValues = $request->getPost()->toArray(); 
 
             //validate the step 3's main form
             $appConfigForm = $melisCoreConfig->getFormMergedAndOrdered('melistemplatingplugincreator/forms/melistemplatingplugincreator_step3_form1', 'melistemplatingplugincreator_step3_form1');
@@ -482,7 +482,7 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
         //validate form if Next button is triggered
         if ($validate) {         
             $request = $this->getRequest();
-            $postValues = get_object_vars($request->getPost()); 
+            $postValues = $request->getPost()->toArray();
                 
             //validate translation form
             list($isValid, $errors) = $this->validateFieldTranslations($curStep, $postValues);  
@@ -541,7 +541,7 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
         //generate templating plugin
         if ($validate) { 
             $request = $this->getRequest();
-            $postValues = get_object_vars($request->getPost()); 
+            $postValues = $request->getPost()->toArray();
 
             //if destination is new module, get the form config and validate form, else if destination is existing, proceed immediately to the plugin generation
             if ($container['melis-templatingplugincreator']['step_1']['tpc_plugin_destination'] == self::NEW_MODULE) {                      
@@ -1168,7 +1168,7 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
     public function getFieldFormAction()
     {
         $request = $this->getRequest();
-        $postValues = get_object_vars($request->getPost()); 
+        $postValues = $request->getPost()->toArray(); 
         $fieldCount = $postValues['step-form']['tpc_main_property_field_count'];
         $curStep = $postValues['curStep'];
         $tab =  $postValues['step-form']['tpc_property_tab_number'];
