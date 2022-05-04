@@ -316,8 +316,8 @@ class MelisTemplatingPluginCreatorService extends MelisGeneralService
                     if (preg_match_all($pattern, $tabElements, $matches)) {
                         $match = implode("\n", $matches[0]);//return as string
 
-                        $switchOptions = "'checked_value' => 1,"."\r\n\t\t\t\t\t\t\t\t\t\t\t\t".
-                                        "'unchecked_value' => 0,"."\r\n\t\t\t\t\t\t\t\t\t\t\t\t".
+                        $switchOptions = "'checked_value' => '1',"."\r\n\t\t\t\t\t\t\t\t\t\t\t\t".
+                                        "'unchecked_value' => '0',"."\r\n\t\t\t\t\t\t\t\t\t\t\t\t".
                                         "'switchOptions' => ["."\r\n\t\t\t\t\t\t\t\t\t\t\t\t\t".
                                             "'label-on' => 'tr_meliscore_common_yes',"."\r\n\t\t\t\t\t\t\t\t\t\t\t\t\t".
                                             "'label-off' => 'tr_meliscore_common_nope',"."\r\n\t\t\t\t\t\t\t\t\t\t\t\t\t".
