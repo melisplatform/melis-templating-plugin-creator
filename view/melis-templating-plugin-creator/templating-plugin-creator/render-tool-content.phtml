@@ -5,7 +5,7 @@
 <div class="innerAll spacing-x2 melis-templating-plugin-creator" id="<?php echo $id ?>" data-melisKey="<?php echo $melisKey; ?>">
     <div class="innerAll spacing-x2">
        <!-- Tool Content-->
-       <?php if (empty($this->fPErr)){ ?>
+       <?php if (empty($this->fPErr) && empty($this->gdExtensionErr)){ ?>
             <div class="wizard wizard-design">
                 <!-- Wizard heading -->
                 <div class="wizard-head melis-templating-plugin-creator-steps">
@@ -36,12 +36,23 @@
             </div>
         <?php } else { ?>
             <div class="alert alert-warning">
-                <h3><?php echo $this->translate('tr_melistemplatingplugincreator_fp_title') ?></h3>
-                <p><?php echo $this->translate('tr_melistemplatingplugincreator_fp_msg') ?></p>
-                <br>
-                <?php foreach ($this->fPErr as $err) { ?>
-                    <p style="display: list-item;list-style-type: disc;list-style-position: inside;"><?php echo $this->translate($err) ?></p>
-                <?php } ?>
+                <?php 
+                    if (!empty($this->fPErr)) { ?>
+                        <h3><?php echo $this->translate('tr_melistemplatingplugincreator_fp_title') ?></h3>
+                        <p><?php echo $this->translate('tr_melistemplatingplugincreator_fp_msg') ?></p>
+                        <br>
+                        <?php                      
+                            foreach ($this->fPErr as $err) { ?>
+                                <p style="display: list-item;list-style-type: disc;list-style-position: inside;"><?php echo $this->translate($err) ?></p>
+                        <?php }
+                    }
+
+                    if (!empty($this->gdExtensionErr)) { ?>
+                        <br>  
+                        <h3><?php echo $this->translate('tr_melistemplatingplugincreator_gd_library_title') ?></h3>
+                        <br>
+                        <p style="display: list-item;list-style-type: disc;list-style-position: inside;"><?=$this->translate($gdExtensionErr)?></p>
+            <?php   }  ?>               
             </div>
         <?php } ?>
     </div>

@@ -83,6 +83,14 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
         
         if (!empty($filePermissionErr)) {
             $view->fPErr = $filePermissionErr;
+        }
+
+        if (!extension_loaded('gd')) {           
+            $gdExtensionErr = 'tr_melistemplatingplugincreator_gd_library_not_found';
+            $view->gdExtensionErr = $gdExtensionErr;
+        }
+        
+        if (!empty($filePermissionErr) || !empty($gdExtensionErr)) {            
             return $view;
         }
 
