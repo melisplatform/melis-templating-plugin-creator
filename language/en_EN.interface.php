@@ -15,6 +15,8 @@
 	    'tr_melistemplatingplugincreator_fp_config' => 'In order to activate the plugin, please give the rights to write in the following file: <b>%s/config/module.load.php</b>',
 	 	'tr_melistemplatingplugincreator_fp_module' => '<b>/module</b> - The directory where the created modules are saved',
         'tr_melistemplatingplugincreator_fp_temp_thumbnail' => '<b>/melis-templating-plugin-creator/public/temp-thumbnail</b> - The directory where the uploaded plugin thumbnails are temporarily saved',
+        'tr_melistemplatingplugincreator_gd_library_title' => 'Missing PHP Library',
+        'tr_melistemplatingplugincreator_gd_library_not_found' => 'The GD library must be installed to use this tool',
 
 	 	 // Error messages
 	    'tr_melistemplatingplugincreator_err_message' => 'Unable to proceed to the next step, please try again',
