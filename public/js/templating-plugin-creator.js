@@ -447,7 +447,7 @@ $(function(){
         clearTimeout(typingTimer);
         
         typingTimer = setTimeout(function() {
-            if($.isNumeric(fieldCount)){
+            if ( !isNaN(parseFloat(fieldCount)) && isFinite(fieldCount) ) {
                 if(fieldCount > 0 && fieldCount <= 25){
                     //remove highlight errors
                     $("#tpc_main_property_field_count").parents('.form-group').find("label").css("color","#686868");  
@@ -503,7 +503,7 @@ $(function(){
         //unset tpc_field_default_value and tpc_field_default_options values
         $(this).parents('form').find('#tpc_field_default_value, #tpc_field_default_options').val("");
 
-        $(this).blur();
+        $(this).trigger("blur");
 
         // format 'Default Value' field type based on the selected 'Display Type' 
         if (prev == 'Dropdown' && current != 'Dropdown') {    
@@ -630,7 +630,7 @@ var widgetCollapsibleInitTemplating = function(){
             $(this).parents('.widget:first').attr('data-collapse-closed', "false");
         })
         .on('shown.bs.collapse', function(){
-            setTimeout(function(){ $(window).resize(); }, 500);
+            setTimeout(function(){ $(window).trigger("resize"); }, 500);
         })
         .on('hidden.bs.collapse', function(){
             $(this).parents('.widget:first').attr('data-collapse-closed', "true");
