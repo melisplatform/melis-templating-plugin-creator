@@ -509,13 +509,13 @@ $(function(){
         if (prev == 'Dropdown' && current != 'Dropdown') {    
             //hide default options field          
             $(this).parents('form').find('#tpc_field_default_options').removeAttr('data-role');
-            $(this).parents('form').find('#tpc_field_default_options').tagsinput('destroy');
+            $(this).parents('form').find('#tpc_field_default_options').tagsinput('dispose');
             $(this).parents('form').find("#tpc_field_default_options").parents('.form-group').hide(); 
 
             /*change back the 'default value' fiele to input type*/          
             $(this).parents('form').find('#tpc_field_default_value').closest('.form-group.input-group').empty().append(tpc_default_val_input);   
         } else if ( (prev == 'DatePicker' && current != 'DatePicker') || (prev == 'DateTimePicker' && current != 'DateTimePicker')) {           
-            $(this).parents('form').find('#tpc_field_default_value').tempusDominus("destroy");
+            $(this).parents('form').find('#tpc_field_default_value').datetimepicker("destroy");
         } else if ( (prev == 'Switch' && current != 'Switch') || (prev == 'PageInput' && current != 'PageInput')) {            
             $(this).parents('form').find('#tpc_field_default_value').closest('.form-group.input-group').empty().append(tpc_default_val_input);  
         } else if (prev == 'MelisCoreTinyMCE' && current != 'MelisCoreTinyMCE') {   
@@ -538,9 +538,9 @@ $(function(){
             $(this).parents('form').find('#tpc_field_default_value').replaceWith('<div class="col-md-2 padding-left-0"><select id="tpc_field_default_value" name="tpc_field_default_value" class="form-control">'+
                 '<option value="">'+translations.tr_melistemplatingplugincreator_tpc_select_placeholder+'</option></select></div>');   
         } else if (current == 'DatePicker') {                      
-            $(this).parents('form').find('#tpc_field_default_value').tempusDominus({ localization: { format: "yyyy-MM-dd"} });            
+            $(this).parents('form').find('#tpc_field_default_value').datetimepicker({format: "YYYY-MM-DD"});            
         } else if (current == 'DateTimePicker'){           
-            $(this).parents('form').find('#tpc_field_default_value').tempusDominus({ localization: { format: "yyyy-MM-dd HH:mm:ss"} });           
+            $(this).parents('form').find('#tpc_field_default_value').datetimepicker({format: "YYYY-MM-DD HH:mm:ss"});           
         } else if (current == 'Switch'){           
             $(this).parents('form').find('#tpc_field_default_value').replaceWith('<div class="col-md-2 padding-left-0"><select id="tpc_field_default_value" name="tpc_field_default_value" class="form-control">'+
                 '<option value="">'+translations.tr_melistemplatingplugincreator_tpc_select_placeholder+'</option><option value="1">On</option><option value="0">Off</option></select></div>');   
@@ -696,11 +696,11 @@ var fieldFormInit = function(){
 
         } else if ($(this).find("#tpc_field_display_type").val() == "DatePicker") {
             //initialize datetimepicker
-            $(this).find('#tpc_field_default_value').tempusDominus({ localization: { format: "yyyy-MM-dd"} });
+            $(this).find('#tpc_field_default_value').datetimepicker({format: "YYYY-MM-DD"});
 
         } else if ($(this).find("#tpc_field_display_type").val() == "DateTimePicker") {
             //initialize datetimepicker
-            $(this).find('#tpc_field_default_value').tempusDominus({ localization: { format: "yyyy-MM-dd HH:mm:ss"} });
+            $(this).find('#tpc_field_default_value').datetimepicker({format: "YYYY-MM-DD HH:mm:ss"});
 
         } else if ($(this).find("#tpc_field_display_type").val() == "Switch") {        
 

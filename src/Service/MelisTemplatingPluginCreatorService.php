@@ -545,15 +545,15 @@ class MelisTemplatingPluginCreatorService extends MelisGeneralService
             }
 
             if (!empty($datePickerFields)) {
-                $datePickerScript = "$('".$datePickerFields."').tempusDominus({localization:{\r\n\t\t\t".                                   
-                                    "format: 'yyyy-MM-dd',\r\n\t\t".
-                                    "}});";
+                $datePickerScript = "$('".$datePickerFields."').datetimepicker({ \r\n\t\t\t".                                   
+                                    "format: 'YYYY-MM-DD',\r\n\t\t".
+                                    "});";
             }
 
             if (!empty($dateTimePickerFields)) {
-                $dateTimePickerScript = "$('".$dateTimePickerFields."').tempusDominus({localization:{\r\n\t\t\t".                                       
-                                        "format: 'yyyy-MM-dd HH:mm:ss',\r\n\t\t".
-                                    "}});";
+                $dateTimePickerScript = "$('".$dateTimePickerFields."').datetimepicker({\r\n\t\t\t".                                       
+                                        "format: 'YYYY-MM-DD HH:mm:ss',\r\n\t\t".
+                                        "});";
             }
             
             if ($datePickerScript || $dateTimePickerScript) {
