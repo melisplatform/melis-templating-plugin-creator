@@ -1,29 +1,29 @@
 <?php
     return [
-         // Tool Title & Desc
-		'tr_melistemplatingplugincreator_title' => 'Créateur de plugin de template',
-		'tr_melistemplatingplugincreator_desc' => 'Le créateur de plugin de template génère des plugins de template prêt à l\'emploi.',
-		
-		//Buttons
+        // Tool Title & Desc
+        'tr_melistemplatingplugincreator_title' => 'Créateur de plugin de template',
+        'tr_melistemplatingplugincreator_desc' => 'Le créateur de plugin de template génère des plugins de template prêt à l\'emploi.',
+        
+        //Buttons
         'tr_melistemplatingplugincreator_back' => 'Retour',
         'tr_melistemplatingplugincreator_next' => 'Suivant',
         'tr_melistemplatingplugincreator_finish_and_create_the_plugin' => 'Terminer et créer le plugin',
 
-		// Warnings
-	    'tr_melistemplatingplugincreator_fp_title' => 'Problème de droits',
-	    'tr_melistemplatingplugincreator_fp_msg' => 'Pour créer ce plugin veuillez donner des droits d\'écriture pour les dossiers suivants ou contactez l\'administrateur.',
-	    'tr_melistemplatingplugincreator_fp_config' => 'Pour activer le plugin veuillez donner les droits d\'écriture sur le fichier suivant: <b>%s/config/module.load.php</b>',
-	 	'tr_melistemplatingplugincreator_fp_module' => '<b>/module</b> - Le répertoire dans lequel les modules créés sont enregistrés',
+        // Warnings
+        'tr_melistemplatingplugincreator_fp_title' => 'Problème de droits',
+        'tr_melistemplatingplugincreator_fp_msg' => 'Pour créer ce plugin veuillez donner des droits d\'écriture pour les dossiers suivants ou contactez l\'administrateur.',
+        'tr_melistemplatingplugincreator_fp_config' => 'Pour activer le plugin veuillez donner les droits d\'écriture sur le fichier suivant: <b>%s/config/module.load.php</b>',
+        'tr_melistemplatingplugincreator_fp_module' => '<b>/module</b> - Le répertoire dans lequel les modules créés sont enregistrés',
         'tr_melistemplatingplugincreator_fp_temp_thumbnail' => '<b>/melis-templating-plugin-creator/public/temp-thumbnail</b> - Le répertoire dans lequel les images sont enregistrées temporairement',
 
-	 	// Error messages
-	    'tr_melistemplatingplugincreator_err_message' => 'Impossible de procéder à l\'étape suivante',
-	    'tr_melistemplatingplugincreator_err_invalid_name' => 'Seul les caractères alphabetiques sont autorisés',	
-	    'tr_melistemplatingplugincreator_err_invalid_field_name' => 'La saisie doit être un nom d\'attribut valide.',
+        // Error messages
+        'tr_melistemplatingplugincreator_err_message' => 'Impossible de procéder à l\'étape suivante',
+        'tr_melistemplatingplugincreator_err_invalid_name' => 'Seul les caractères alphabetiques sont autorisés',	
+        'tr_melistemplatingplugincreator_err_invalid_field_name' => 'La saisie doit être un nom d\'attribut valide.',
         'tr_melistemplatingplugincreator_err_long_50' => 'Valeur trop longue, elle doit être de moins de 50 caractères',
-	    'tr_melistemplatingplugincreator_err_empty' => 'Valeur requise, ne peut être vide',
-	    'tr_melistemplatingplugincreator_greater_than_0' => 'The input must be greather than or equal to 1',
-	    'tr_melistemplatingplugincreator_value_must_be_between_1_to_25' => 'Seules les valeurs entre 1 et 25 sont autorisées',
+        'tr_melistemplatingplugincreator_err_empty' => 'Valeur requise, ne peut être vide',
+        'tr_melistemplatingplugincreator_greater_than_0' => 'The input must be greather than or equal to 1',
+        'tr_melistemplatingplugincreator_value_must_be_between_1_to_25' => 'Seules les valeurs entre 1 et 25 sont autorisées',
         'tr_melistemplatingplugincreator_integer_only' => 'La valeur saisie doit être un nombre entier uniquement',
         'tr_melistemplatingplugincreator_digits_only' => 'Caractères numériques uniquement', 
         'tr_melistemplatingplugincreator_save_upload_image_imageFalseType' => 'Format d\'image invalide',
@@ -40,19 +40,22 @@
         'tr_melistemplatingplugincreator_generate_plugin_error_encountered' => 'Erreurs lors de la génération du plugin.',
         'tr_melistemplatingplugincreator_upload_too_big' => 'La taille de l\'image ne doit pas excéder %s',
 
-		/*Steps*/
-		'tr_melistemplatingplugincreator_plugin' => 'Plugin',
-		'tr_melistemplatingplugincreator_menu_texts_display' => 'Textes du menu et affichage',
-		'tr_melistemplatingplugincreator_main_properties' => 'Propriétés principales',
-		'tr_melistemplatingplugincreator_properties_translation' => 'Traduction des propriétés',
-		'tr_melistemplatingplugincreator_summary' => 'Récapitulatif',
-		'tr_melistemplatingplugincreator_finalization' => 'Finalisation',
-		
-		/*Step1 Form*/
-		'tr_melistemplatingplugincreator_title_step_1' => 'Propriétés du plugin',
+        // steps
+        'tr_melistemplatingplugincreator_steps' => 'Étape',
+
+        /*Steps*/
+        'tr_melistemplatingplugincreator_plugin' => 'Plugin',
+        'tr_melistemplatingplugincreator_menu_texts_display' => 'Textes du menu et affichage',
+        'tr_melistemplatingplugincreator_main_properties' => 'Propriétés principales',
+        'tr_melistemplatingplugincreator_properties_translation' => 'Traduction des propriétés',
+        'tr_melistemplatingplugincreator_summary' => 'Récapitulatif',
+        'tr_melistemplatingplugincreator_finalization' => 'Finalisation',
+        
+        /*Step1 Form*/
+        'tr_melistemplatingplugincreator_title_step_1' => 'Propriétés du plugin',
         'tr_melistemplatingplugincreator_desc_step_1' => 'Saisissez le nom du plugin.<br>Veuillez ensuite choisir la destination du code, nouveau module ou module existant.',
-	    'tr_melistemplatingplugincreator_tpc_plugin_name' => 'Nom du plugin',
-	    'tr_melistemplatingplugincreator_tpc_plugin_name tooltip' => 'Saisissez le nom du plugin.',	       
+        'tr_melistemplatingplugincreator_tpc_plugin_name' => 'Nom du plugin',
+        'tr_melistemplatingplugincreator_tpc_plugin_name tooltip' => 'Saisissez le nom du plugin.',	       
         'tr_melistemplatingplugincreator_tpc_plugin_destination' => 'Destination',
         'tr_melistemplatingplugincreator_tpc_plugin_destination tooltip' => 'Sélectionnez la destinations du plugin',
         'tr_melistemplatingplugincreator_destination_new_opt' => 'Nouveau module',
@@ -63,7 +66,7 @@
         'tr_melistemplatingplugincreator_tpc_existing_module_name tooltip' => 'Sélectionnez le module du site existant',
         'tr_melistemplatingplugincreator_tpc_existing_module_placeholder' => 'Choisissez un module',
 
-         //Step2 Form
+        //Step2 Form
         'tr_melistemplatingplugincreator_title_step_2' => 'Traductions et images du menu des plugins',
         'tr_melistemplatingplugincreator_desc_step_2' => 'Saisissez la traduction du texte dans les différentes langues, au moins une langue doit être saisie.<br>Choisissez l\'image du plugin qui apparaîtra dans le menu de droite.',
         'tr_melistemplatingplugincreator_tpc_plugin_title' => 'Titre du plugin',

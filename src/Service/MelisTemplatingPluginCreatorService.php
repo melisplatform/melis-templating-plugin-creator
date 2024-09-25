@@ -553,7 +553,7 @@ class MelisTemplatingPluginCreatorService extends MelisGeneralService
             if (!empty($dateTimePickerFields)) {
                 $dateTimePickerScript = "$('".$dateTimePickerFields."').datetimepicker({\r\n\t\t\t".                                       
                                         "format: 'YYYY-MM-DD HH:mm:ss',\r\n\t\t".
-                                    "});";
+                                        "});";
             }
             
             if ($datePickerScript || $dateTimePickerScript) {
