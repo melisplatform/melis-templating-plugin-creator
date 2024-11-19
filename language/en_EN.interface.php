@@ -43,6 +43,8 @@
         'tr_melistemplatingplugincreator_generate_plugin_error_encountered' => 'Error encountered while generating the templating plugin.',
         'tr_melistemplatingplugincreator_upload_too_big' => 'The picture size should not exceed %s',
 
+        // steps
+        'tr_melistemplatingplugincreator_steps' => 'Étape',
 		/*Steps*/
 		'tr_melistemplatingplugincreator_plugin' => 'Plugin',
 		'tr_melistemplatingplugincreator_menu_texts_display' => 'Menu Texts & Display',

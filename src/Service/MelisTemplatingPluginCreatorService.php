@@ -628,7 +628,7 @@ class MelisTemplatingPluginCreatorService extends MelisGeneralService
         $melisModule = $this->getServiceManager()->get('MelisAssetManagerModulesService');  
         $names = explode("\\", __NAMESPACE__);                       
         $moduleToolName = $names[0];
-        $thumbnailTempPath = $melisModule->getModulePath($moduleToolName,true).'/public/temp-thumbnail/';        
+        $thumbnailTempPath = $this->getTempThumbnailDirectory();            
         
         //append the current session ID to the thumbnail path
         $thumbnailTempPath = $thumbnailTempPath.$sessionID.'/';
@@ -1218,4 +1218,14 @@ class MelisTemplatingPluginCreatorService extends MelisGeneralService
         return $arrayParameters['templatingPlugins']; 
     }
 
+    /**
+     * Retrieves the temp thumbnail directory
+     * @return string
+     */
+    private function getTempThumbnailDirectory()
+    {
+        $melisCoreConfig = $this->getServiceManager()->get('MelisCoreConfig');
+        $pluginThumbnailConfig = $melisCoreConfig->getItem('melistemplatingplugincreator/datas/plugin_thumbnail');
+        return $pluginThumbnailConfig['path'];
+    }
 }

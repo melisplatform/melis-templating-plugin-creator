@@ -69,7 +69,7 @@ return [
                             'conf' => [
                                 'id' => 'id_melistemplatingplugincreator_header',
                                 'melisKey' => 'melistemplatingplugincreator_header',
-                                'name' => 'tr_melistemplatingplugincreator_header',
+                                'name' => 'tr_meliscore_common_header',
                             ],
                             'forward' => [
                                 'module' => 'MelisTemplatingPluginCreator',
@@ -83,7 +83,7 @@ return [
                             'conf' => [
                                 'id' => 'id_melistemplatingplugincreator_content',
                                 'melisKey' => 'melistemplatingplugincreator_content',
-                                'name' => 'tr_melistemplatingplugincreator_content',
+                                'name' => 'tr_meliscore_common_content',
                             ],
                             'forward' => [
                                 'module' => 'MelisTemplatingPluginCreator',

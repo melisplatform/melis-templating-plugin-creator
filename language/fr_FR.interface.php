@@ -40,6 +40,8 @@
         'tr_melistemplatingplugincreator_generate_plugin_error_encountered' => 'Erreurs lors de la génération du plugin.',
         'tr_melistemplatingplugincreator_upload_too_big' => 'La taille de l\'image ne doit pas excéder %s',
 
+        // steps
+        'tr_melistemplatingplugincreator_steps' => 'Étape',
 		/*Steps*/
 		'tr_melistemplatingplugincreator_plugin' => 'Plugin',
 		'tr_melistemplatingplugincreator_menu_texts_display' => 'Textes du menu et affichage',
