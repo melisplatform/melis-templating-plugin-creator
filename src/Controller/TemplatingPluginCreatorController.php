@@ -227,7 +227,7 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
                      */
                     $modulesSvc = $this->getServiceManager()->get('ModulesService');
                     $assetModuleService = $this->getServiceManager()->get('MelisAssetManagerModulesService');
-                    $existingModules = array_merge($modulesSvc->getModulePlugins(), \MelisCore\MelisModuleManager::getModules(), $assetModuleService->getSitesModules());
+                    $existingModules = array_merge($modulesSvc->getModulePlugins(), $modulesSvc->getAllModules(), $assetModuleService->getSitesModules());
                     $existingModules = array_map('strtolower', $existingModules);                    
 
                     //set error if the entered module name has duplicate
@@ -362,7 +362,7 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
 
                     if ($isValid2ndForm) {
                         //save to session   
-                        $container['melis-templatingplugincreator']['step_2']['plugin_thumbnail'] = '/Melistemplatingplugincreator/temp-thumbnail/'.$sessionID.'/'.pathinfo($pluginThumbnail, PATHINFO_FILENAME).'.'.pathinfo($pluginThumbnail, PATHINFO_EXTENSION); 
+                        $container['melis-templatingplugincreator']['step_2']['plugin_thumbnail'] = '/tpc/temp-thumbnail/' . $sessionID . '/' . pathinfo($pluginThumbnail, PATHINFO_FILENAME) . '.' . pathinfo($pluginThumbnail, PATHINFO_EXTENSION); 
 
                     } else {         
                         //unset previously uploaded file
@@ -1072,7 +1072,7 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
 
             if ($isValid2ndForm) {
                 //save to session   
-                $container['melis-templatingplugincreator']['step_2']['plugin_thumbnail'] = '/MelisTemplatingPluginCreator/temp-thumbnail/'.$sessionID.'/'.pathinfo($pluginThumbnail, PATHINFO_FILENAME).'.'.pathinfo($pluginThumbnail, PATHINFO_EXTENSION); 
+                $container['melis-templatingplugincreator']['step_2']['plugin_thumbnail'] = '/tpc/temp-thumbnail/' . $sessionID . '/' . pathinfo($pluginThumbnail, PATHINFO_FILENAME) . '.' . pathinfo($pluginThumbnail, PATHINFO_EXTENSION); 
 
             } else {         
                 //unset previously uploaded file
@@ -1708,12 +1708,9 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
     */
     private function getTempThumbnailDirectory()
     {
-        // Set the user
-        $melisModule = $this->getServiceManager()->get('MelisAssetManagerModulesService');                        
-        $names = explode("\\", __NAMESPACE__);                       
-        $moduleName = $names[0];        
-        $tempThumbnailDirectory = $melisModule->getModulePath($moduleName,true).'/public/temp-thumbnail/';
+        $melisCoreConfig = $this->getServiceManager()->get('MelisCoreConfig');
+        $pluginThumbnailConfig = $melisCoreConfig->getItem('melistemplatingplugincreator/datas/plugin_thumbnail');
 
-        return $tempThumbnailDirectory;
+        return $pluginThumbnailConfig['path'];
     }
 }
