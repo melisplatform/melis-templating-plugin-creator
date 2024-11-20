@@ -620,6 +620,10 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
                                 }                           
                             }                        
                         }
+                        // Activate new module
+                        $moduleSrv->activateModule($toolCreatorSrv->moduleName());
+                        // Reloading module paths
+                        unlink($_SERVER['DOCUMENT_ROOT'] . '/../config/melis.modules.path.php');
                        
                         //unset tool container
                         unset($toolContainer['melis-toolcreator']); 
@@ -629,22 +633,8 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
                         //reload page to activate the plugin, also activate the new module by adding it to config/melis.module.load
                         if ($isActivatePlugin) {   
                             $viewStep->restartRequired = 1;
-                            $existingModules = include $_SERVER['DOCUMENT_ROOT'] . '/../config/melis.module.load.php'; 
 
-                            if ($existingModules) {
-                                //add the newly created module to the existing modules of the platform
-                                $existingModules[] = $tpcService->generateModuleNameCase($container['melis-templatingplugincreator']['step_1']['tpc_new_module_name']);
                                 
-                                $filePath = $_SERVER['DOCUMENT_ROOT'] . '/../config';
-                                if (is_writable($filePath)) {                                   
-                                    $status = $moduleSrv->createModuleLoader($filePath, $existingModules);
-                                    if (!$status) {
-                                        $viewStep->textMessage = $translator->translate('tr_melistemplatingplugincreator_generate_plugin_error_encountered');
-                                    }
-                                } else {                               
-                                    $viewStep->textMessage = $translator->translate('tr_melistemplatingplugincreator_fp_config_root');                    
-                                }                           
-                            }            
                         } else {      
                             $viewStep->restartRequired = 0;
                         }   
