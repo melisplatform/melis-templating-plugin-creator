@@ -13,6 +13,7 @@
         'tr_melistemplatingplugincreator_fp_title' => 'File permission denied',
         'tr_melistemplatingplugincreator_fp_msg' => 'In-order to create templating plugin using this module, please give the rights to write in the following directories or contact the administrator if the problem persists',
         'tr_melistemplatingplugincreator_fp_config' => 'In order to activate the plugin, please give the rights to write in the following file: <b>%s/config/module.load.php</b>',
+        'tr_melistemplatingplugincreator_fp_config_root' => 'In order to activate the plugin, please give the rights to write in the following file: <b>%s/config/melis.module.load.php</b>',
         'tr_melistemplatingplugincreator_fp_module' => '<b>/module</b> - The directory where the created modules are saved',
         'tr_melistemplatingplugincreator_fp_temp_thumbnail' => '<b>/melis-templating-plugin-creator/public/temp-thumbnail</b> - The directory where the uploaded plugin thumbnails are temporarily saved',
         'tr_melistemplatingplugincreator_gd_library_title' => 'Missing PHP Library',

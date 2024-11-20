@@ -582,11 +582,11 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
                     if ($result) {                       
                         $translator = $this->getServiceManager()->get('translator');                        
                         $siteModuleName = $postValues['step-form']['tpc_existing_site_name'];
+                        $moduleSrv = $this->getServiceManager()->get('ModulesService');
 
                         //if site name is not 'None', activate the module to the chosen site module
                         if ($siteModuleName != $translator->translate('tr_melistemplatingplugincreator_tpc_existing_site_name_none')) {
                                                  
-                            $moduleSrv = $this->getServiceManager()->get('ModulesService');
 
                             /**
                              * get the module path
@@ -626,9 +626,25 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
 
                         $isActivatePlugin = !empty($postValues['step-form']['tpc_activate_plugin']) ? 1 : 0;
 
-                        //reload page to activate the plugin
+                        //reload page to activate the plugin, also activate the new module by adding it to config/melis.module.load
                         if ($isActivatePlugin) {   
                             $viewStep->restartRequired = 1;
+                            $existingModules = include $_SERVER['DOCUMENT_ROOT'] . '/../config/melis.module.load.php'; 
+
+                            if ($existingModules) {
+                                //add the newly created module to the existing modules of the platform
+                                $existingModules[] = $tpcService->generateModuleNameCase($container['melis-templatingplugincreator']['step_1']['tpc_new_module_name']);
+                                
+                                $filePath = $_SERVER['DOCUMENT_ROOT'] . '/../config';
+                                if (is_writable($filePath)) {                                   
+                                    $status = $moduleSrv->createModuleLoader($filePath, $existingModules);
+                                    if (!$status) {
+                                        $viewStep->textMessage = $translator->translate('tr_melistemplatingplugincreator_generate_plugin_error_encountered');
+                                    }
+                                } else {                               
+                                    $viewStep->textMessage = $translator->translate('tr_melistemplatingplugincreator_fp_config_root');                    
+                                }                           
+                            }            
                         } else {      
                             $viewStep->restartRequired = 0;
                         }   

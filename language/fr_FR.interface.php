@@ -13,6 +13,7 @@
         'tr_melistemplatingplugincreator_fp_title' => 'Problème de droits',
         'tr_melistemplatingplugincreator_fp_msg' => 'Pour créer ce plugin veuillez donner des droits d\'écriture pour les dossiers suivants ou contactez l\'administrateur.',
         'tr_melistemplatingplugincreator_fp_config' => 'Pour activer le plugin veuillez donner les droits d\'écriture sur le fichier suivant: <b>%s/config/module.load.php</b>',
+         'tr_melistemplatingplugincreator_fp_config_root' => 'Pour activer le plugin veuillez donner les droits d\'écriture sur le fichier suivant: <b>%s/config/melis.module.load.php</b>',
         'tr_melistemplatingplugincreator_fp_module' => '<b>/module</b> - Le répertoire dans lequel les modules créés sont enregistrés',
         'tr_melistemplatingplugincreator_fp_temp_thumbnail' => '<b>/melis-templating-plugin-creator/public/temp-thumbnail</b> - Le répertoire dans lequel les images sont enregistrées temporairement',
 
