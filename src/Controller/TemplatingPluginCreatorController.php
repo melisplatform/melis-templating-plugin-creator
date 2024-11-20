@@ -582,11 +582,11 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
                     if ($result) {                       
                         $translator = $this->getServiceManager()->get('translator');                        
                         $siteModuleName = $postValues['step-form']['tpc_existing_site_name'];
+                        $moduleSrv = $this->getServiceManager()->get('ModulesService');
 
                         //if site name is not 'None', activate the module to the chosen site module
                         if ($siteModuleName != $translator->translate('tr_melistemplatingplugincreator_tpc_existing_site_name_none')) {
                                                  
-                            $moduleSrv = $this->getServiceManager()->get('ModulesService');
 
                             /**
                              * get the module path
@@ -620,13 +620,17 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
                                 }                           
                             }                        
                         }
+                        // Activate new module
+                        $moduleSrv->activateModule($toolCreatorSrv->moduleName());
+                        // Reloading module paths
+                        unlink($_SERVER['DOCUMENT_ROOT'] . '/../config/melis.modules.path.php');
                        
                         //unset tool container
                         unset($toolContainer['melis-toolcreator']); 
 
                         $isActivatePlugin = !empty($postValues['step-form']['tpc_activate_plugin']) ? 1 : 0;
 
-                        //reload page to activate the plugin
+                        //reload page to activate the plugin, also activate the new module by adding it to config/melis.module.load
                         if ($isActivatePlugin) {   
                             $viewStep->restartRequired = 1;
                         } else {      
