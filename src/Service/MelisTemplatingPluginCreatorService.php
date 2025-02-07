@@ -427,6 +427,8 @@ class MelisTemplatingPluginCreatorService extends MelisGeneralService
 
         $templatingPluginConfigContent = str_replace('#TABPROPERTIES  ', $tabPropertiesTpl, $templatingPluginConfigContent); 
 
+        //set the extension of the thumbnail
+        $templatingPluginConfigContent = str_replace('ThumbnailExt', pathinfo($this->steps['step_2']['plugin_thumbnail'], PATHINFO_EXTENSION), $templatingPluginConfigContent);
         $res = $this->generateFile($this->moduleName.$this->pluginName.'Plugin.config.php', $targetDir, $templatingPluginConfigContent);
         return $res;
     }
