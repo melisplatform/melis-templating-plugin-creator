@@ -31,7 +31,13 @@ return [
                                                 'icon' => 'fa fa-magic',
                                             ],
                                             'interface' => [
-                                                'melistemplatingplugincreator_conf' => [
+                                                /**
+                                                 * Clé de nœud de menu (pas un melisKey) : le back-office React en
+                                                 * dérive l'URL de l'outil (`toolSlug()` → /melis-core/templating-plugin-creator).
+                                                 * Le suffixe `_tool` est retiré par le slugifier. Une clé
+                                                 * `..._conf` donnerait `/melis-core/melistemplatingplugincreator-conf`.
+                                                 */
+                                                'templating_plugin_creator_tool' => [
                                                     'conf' => [
                                                         'type' => '/melistemplatingplugincreator/interface/melistemplatingplugincreator_tool',
                                                     ],

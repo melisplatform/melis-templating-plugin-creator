@@ -136,5 +136,12 @@
         'tr_melistemplatingplugincreator_tpc_existing_site_name' => 'Site',
         'tr_melistemplatingplugincreator_tpc_existing_site_name tooltip' => 'Sélectionnez le site pour lequel le plugin sera activé.',
         'tr_melistemplatingplugincreator_tpc_existing_site_placeholder' => 'Choisissez',
-        'tr_melistemplatingplugincreator_tpc_existing_site_name_none' => 'Aucun', 
+        'tr_melistemplatingplugincreator_tpc_existing_site_name_none' => 'Aucun',
+
+        // Groupes de capacités (droits avancés) affichés dans l'onglet Rights du BO React.
+        // Déclarés dans config/react.capabilities.php, résolus côté serveur dans la locale courante.
+        'tr_melistemplatingplugincreator_caps_wizard' => 'Étapes de configuration',
+        'tr_melistemplatingplugincreator_caps_thumbnail' => 'Vignette du plugin',
+        'tr_melistemplatingplugincreator_caps_summary' => 'Récapitulatif',
+        'tr_melistemplatingplugincreator_caps_finalization' => 'Génération du plugin',
     ];
