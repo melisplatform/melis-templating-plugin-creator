@@ -238,9 +238,9 @@ class MelisTemplatingPluginCreatorService extends MelisGeneralService
                 
                 //starts with field #2 since the field 1[template_path] is already added in the template file
                 for ($f = 2; $f <= $tabFieldCount; $f++) {
-                    $fieldName = $this->steps['step_3']['tab_'.$t]['field_'.$f]['tpc_field_name'];
+                    $fieldName = preg_replace('/[^A-Za-z0-9_]/', '', (string) $this->steps['step_3']['tab_'.$t]['field_'.$f]['tpc_field_name']);
                     $displayType = $this->steps['step_3']['tab_'.$t]['field_'.$f]['tpc_field_display_type'];
-                    $defaultValue = $this->steps['step_3']['tab_'.$t]['field_'.$f]['tpc_field_default_value'];
+                    $defaultValue = addcslashes((string) $this->steps['step_3']['tab_'.$t]['field_'.$f]['tpc_field_default_value'], "\\'");
 
                     if ($f != 2) {
                         $tab = "\t\t\t\t\t\t";
@@ -269,7 +269,7 @@ class MelisTemplatingPluginCreatorService extends MelisGeneralService
             for ($j = 1; $j <= $fieldCount; $j++) {
                 //set template path default value
                 if ($j == 1) {
-                    $templatingPluginConfigContent = str_replace('#template_path',$this->steps['step_3']['tab_'.$i]['field_'.$j]['tpc_field_default_value'], $templatingPluginConfigContent);
+                    $templatingPluginConfigContent = str_replace('#template_path', addcslashes((string) $this->steps['step_3']['tab_'.$i]['field_'.$j]['tpc_field_default_value'], "\\'"), $templatingPluginConfigContent);
                 }
 
                 /********************* start setting tab elements ********************/
@@ -345,7 +345,7 @@ class MelisTemplatingPluginCreatorService extends MelisGeneralService
                 $tabElements = str_replace('#classAttr', $classAttr, $tabElements);
 
                 //set field name
-                $tabElements = str_replace('#field_name', $this->steps['step_3']['tab_'.$i]['field_'.$j]['tpc_field_name'], $tabElements);
+                $tabElements = str_replace('#field_name', preg_replace('/[^A-Za-z0-9_]/', '', (string) $this->steps['step_3']['tab_'.$i]['field_'.$j]['tpc_field_name']), $tabElements);
                               
                 //set field type
                 switch ($fieldDisplayType) {
@@ -387,7 +387,7 @@ class MelisTemplatingPluginCreatorService extends MelisGeneralService
                 $tabInputFilters .= $this->getTemplateContent('/Code/tab-input-filters');
 
                 //set field name
-                $tabInputFilters = str_replace('field_name', $this->steps['step_3']['tab_'.$i]['field_'.$j]['tpc_field_name'], $tabInputFilters);
+                $tabInputFilters = str_replace('field_name', preg_replace('/[^A-Za-z0-9_]/', '', (string) $this->steps['step_3']['tab_'.$i]['field_'.$j]['tpc_field_name']), $tabInputFilters);
 
                 //set required attribute
                 $isRequired = $this->steps['step_3']['tab_'.$i]['field_'.$j]['tpc_field_is_required'];
