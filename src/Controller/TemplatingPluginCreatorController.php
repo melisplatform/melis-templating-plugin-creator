@@ -939,7 +939,7 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
             chmod($path, 0777);
             $status = true;
         } else {            
-            $status = mkdir($path, 0777, true);           
+            $status = mkdir($path, 0755, true);           
         }
         return $status;             
     }

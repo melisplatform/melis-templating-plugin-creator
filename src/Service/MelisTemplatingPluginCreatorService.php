@@ -595,7 +595,7 @@ class MelisTemplatingPluginCreatorService extends MelisGeneralService
             } elseif ($asset == 'images') {                
                 //check if target directory exists
                 if (!file_exists($dir)) {
-                    mkdir($dir, 0777, true);
+                    mkdir($dir, 0755, true);
                 }                        
 
                 //copy saved thumbnail to the plugins/image directory of the module          
@@ -995,7 +995,7 @@ class MelisTemplatingPluginCreatorService extends MelisGeneralService
 
             //create directory if not yet exists
             if (!file_exists($targetDir)) {
-                mkdir($targetDir, 0777, true);
+                mkdir($targetDir, 0755, true);
             }
 
             //add file if not yet exists
