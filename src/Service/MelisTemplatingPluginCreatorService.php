@@ -1042,9 +1042,18 @@ class MelisTemplatingPluginCreatorService extends MelisGeneralService
      */
     protected function emptyConfigToolsTreeSection($moduleDir)
     {
-        $toolsTreeConfigFile = $moduleDir.'/config/app.toolstree.php';        
+        $toolsTreeConfigFile = $moduleDir.'/config/app.toolstree.php';
+
+        // Rien à nettoyer si le fichier n'existe pas (ou ne renvoie pas un tableau) : `include` d'un
+        // fichier absent renvoie `false`, ce qui ferait planter Factory::toFile plus bas.
+        if (!is_file($toolsTreeConfigFile)) {
+            return true;
+        }
         $toolsTreeConfig = include $toolsTreeConfigFile;
-        
+        if (!is_array($toolsTreeConfig)) {
+            return true;
+        }
+
         //unset the meliscustom_toolstree_section of the newly created module
         if (isset($toolsTreeConfig['plugins']['meliscore']['interface']['meliscore_leftmenu']['interface']['meliscustom_toolstree_section']['interface'][strtolower($this->moduleName).'_conf'])) {
             unset($toolsTreeConfig['plugins']['meliscore']['interface']['meliscore_leftmenu']['interface']['meliscustom_toolstree_section']['interface'][strtolower($this->moduleName).'_conf']);
@@ -1094,11 +1103,15 @@ class MelisTemplatingPluginCreatorService extends MelisGeneralService
      * @param string $str
      * @return string
      */
-    public function generateModuleNameCase($str) 
+    public function generateModuleNameCase($str)
     {
-        $str = preg_replace('/([a-z])([A-Z])/', "$1$2", $str);
-        $str = str_replace(['-', '_'], '', ucwords(strtolower($str)));
-        $str = ucfirst($str);
+        // Doit produire EXACTEMENT le même PascalCase que MelisToolCreatorService::generateModuleNameCase
+        // (le service qui CRÉE réellement le dossier du module). Ne PAS `strtolower()` avant `ucwords()` :
+        // sinon un nom déjà en camelCase (ex. "TestPluginTwo") est aplati en "Testplugintwo", et le module
+        // généré devient introuvable ici (include app.toolstree.php => false => Factory::toFile plante).
+        $str = preg_replace('/[^a-zA-Z0-9\s]/', '', $str);
+        $str = ucwords($str);
+        $str = str_replace(' ', '', $str);
         $str = $this->cleanString($str);
         return $str;
     }
