@@ -633,6 +633,8 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
                         //reload page to activate the plugin, also activate the new module by adding it to config/melis.module.load
                         if ($isActivatePlugin) {   
                             $viewStep->restartRequired = 1;
+
+                                
                         } else {      
                             $viewStep->restartRequired = 0;
                         }   
@@ -937,7 +939,7 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
             chmod($path, 0777);
             $status = true;
         } else {            
-            $status = mkdir($path, 0777, true);           
+            $status = mkdir($path, 0755, true);           
         }
         return $status;             
     }

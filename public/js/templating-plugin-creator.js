@@ -515,7 +515,7 @@ $(function(){
             /*change back the 'default value' fiele to input type*/          
             $(this).parents('form').find('#tpc_field_default_value').closest('.form-group.input-group').empty().append(tpc_default_val_input);   
         } else if ( (prev == 'DatePicker' && current != 'DatePicker') || (prev == 'DateTimePicker' && current != 'DateTimePicker')) {           
-            $(this).parents('form').find('#tpc_field_default_value').datetimepicker("destroy");   
+            $(this).parents('form').find('#tpc_field_default_value').datetimepicker("destroy");
         } else if ( (prev == 'Switch' && current != 'Switch') || (prev == 'PageInput' && current != 'PageInput')) {            
             $(this).parents('form').find('#tpc_field_default_value').closest('.form-group.input-group').empty().append(tpc_default_val_input);  
         } else if (prev == 'MelisCoreTinyMCE' && current != 'MelisCoreTinyMCE') {   

@@ -238,9 +238,9 @@ class MelisTemplatingPluginCreatorService extends MelisGeneralService
                 
                 //starts with field #2 since the field 1[template_path] is already added in the template file
                 for ($f = 2; $f <= $tabFieldCount; $f++) {
-                    $fieldName = $this->steps['step_3']['tab_'.$t]['field_'.$f]['tpc_field_name'];
+                    $fieldName = preg_replace('/[^A-Za-z0-9_]/', '', (string) $this->steps['step_3']['tab_'.$t]['field_'.$f]['tpc_field_name']);
                     $displayType = $this->steps['step_3']['tab_'.$t]['field_'.$f]['tpc_field_display_type'];
-                    $defaultValue = $this->steps['step_3']['tab_'.$t]['field_'.$f]['tpc_field_default_value'];
+                    $defaultValue = addcslashes((string) $this->steps['step_3']['tab_'.$t]['field_'.$f]['tpc_field_default_value'], "\\'");
 
                     if ($f != 2) {
                         $tab = "\t\t\t\t\t\t";
@@ -269,7 +269,7 @@ class MelisTemplatingPluginCreatorService extends MelisGeneralService
             for ($j = 1; $j <= $fieldCount; $j++) {
                 //set template path default value
                 if ($j == 1) {
-                    $templatingPluginConfigContent = str_replace('#template_path',$this->steps['step_3']['tab_'.$i]['field_'.$j]['tpc_field_default_value'], $templatingPluginConfigContent);
+                    $templatingPluginConfigContent = str_replace('#template_path', addcslashes((string) $this->steps['step_3']['tab_'.$i]['field_'.$j]['tpc_field_default_value'], "\\'"), $templatingPluginConfigContent);
                 }
 
                 /********************* start setting tab elements ********************/
@@ -345,7 +345,7 @@ class MelisTemplatingPluginCreatorService extends MelisGeneralService
                 $tabElements = str_replace('#classAttr', $classAttr, $tabElements);
 
                 //set field name
-                $tabElements = str_replace('#field_name', $this->steps['step_3']['tab_'.$i]['field_'.$j]['tpc_field_name'], $tabElements);
+                $tabElements = str_replace('#field_name', preg_replace('/[^A-Za-z0-9_]/', '', (string) $this->steps['step_3']['tab_'.$i]['field_'.$j]['tpc_field_name']), $tabElements);
                               
                 //set field type
                 switch ($fieldDisplayType) {
@@ -387,7 +387,7 @@ class MelisTemplatingPluginCreatorService extends MelisGeneralService
                 $tabInputFilters .= $this->getTemplateContent('/Code/tab-input-filters');
 
                 //set field name
-                $tabInputFilters = str_replace('field_name', $this->steps['step_3']['tab_'.$i]['field_'.$j]['tpc_field_name'], $tabInputFilters);
+                $tabInputFilters = str_replace('field_name', preg_replace('/[^A-Za-z0-9_]/', '', (string) $this->steps['step_3']['tab_'.$i]['field_'.$j]['tpc_field_name']), $tabInputFilters);
 
                 //set required attribute
                 $isRequired = $this->steps['step_3']['tab_'.$i]['field_'.$j]['tpc_field_is_required'];
@@ -555,7 +555,7 @@ class MelisTemplatingPluginCreatorService extends MelisGeneralService
             if (!empty($dateTimePickerFields)) {
                 $dateTimePickerScript = "$('".$dateTimePickerFields."').datetimepicker({\r\n\t\t\t".                                       
                                         "format: 'YYYY-MM-DD HH:mm:ss',\r\n\t\t".
-                                    "});";
+                                        "});";
             }
             
             if ($datePickerScript || $dateTimePickerScript) {
@@ -597,7 +597,7 @@ class MelisTemplatingPluginCreatorService extends MelisGeneralService
             } elseif ($asset == 'images') {                
                 //check if target directory exists
                 if (!file_exists($dir)) {
-                    mkdir($dir, 0777, true);
+                    mkdir($dir, 0755, true);
                 }                        
 
                 //copy saved thumbnail to the plugins/image directory of the module          
@@ -997,7 +997,7 @@ class MelisTemplatingPluginCreatorService extends MelisGeneralService
 
             //create directory if not yet exists
             if (!file_exists($targetDir)) {
-                mkdir($targetDir, 0777, true);
+                mkdir($targetDir, 0755, true);
             }
 
             //add file if not yet exists
@@ -1044,9 +1044,18 @@ class MelisTemplatingPluginCreatorService extends MelisGeneralService
      */
     protected function emptyConfigToolsTreeSection($moduleDir)
     {
-        $toolsTreeConfigFile = $moduleDir.'/config/app.toolstree.php';        
+        $toolsTreeConfigFile = $moduleDir.'/config/app.toolstree.php';
+
+        // Rien à nettoyer si le fichier n'existe pas (ou ne renvoie pas un tableau) : `include` d'un
+        // fichier absent renvoie `false`, ce qui ferait planter Factory::toFile plus bas.
+        if (!is_file($toolsTreeConfigFile)) {
+            return true;
+        }
         $toolsTreeConfig = include $toolsTreeConfigFile;
-        
+        if (!is_array($toolsTreeConfig)) {
+            return true;
+        }
+
         //unset the meliscustom_toolstree_section of the newly created module
         if (isset($toolsTreeConfig['plugins']['meliscore']['interface']['meliscore_leftmenu']['interface']['meliscustom_toolstree_section']['interface'][strtolower($this->moduleName).'_conf'])) {
             unset($toolsTreeConfig['plugins']['meliscore']['interface']['meliscore_leftmenu']['interface']['meliscustom_toolstree_section']['interface'][strtolower($this->moduleName).'_conf']);
@@ -1096,11 +1105,15 @@ class MelisTemplatingPluginCreatorService extends MelisGeneralService
      * @param string $str
      * @return string
      */
-    public function generateModuleNameCase($str) 
+    public function generateModuleNameCase($str)
     {
-        $str = preg_replace('/([a-z])([A-Z])/', "$1$2", $str);
-        $str = str_replace(['-', '_'], '', ucwords(strtolower($str)));
-        $str = ucfirst($str);
+        // Doit produire EXACTEMENT le même PascalCase que MelisToolCreatorService::generateModuleNameCase
+        // (le service qui CRÉE réellement le dossier du module). Ne PAS `strtolower()` avant `ucwords()` :
+        // sinon un nom déjà en camelCase (ex. "TestPluginTwo") est aplati en "Testplugintwo", et le module
+        // généré devient introuvable ici (include app.toolstree.php => false => Factory::toFile plante).
+        $str = preg_replace('/[^a-zA-Z0-9\s]/', '', $str);
+        $str = ucwords($str);
+        $str = str_replace(' ', '', $str);
         $str = $this->cleanString($str);
         return $str;
     }

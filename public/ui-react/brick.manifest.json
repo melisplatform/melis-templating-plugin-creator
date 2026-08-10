@@ -1,0 +1,10 @@
+{
+  "id": "templating-plugin-creator",
+  "route": "/melis-core/templating-plugin-creator",
+  "label": "Templating Plugin Creator",
+  "forwardKey": "MelisTemplatingPluginCreator/TemplatingPluginCreator",
+  "melisKey": "melistemplatingplugincreator_tool",
+  "subTabs": false,
+  "persistent": true,
+  "entry": "brick.js"
+}
