@@ -30,7 +30,7 @@ return [
                             'title' => 'tr_MelisFrontSubcategoryPageBasics_Title'
                         ],
                         'name' => 'tr_ModuleTplPluginNamePlugin_Name',
-                        'thumbnail' => '/ModuleTpl/plugins/images/ModuleTplPluginNamePlugin_thumbnail.jpg',
+                        'thumbnail' => '/ModuleTpl/plugins/images/ModuleTplPluginNamePlugin_thumbnail.ThumbnailExt',
                         'description' => 'tr_ModuleTplPluginNamePlugin_Description',
                         'files' => [
                             'css' => [
