@@ -21,6 +21,16 @@ use MelisCore\Controller\MelisAbstractActionController;
 
 class TemplatingPluginCreatorController extends MelisAbstractActionController
 {
+    /**
+     * Outil auquel ce contrôleur appartient (audit DEKRA 7.0).
+     *
+     * Lu par MelisCoreAuthorizationListener : le garde-fou global résout la route jusqu'à
+     * cette classe et vérifie `canAccess()` sur cette clé AVANT le dispatch. Sans elle, le
+     * contrôleur restait joignable par tout compte connecté (route seulement authentifiée).
+     * Clé accordable par l'arbre des droits — Templating Plugin Creator.
+     */
+    const MELIS_KEY = 'melistemplatingplugincreator_tool';
+
     const NEW_MODULE = "new_module";
     const DROPDOWN = "Dropdown";
     const NUMERIC_INPUT = "NumericInput";
