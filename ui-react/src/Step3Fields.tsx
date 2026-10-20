@@ -44,7 +44,11 @@ function DefaultValueInput({ spec, onChange, off }: { spec: FieldSpec; onChange:
     case 'DatePicker':
       return <input type="date" style={inputCss} {...common} />
     case 'DateTimePicker':
-      return <input type="datetime-local" style={inputCss} {...common} />
+      // Stored as the platform date-time picker writes it ("YYYY-MM-DD HH:mm:ss", like the legacy wizard),
+      // not in the browser's datetime-local format "YYYY-MM-DDTHH:mm" (Mantis #0011240)
+      return <input type="datetime-local" style={inputCss} {...common}
+                    value={spec.tpc_field_default_value.replace(' ', 'T').slice(0, 16)}
+                    onChange={(e) => onChange(e.target.value ? e.target.value.replace('T', ' ') + ':00' : '')} />
     case 'NumericInput':
     case 'PageInput':
       // Le serveur applique un validateur `Digits` sur ces deux types (règle legacy).
