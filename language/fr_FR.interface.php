@@ -19,7 +19,17 @@
 
         // Error messages
         'tr_melistemplatingplugincreator_err_message' => 'Impossible de procéder à l\'étape suivante',
-        'tr_melistemplatingplugincreator_err_invalid_name' => 'Seul les caractères alphabetiques sont autorisés',	
+        'tr_melistemplatingplugincreator_err_invalid_name' => 'Seuls les caractères alphabétiques sont autorisés',	
+        'tr_melistemplatingplugincreator_err_invalid_display_type' => 'Choisissez un type d\'affichage de la liste',
+        'tr_melistemplatingplugincreator_type_text' => 'Texte / Champ normal',
+        'tr_melistemplatingplugincreator_type_dropdown' => 'Liste déroulante',
+        'tr_melistemplatingplugincreator_type_date' => 'Sélecteur de date',
+        'tr_melistemplatingplugincreator_type_datetime' => 'Sélecteur de date et heure',
+        'tr_melistemplatingplugincreator_type_page' => 'Sélecteur de page',
+        'tr_melistemplatingplugincreator_type_numeric' => 'Champ numérique',
+        'tr_melistemplatingplugincreator_type_switch' => 'Switch ON/OFF vert/rouge',
+        'tr_melistemplatingplugincreator_type_textarea' => 'Zone de texte',
+        'tr_melistemplatingplugincreator_type_tinymce' => 'HTML riche (TinyMCE)',
         'tr_melistemplatingplugincreator_err_invalid_field_name' => 'La saisie doit être un nom d\'attribut valide.',
         'tr_melistemplatingplugincreator_err_long_50' => 'Valeur trop longue, elle doit être de moins de 50 caractères',
         'tr_melistemplatingplugincreator_err_empty' => 'Valeur requise, ne peut être vide',

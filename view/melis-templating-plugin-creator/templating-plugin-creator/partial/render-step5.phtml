@@ -129,16 +129,17 @@
                                     $defaultOptions = $sessionData['tab_'.$tabNumber]['field_'.$field]['tpc_field_default_options'];
                                     $defaultValue = $sessionData['tab_'.$tabNumber]['field_'.$field]['tpc_field_default_value'];
                     
+                                    // Translated labels, same keys as the field form (were English only, Mantis #0011240)
                                     $displayTypeOptions = array(
-                                        'MelisText' => 'Text / Classic input',
-                                        'Dropdown' => 'Dropdown',
-                                        'DatePicker' => 'Date Picker',
-                                        'DateTimePicker' => 'Datetime Picker', 
-                                        'PageInput' => 'Page Input', 
-                                        'NumericInput' => 'Numeric Input',  
-                                        'Switch' => 'Switch ON/OFF green/red',                                     
-                                        'Textarea' => 'Textarea',
-                                        'MelisCoreTinyMCE' => 'HTML Rich (TinyMCE)'); 
+                                        'MelisText' => $this->translate('tr_melistemplatingplugincreator_type_text'),
+                                        'Dropdown' => $this->translate('tr_melistemplatingplugincreator_type_dropdown'),
+                                        'DatePicker' => $this->translate('tr_melistemplatingplugincreator_type_date'),
+                                        'DateTimePicker' => $this->translate('tr_melistemplatingplugincreator_type_datetime'),
+                                        'PageInput' => $this->translate('tr_melistemplatingplugincreator_type_page'),
+                                        'NumericInput' => $this->translate('tr_melistemplatingplugincreator_type_numeric'),
+                                        'Switch' => $this->translate('tr_melistemplatingplugincreator_type_switch'),
+                                        'Textarea' => $this->translate('tr_melistemplatingplugincreator_type_textarea'),
+                                        'MelisCoreTinyMCE' => $this->translate('tr_melistemplatingplugincreator_type_tinymce'));
                                     ?>
                                     <tr>
                                         <td><?=$this->translate('tr_melistemplatingplugincreator_field'). ' '.$field?></td>

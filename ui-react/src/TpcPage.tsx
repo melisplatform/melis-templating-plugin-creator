@@ -45,6 +45,43 @@ import {
 const MELIS_KEY = 'melistemplatingplugincreator_tool'
 const STEP_COUNT = 6
 
+// ── Errors of the inputs being edited ─────────────────────────────────────────────
+// The server's messages stayed under a field after it was corrected, until the step was submitted
+// again (Mantis #0011240): each change now drops the errors of the inputs it touched.
+
+/** Leaf paths whose value differs between two step values (objects/arrays of strings). */
+function changedPaths(a: unknown, b: unknown, path: string[] = []): string[][] {
+  if (a === b) return []
+  const isObj = (v: unknown) => v !== null && typeof v === 'object'
+  if (!isObj(a) || !isObj(b)) return [path]
+  const keys = new Set([...Object.keys(a as object), ...Object.keys(b as object)])
+  return [...keys].flatMap((k) => changedPaths((a as Record<string, unknown>)[k], (b as Record<string, unknown>)[k], [...path, k]))
+}
+
+/** Error path of a value path, per step (the error trees are not shaped like the values). */
+function errorPath(step: number, p: string[]): string[] {
+  if (step === 3) return [`field_${Number(p[0]) + 1}`, ...p.slice(1)]   // fields[i].x → field_{i+1}.x
+  if (step === 4) return [p[1], p[0], ...p.slice(2)]                    // [locale][field][x] → [field][locale][x]
+  return p                                                             // step 1: x ; step 2: [locale][x]
+}
+
+/** Copy of `errors` without the entry at `path` (nor the parents it leaves empty). */
+function withoutError(errors: Record<string, unknown>, path: string[]): Record<string, unknown> {
+  const [head, ...rest] = path
+  if (head === undefined || !(head in errors)) return errors
+  const copy = { ...errors }
+  const child = copy[head]
+  // A leaf error ({ label, messages }) or the end of the path: drop the whole entry.
+  if (!rest.length || child === null || typeof child !== 'object' || 'messages' in (child as object)) {
+    delete copy[head]
+    return copy
+  }
+  const next = withoutError(child as Record<string, unknown>, rest)
+  if (Object.keys(next).length) copy[head] = next
+  else delete copy[head]
+  return copy
+}
+
 export default function TpcPage() {
   const t = useT()
   const { can } = useCaps(MELIS_KEY)   // droits avancés (config/react.capabilities.php)
@@ -63,6 +100,17 @@ export default function TpcPage() {
   const [templatePath, setTemplatePath] = useState('')
 
   const [errors, setErrors] = useState<Record<number, StepErrors>>({})
+
+  /** Clears the errors of what changed between `prev` and `next` in step `n` (Mantis #0011240). */
+  const clearEdited = useCallback((n: number, prev: unknown, next: unknown, extra: string[][] = []) => {
+    const paths = [...changedPaths(prev, next).map((p) => errorPath(n, p)), ...extra]
+    if (!paths.length) return
+    setErrors((all) => {
+      if (!all[n]) return all
+      const stepErrors = paths.reduce((e, p) => withoutError(e, p), all[n] as Record<string, unknown>)
+      return { ...all, [n]: stepErrors }
+    })
+  }, [])
   const [transFields, setTransFields] = useState<TranslationField[]>([])
   const [transLoading, setTransLoading] = useState(false)
   /** Signature de l'étape 3 ayant produit `transFields` → évite de refetcher sans changement. */
@@ -239,21 +287,24 @@ export default function TpcPage() {
 
         {/* Volets montés une fois, montrés/cachés en CSS → aucun remontage, aucun refetch. */}
         <Pane show={step === 1}>
-          <Step1Plugin ctx={ctx} value={step1} onChange={setStep1} readOnly={readOnly}
+          <Step1Plugin ctx={ctx} value={step1} onChange={(v) => { clearEdited(1, step1, v); setStep1(v) }} readOnly={readOnly}
                        errors={(errors[1] ?? {}) as FieldErrors} />
         </Pane>
         <Pane show={step === 2}>
-          <Step2Texts ctx={ctx} value={step2} onChange={setStep2} thumbnail={thumbnail} onThumbnail={setThumbnail}
+          <Step2Texts ctx={ctx} value={step2} onChange={(v) => { clearEdited(2, step2, v); setStep2(v) }} thumbnail={thumbnail}
+                      onThumbnail={(v) => { clearEdited(2, null, null, [['tpc_plugin_upload_thumbnail']]); setThumbnail(v) }}
                       errors={errors[2] ?? {}} readOnly={readOnly}
                       canUpload={can('thumbnail') && can('thumbnail.create')}
                       canDelete={can('thumbnail') && can('thumbnail.delete')} />
         </Pane>
         <Pane show={step === 3}>
-          <Step3Fields ctx={ctx} fields={fields} onChange={setFields} errors={errors[3] ?? {}}
+          <Step3Fields ctx={ctx} fields={fields} errors={errors[3] ?? {}}
+                       onChange={(v) => { clearEdited(3, fields, v, v.length !== fields.length ? [['main']] : []); setFields(v) }}
                        readOnly={readOnly} templatePath={templatePath} />
         </Pane>
         <Pane show={step === 4}>
-          <Step4Translations fields={transFields} languages={ctx.languages} value={step4} onChange={setStep4}
+          <Step4Translations fields={transFields} languages={ctx.languages} value={step4}
+                             onChange={(v) => { clearEdited(4, step4, v); setStep4(v) }}
                              errors={errors[4] ?? {}} readOnly={readOnly} loading={transLoading} />
         </Pane>
         <Pane show={step === 5}>

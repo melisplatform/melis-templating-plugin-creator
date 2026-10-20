@@ -112,7 +112,8 @@ class MelisReactApiTemplatingPluginCreatorController extends MelisAbstractAction
             $fieldForm    = $this->form('melistemplatingplugincreator_step3_field_form');
             $displayTypes = [];
             foreach ((array) $fieldForm->get('tpc_field_display_type')->getValueOptions() as $value => $label) {
-                $displayTypes[] = ['value' => (string) $value, 'label' => (string) $label];
+                // Labels are translation keys (they were English text in the French back office, Mantis #0011240)
+                $displayTypes[] = ['value' => (string) $value, 'label' => $translator->translate((string) $label)];
             }
 
             return $this->ok([
@@ -223,7 +224,13 @@ class MelisReactApiTemplatingPluginCreatorController extends MelisAbstractAction
         $errors     = [];
 
         if ($data['tpc_plugin_destination'] === self::NEW_MODULE && $data['tpc_new_module_name'] !== '') {
-            $newModule = strtolower($data['tpc_new_module_name']);
+            // Checked on the name that will be GENERATED: "éMelisCore" was accepted although it becomes
+            // MelisCore, and "ééé" although it becomes empty (Mantis #0011238)
+            $newModule = strtolower((string) $this->tpcService()->generateModuleNameCase($data['tpc_new_module_name']));
+            if ($newModule === '') {
+                return ['valid' => false, 'errors' => ['tpc_new_module_name' => $this->fieldError($form, 'tpc_new_module_name',
+                    $translator->translate('tr_melistemplatingplugincreator_err_invalid_name'))]];
+            }
 
             $reserved = (array) $sm->get('MelisCoreConfig')->getItem('melistemplatingplugincreator/datas/reserved_keywords');
             if (in_array($newModule, $reserved, true)) {
@@ -236,7 +243,9 @@ class MelisReactApiTemplatingPluginCreatorController extends MelisAbstractAction
             $existing = array_map('strtolower', array_merge(
                 (array) $sm->get('ModulesService')->getModulePlugins(),
                 (array) $sm->get('ModulesService')->getAllModules(),
+                (array) $sm->get('ModulesService')->getCoreModules(),
                 (array) $sm->get('MelisAssetManagerModulesService')->getSitesModules(),
+                \MelisCore\MelisModuleManager::getModules(),
             ));
             if (in_array($newModule, $existing, true)) {
                 $errors['tpc_new_module_name'] = $this->fieldError($form, 'tpc_new_module_name', sprintf(
@@ -401,6 +410,17 @@ class MelisReactApiTemplatingPluginCreatorController extends MelisAbstractAction
 
             $clean = $form->getData();
 
+            // Display type from the list only: "EvilType" was accepted (Mantis #0011239). The form's input
+            // filter replaces the Select's own InArray validator, so it is checked here.
+            $types = array_map('strval', array_keys((array) $form->get('tpc_field_display_type')->getValueOptions()));
+            if (!in_array($type, $types, true)) {
+                $errors['field_' . $i]['tpc_field_display_type'] = $this->fieldError(
+                    $form, 'tpc_field_display_type',
+                    $this->getServiceManager()->get('translator')->translate('tr_melistemplatingplugincreator_err_invalid_display_type'),
+                );
+                continue;
+            }
+
             // Un Dropdown sans option est inexploitable (le générateur écrit ses value_options).
             if ($type === self::DROPDOWN && trim($clean['tpc_field_default_options']) === '') {
                 $errors['field_' . $i]['tpc_field_default_options'] = $this->fieldError(
@@ -412,19 +432,21 @@ class MelisReactApiTemplatingPluginCreatorController extends MelisAbstractAction
 
             // Doublon de nom de champ (règle legacy `DuplicateFieldName`). Le message attend le nom
             // fautif ET le numéro du champ qui le porte déjà.
+            // Compared without case: "title" and "Title" were both accepted (Mantis #0011239)
             $name = $clean['tpc_field_name'];
-            if ($name !== '' && isset($names[$name])) {
+            $nameKey = strtolower($name);
+            if ($name !== '' && isset($names[$nameKey])) {
                 $errors['field_' . $i]['tpc_field_name'] = $this->fieldError(
                     $form, 'tpc_field_name',
                     sprintf(
                         $this->getServiceManager()->get('translator')->translate('tr_melistemplatingplugincreator_tpc_field_name_exist'),
                         $name,
-                        $names[$name],
+                        $names[$nameKey],
                     ),
                 );
                 continue;
             }
-            $names[$name] = $i;
+            $names[$nameKey] = $i;
             $fields['field_' . $i] = $clean;
         }
 
