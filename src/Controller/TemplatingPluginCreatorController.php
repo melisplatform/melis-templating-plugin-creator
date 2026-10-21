@@ -252,8 +252,21 @@ class TemplatingPluginCreatorController extends MelisAbstractActionController
                     }
                 }
                     
-                //validate templating plugin name if it already exists for the selected existing module
-                if (!empty($postValues['step-form']['tpc_existing_module_name'])) {  
+                // Existing module: one of the site modules offered by the dropdown only. "MelisCore" was accepted,
+                // its config folder was read (password-blocklist.txt printed into the response) and a plugin
+                // could be generated into a core or vendor module (Mantis #0011314)
+                $existingModuleOffered = in_array(trim((string) ($postValues['step-form']['tpc_existing_module_name'] ?? '')),
+                    (array) $this->getServiceManager()->get('ModulesService')->getSitesModules(), true);
+                if (!empty($postValues['step-form']['tpc_existing_module_name']) && !$existingModuleOffered
+                    && ($postValues['step-form']['tpc_plugin_destination'] ?? '') != self::NEW_MODULE) {
+                    $translator = $this->getServiceManager()->get('translator');
+                    $stepForm->get('tpc_existing_module_name')->setMessages([
+                        'NotInArray' => $translator->translate('tr_melistemplatingplugincreator_err_invalid_option')
+                    ]);
+
+                    $errorMessages = $stepForm->getMessages();
+                } elseif (!empty($postValues['step-form']['tpc_existing_module_name']) && $existingModuleOffered) {
+                    //validate templating plugin name if it already exists for the selected existing module
                     $templatingPluginCreatorSrv = $this->getServiceManager()->get('MelisTemplatingPluginCreatorService');
                     $existingModuleName = trim($postValues['step-form']['tpc_existing_module_name']);
                     $newPluginName = trim($postValues['step-form']['tpc_plugin_name']);

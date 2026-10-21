@@ -35,6 +35,7 @@
         'tr_melistemplatingplugincreator_err_invalid_field_name' => 'The input must be a valid name attribute.',
         'tr_melistemplatingplugincreator_err_long_50' => 'Value is too long, it should be less than 50 characters',
         'tr_melistemplatingplugincreator_err_empty' => 'The input is required and cannot be empty',
+        'tr_melistemplatingplugincreator_err_invalid_option' => 'Choose a value from the list',
         'tr_melistemplatingplugincreator_greater_than_0' => 'The input must be greather than or equal to 1',
         'tr_melistemplatingplugincreator_value_must_be_between_1_to_25' => 'The input must be between 1 and 25',
         'tr_melistemplatingplugincreator_integer_only' => 'The input must be integer only',
