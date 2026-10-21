@@ -1202,9 +1202,13 @@ class MelisTemplatingPluginCreatorService extends MelisGeneralService
         $moduleDir = $moduleDir.'/config';  
         $templatingPlugins = [];
 
-        $dir = new \RecursiveDirectoryIterator($moduleDir);
-        foreach (new \RecursiveIteratorIterator($dir) as $filename => $file) { 
-            if (!is_dir($filename) && $filename != '.' && $filename != '..' ) {                         
+        // Only the module's PHP config files are read: any other file was printed into the response by the
+        // include (MelisCore's password-blocklist.txt, Mantis #0011314)
+        $files = is_dir($moduleDir)
+            ? new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($moduleDir, \FilesystemIterator::SKIP_DOTS))
+            : [];
+        foreach ($files as $filename => $file) { 
+            if ($file->isFile() && strtolower($file->getExtension()) === 'php') {                         
                 $conf = include $filename;
                
                 if (isset($conf['plugins'])) {

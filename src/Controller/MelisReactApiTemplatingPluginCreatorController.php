@@ -246,6 +246,15 @@ class MelisReactApiTemplatingPluginCreatorController extends MelisAbstractAction
             }
         }
 
+        // Existing module: one of the site modules OFFERED, not any module of the platform. "MelisCore" was
+        // accepted, its config folder was read (password-blocklist.txt printed into the response) and a plugin
+        // could be generated into a core or vendor module (Mantis #0011314)
+        if ($data['tpc_plugin_destination'] !== self::NEW_MODULE && $data['tpc_existing_module_name'] !== ''
+            && !in_array($data['tpc_existing_module_name'], (array) $sm->get('ModulesService')->getSitesModules(), true)) {
+            return ['valid' => false, 'errors' => ['tpc_existing_module_name' => $this->fieldError($form, 'tpc_existing_module_name',
+                $translator->translate('tr_melistemplatingplugincreator_err_invalid_option'))]];
+        }
+
         if ($data['tpc_plugin_destination'] !== self::NEW_MODULE && $data['tpc_existing_module_name'] !== '') {
             $pluginKey = strtolower($data['tpc_existing_module_name'] . $data['tpc_plugin_name'] . 'plugin');
             $taken     = array_map('strtolower', (array) $this->tpcService()->getSiteTemplatingPluginNames($data['tpc_existing_module_name']));

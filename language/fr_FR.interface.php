@@ -23,6 +23,7 @@
         'tr_melistemplatingplugincreator_err_invalid_field_name' => 'La saisie doit être un nom d\'attribut valide.',
         'tr_melistemplatingplugincreator_err_long_50' => 'Valeur trop longue, elle doit être de moins de 50 caractères',
         'tr_melistemplatingplugincreator_err_empty' => 'Valeur requise, ne peut être vide',
+        'tr_melistemplatingplugincreator_err_invalid_option' => 'Choisissez une valeur de la liste',
         'tr_melistemplatingplugincreator_greater_than_0' => 'The input must be greather than or equal to 1',
         'tr_melistemplatingplugincreator_value_must_be_between_1_to_25' => 'Seules les valeurs entre 1 et 25 sont autorisées',
         'tr_melistemplatingplugincreator_integer_only' => 'La valeur saisie doit être un nombre entier uniquement',
