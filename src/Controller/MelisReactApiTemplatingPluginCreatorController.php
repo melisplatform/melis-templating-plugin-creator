@@ -552,9 +552,8 @@ class MelisReactApiTemplatingPluginCreatorController extends MelisAbstractAction
 
     /**
      * Téléverse la vignette du plugin. Mêmes contraintes que le legacy (taille min/max de la
-     * config, contenu réellement décodable en image), plus deux durcissements : liste blanche
-     * d'extensions et nom de fichier assaini (le legacy ne retirait que les accents/espaces),
-     * dossier en 0755 (le legacy faisait `mkdir(0755)` + `chmod(0777)`).
+     * config, contenu réellement décodable en image), avec une liste blanche d'extensions,
+     * un nom de fichier assaini et un dossier en 0755.
      */
     public function thumbnailAction(): HttpResponse
     {
